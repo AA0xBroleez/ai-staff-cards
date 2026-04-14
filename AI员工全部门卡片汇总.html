@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI 员工全部门卡片图鉴</title>
+  <style>
+    :root {
+      --ink: #0f172a;
+      --muted: #64748b;
+      --surface: #f8fafc;
+      --card: #ffffff;
+      --radius: 20px;
+      --dex-violet: #4c1d95;
+      --dex-indigo: #312e81;
+      --dex-iris: #6366f1;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+      background: var(--surface);
+      color: var(--ink);
+      line-height: 1.6;
+      padding-bottom: 48px;
+    }
+    .dex-top {
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 38%, #5b21b6 72%, #6d28d9 100%);
+      color: #e0e7ff;
+      padding: 28px 20px 36px;
+      text-align: center;
+      margin-bottom: 24px;
+      box-shadow: 0 12px 40px rgba(49, 46, 129, 0.35);
+    }
+    .dex-top h1 {
+      margin: 0 0 8px;
+      font-size: 1.55rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0,0,0,.2);
+    }
+    .dex-top .sub {
+      margin: 0;
+      font-size: 0.88rem;
+      opacity: 0.92;
+      font-weight: 500;
+    }
+    .dex-top .stats {
+      margin-top: 14px;
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      justify-content: center;
+      font-size: 0.78rem;
+      padding: 10px 16px;
+      background: rgba(255,255,255,.1);
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.2);
+    }
+    .dex-top a.ref {
+      color: #c4b5fd;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+    nav.toc {
+      background: var(--card);
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      margin-bottom: 22px;
+      box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+    }
+    nav.toc h2 { margin: 0 0 10px; font-size: 0.75rem; font-weight: 700; color: #64748b; letter-spacing: 0.06em; }
+    nav.toc ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; grid-template-columns: 1fr 1fr; }
+    @media (max-width: 520px) { nav.toc ul { grid-template-columns: 1fr; } }
+    nav.toc a { font-size: 0.8rem; color: var(--dex-iris); text-decoration: none; font-weight: 600; }
+    nav.toc a:hover { text-decoration: underline; }
+
+    .dex-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      margin-bottom: 22px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 24px rgba(15, 23, 42, 0.07);
+      overflow: hidden;
+      break-inside: avoid;
+    }
+    .dex-card-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 20px 20px 14px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .dex-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      object-fit: cover;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.15);
+      border: 3px solid #fff;
+    }
+    .dex-avatar.dex-avatar--logo {
+      border-radius: 16px;
+      object-fit: contain;
+      padding: 4px;
+      background: linear-gradient(160deg, #0f172a, #1e3a8a);
+    }
+    .dex-avatar-letter {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.2);
+      border: 3px solid rgba(255,255,255,.95);
+    }
+    .dex-head-main { flex: 1; min-width: 0; }
+    .dex-name-row { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+    .dex-no { font-size: 0.7rem; font-weight: 700; color: var(--muted); letter-spacing: 0.08em; }
+    .dex-card h2 { margin: 0; font-size: 1.35rem; font-weight: 800; color: var(--ink); }
+    .dex-role { margin: 4px 0 8px; font-size: 0.82rem; color: var(--muted); font-weight: 500; }
+    .dex-status {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #e2e8f0;
+      white-space: normal;
+      max-width: 100%;
+    }
+    .dex-tags {
+      margin: 10px 20px 12px;
+      font-size: 0.8rem;
+      color: #475569;
+      line-height: 1.55;
+    }
+    .dex-tags strong { color: #334155; }
+    .dex-body { padding: 0 20px 18px; }
+    .dex-sec { margin-top: 14px; }
+    .dex-sec h3 {
+      margin: 0 0 8px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #64748b;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .dex-sec p { margin: 0 0 8px; font-size: 0.86rem; color: #334155; line-height: 1.7; }
+    .dex-split { display: grid; gap: 12px; }
+    @media (min-width: 560px) { .dex-split { grid-template-columns: 1fr 1fr; } }
+    .dex-box {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 12px 14px;
+      border: 1px solid #e2e8f0;
+    }
+    /* 找我做 / 别找我做：两列不同色块，便于扫读 */
+    .dex-split > .dex-box:nth-child(1) {
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      border-color: #6ee7b7;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+    }
+    .dex-split > .dex-box:nth-child(2) {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border-color: #fcd34d;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.65);
+    }
+    .dex-box h4 { margin: 0 0 8px; font-size: 0.72rem; font-weight: 700; color: var(--accent, #4f46e5); }
+    .dex-box ul { margin: 0; padding-left: 1.1em; font-size: 0.82rem; color: #475569; }
+    .dex-box li { margin-bottom: 4px; }
+    .dex-ask { margin: 0; padding-left: 1.1em; font-size: 0.84rem; color: #334155; }
+    .dex-ask li { margin-bottom: 6px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+    .chip {
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 5px 9px;
+      border-radius: 8px;
+      background: #eef2ff;
+      color: #4338ca;
+      border: 1px solid #c7d2fe;
+      font-family: ui-monospace, Menlo, monospace;
+    }
+    .chip-muted {
+      background: #f1f5f9;
+      color: #64748b;
+      border-color: #e2e8f0;
+    }
+
+
+    /* 技能树：进度条 + 图例 + Phase 分组 + 分册/全名/状态 */
+    .skill-tree {
+      background: #fff;
+      border: 1px solid #e8ecf0;
+      border-radius: 14px;
+      padding: 14px 16px 10px;
+      margin-top: 6px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+    }
+    .skill-tree .st-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .skill-tree .st-heading {
+      margin: 0;
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: 0.02em;
+    }
+    .skill-tree .st-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 14px;
+      font-size: 0.72rem;
+      color: #64748b;
+    }
+    .skill-tree .st-legend strong { color: #475569; font-weight: 700; }
+    .skill-tree .st-progress-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .skill-tree .st-frac {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #0f172a;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    .skill-tree .st-frac .st-sep { font-weight: 500; color: #cbd5e1; margin: 0 2px; }
+    .skill-tree .st-frac .st-total { font-weight: 700; color: #94a3b8; font-size: 1.05rem; }
+    .skill-tree .st-bar {
+      flex: 1;
+      min-width: 80px;
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .skill-tree .st-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #22c55e, #16a34a);
+      transition: width 0.25s ease;
+    }
+    /* 已上线（绿）+ 开发中（橙）分段，余下为灰底 */
+    .skill-tree .st-bar.st-bar--mixed {
+      display: flex;
+      align-items: stretch;
+      padding: 0;
+      background: transparent;
+    }
+    .skill-tree .st-bar--mixed .st-bar-inner {
+      display: flex;
+      flex: 1;
+      min-width: 80px;
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .skill-tree .st-bar-seg {
+      display: block;
+      height: 100%;
+      flex-shrink: 0;
+      transition: width 0.25s ease;
+    }
+    .skill-tree .st-bar-seg--on {
+      background: linear-gradient(90deg, #22c55e, #16a34a);
+    }
+    .skill-tree .st-bar-seg--dev {
+      background: linear-gradient(90deg, #fb923c, #ea580c);
+    }
+    .skill-tree .st-st--dev {
+      color: #c2410c;
+      font-weight: 600;
+    }
+    .skill-tree .st-st--on {
+      color: #15803d;
+      font-weight: 600;
+    }
+    .skill-tree .st-phase {
+      margin-top: 10px;
+      padding-top: 12px;
+      border-top: 1px solid #eef2f6;
+    }
+    .skill-tree .st-phase:first-of-type {
+      border-top: 0;
+      margin-top: 0;
+      padding-top: 0;
+    }
+    .skill-tree .st-phase h4 {
+      margin: 0 0 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #334155;
+      line-height: 1.45;
+    }
+    .skill-tree .st-phase-desc {
+      font-weight: 500;
+      color: #94a3b8;
+      font-style: italic;
+      margin-left: 6px;
+    }
+    .skill-tree .st-row {
+      display: grid;
+      grid-template-columns: 4.75rem 1fr auto;
+      gap: 8px 10px;
+      align-items: start;
+      padding: 9px 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 0.78rem;
+    }
+    .skill-tree .st-row:last-child { border-bottom: 0; padding-bottom: 2px; }
+    .skill-tree .st-id {
+      color: #94a3b8;
+      font-family: ui-monospace, Menlo, SFMono-Regular, monospace;
+      font-size: 0.74rem;
+      padding-top: 1px;
+    }
+    .skill-tree .st-name {
+      font-family: ui-monospace, Menlo, SFMono-Regular, monospace;
+      color: #1e293b;
+      word-break: break-word;
+      line-height: 1.45;
+    }
+    .skill-tree .st-st {
+      text-align: right;
+      white-space: nowrap;
+      color: #64748b;
+      font-size: 0.72rem;
+      padding-top: 2px;
+    }
+    .skill-tree .st-footnote {
+      margin-top: 10px;
+      font-size: 0.72rem;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+    .skill-tree .st-footnote a { color: var(--dex-iris); font-weight: 600; text-decoration: none; }
+    .skill-tree .st-footnote a:hover { text-decoration: underline; }
+
+    .theme-bs { --accent: #4f46e5; border-top: 4px solid #4f46e5; }
+    .theme-bs .dex-avatar-letter { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+    .theme-hr-lumi { --accent: #db2777; border-top: 4px solid #ec4899; }
+    .theme-hr-lumi .dex-box h4 { color: #be185d; }
+    .theme-hr-lumi .chip { background: #fce7f3; color: #9d174d; border-color: #fbcfe8; }
+    .theme-treasury { --accent: #059669; border-top: 4px solid #10b981; }
+    .theme-treasury .dex-avatar-letter { background: linear-gradient(135deg, #34d399, #047857); }
+    .theme-treasury .dex-box h4 { color: #047857; }
+    .theme-treasury .chip { background: #d1fae5; color: #065f46; border-color: #a7f3d0; }
+    .theme-recruiting { --accent: #6366f1; border-top: 4px solid #6366f1; }
+    .theme-recruiting .dex-avatar-letter { background: linear-gradient(135deg, #818cf8, #4338ca); }
+    .theme-compliance { --accent: #0284c7; border-top: 4px solid #0ea5e9; }
+    .theme-compliance .dex-box h4 { color: #0369a1; }
+    .theme-compliance .chip { background: #e0f2fe; color: #0c4a6e; border-color: #bae6fd; }
+    .theme-nsfin { --accent: #d97706; border-top: 4px solid #f59e0b; }
+    .theme-nsfin .dex-avatar-letter { background: linear-gradient(135deg, #fbbf24, #b45309); }
+    .theme-nsfin .chip { background: #fef3c7; color: #92400e; border-color: #fde68a; }
+    .theme-osm { --accent: #16a34a; border-top: 4px solid #22c55e; }
+    .theme-osm .dex-avatar-letter { background: linear-gradient(135deg, #4ade80, #15803d); }
+    .theme-osm .chip { background: #dcfce7; color: #14532d; border-color: #bbf7d0; }
+    .theme-cango { --accent: #9333ea; border-top: 4px solid #a855f7; }
+    .theme-cango .dex-avatar-letter { background: linear-gradient(135deg, #c084fc, #6d28d9); font-size: 1.1rem; }
+
+    .appendix {
+      background: var(--card);
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    footer.note { text-align: center; font-size: 0.75rem; color: var(--muted); margin-top: 28px; padding: 0 16px; }
+    @media print {
+      .dex-top { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .dex-card { break-inside: avoid; }
+    }
+
+    /* ─── Desktop：侧边栏 TOC + 双列卡片 ─────────────────────────── */
+    @media (min-width: 960px) {
+      .wrap {
+        display: flex;
+        align-items: flex-start;
+        gap: 28px;
+      }
+      nav.toc {
+        width: 190px;
+        flex-shrink: 0;
+        position: sticky;
+        top: 24px;
+        margin-bottom: 0;
+      }
+      nav.toc ul { grid-template-columns: 1fr; }
+      .main-col { flex: 1; min-width: 0; }
+      .cards-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+        margin-bottom: 22px;
+      }
+      .cards-grid .dex-card { margin-bottom: 0; }
+    }
+
+    /* 中等屏（640–959px）：TOC 4 列紧凑展示 */
+    @media (min-width: 640px) and (max-width: 959px) {
+      nav.toc ul { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    /* ─── 技能树：小屏（≤520px）两列布局 ───────────────────────── */
+    @media (max-width: 520px) {
+      .skill-tree .st-row {
+        grid-template-columns: 1fr auto;
+        grid-template-areas: "id status" "name status";
+        gap: 2px 8px;
+      }
+      .skill-tree .st-id   { grid-area: id;     padding-top: 0; }
+      .skill-tree .st-name { grid-area: name; }
+      .skill-tree .st-st   { grid-area: status; align-self: center; padding-top: 0; }
+    }
+
+    /* ─── 返回顶部按钮 ─────────────────────────────────────────── */
+    .back-top {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--dex-violet);
+      color: #e0e7ff;
+      padding: 9px 16px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      box-shadow: 0 4px 20px rgba(76, 29, 149, 0.4);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .back-top.visible { opacity: 1; transform: none; pointer-events: auto; }
+    @media (max-width: 480px) {
+      .back-top { bottom: 16px; right: 16px; padding: 8px 12px; }
+    }
+
+    /* ─── 编辑 / 预览 模式切换按钮 ─────────────────────────────── */
+    /* 模式控制组（固定右上角） */
+    .mode-controls {
+      position: fixed;
+      top: 16px;
+      right: 20px;
+      z-index: 200;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .mode-toggle, .save-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(255,255,255,0.28);
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-weight: 700;
+      font-family: inherit;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+      transition: background 0.2s, box-shadow 0.2s;
+      letter-spacing: 0.03em;
+    }
+    .mode-toggle:hover, .save-btn:hover {
+      background: rgba(255,255,255,0.22);
+      box-shadow: 0 4px 18px rgba(0,0,0,0.22);
+    }
+    body.edit-mode .mode-toggle {
+      background: #fff;
+      color: var(--dex-violet);
+      border-color: transparent;
+      box-shadow: 0 4px 20px rgba(76,29,149,0.22);
+    }
+    body.edit-mode .mode-toggle:hover { background: #f5f3ff; }
+    .save-btn, .export-btn { display: none; }
+    body.edit-mode .save-btn {
+      display: flex;
+      background: #fff;
+      color: #15803d;
+      border-color: transparent;
+      box-shadow: 0 4px 20px rgba(22,163,74,0.2);
+    }
+    body.edit-mode .save-btn:hover { background: #f0fdf4; }
+    body.edit-mode .export-btn {
+      display: flex;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      border-color: rgba(255,255,255,0.28);
+    }
+    body.edit-mode .export-btn:hover { background: rgba(255,255,255,0.22); }
+
+    /* Toast 提示 */
+    .save-toast {
+      position: fixed;
+      bottom: 76px;
+      right: 20px;
+      z-index: 300;
+      padding: 10px 18px;
+      border-radius: 10px;
+      background: #1e293b;
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
+    }
+    .save-toast.show { opacity: 1; transform: none; }
+
+    /* ─── 编辑模式：可编辑文本区域 ──────────────────────────────── */
+    body.edit-mode [contenteditable="true"] {
+      outline: none;
+      border-radius: 4px;
+      cursor: text;
+      transition: background 0.15s, box-shadow 0.15s;
+    }
+    body.edit-mode [contenteditable="true"]:hover {
+      background: rgba(99,102,241,0.06);
+    }
+    body.edit-mode [contenteditable="true"]:focus {
+      background: rgba(99,102,241,0.09);
+      box-shadow: 0 0 0 2px rgba(99,102,241,0.28);
+    }
+
+    /* 状态标签点击循环 */
+    body.edit-mode .st-st {
+      cursor: pointer;
+      user-select: none;
+    }
+    body.edit-mode .st-st:hover { opacity: 0.72; }
+
+    /* 编辑模式：st-row 增加第 4 列放删除按钮 */
+    body.edit-mode .skill-tree .st-row {
+      grid-template-columns: 4.75rem 1fr auto 22px;
+    }
+    @media (max-width: 520px) {
+      body.edit-mode .skill-tree .st-row {
+        grid-template-columns: 1fr auto 22px;
+        grid-template-areas: "id status del" "name status del";
+      }
+      body.edit-mode .skill-tree .st-del-btn { grid-area: del; }
+    }
+
+    /* 删除行按钮 */
+    .st-del-btn {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      padding: 0;
+      border: none;
+      background: none;
+      color: #f87171;
+      font-size: 1.1rem;
+      cursor: pointer;
+      border-radius: 4px;
+      line-height: 1;
+      opacity: 0;
+      transition: opacity 0.15s, background 0.15s;
+      font-family: inherit;
+    }
+    body.edit-mode .st-del-btn { display: flex; }
+    body.edit-mode .st-row:hover .st-del-btn { opacity: 0.55; }
+    .st-del-btn:hover { opacity: 1 !important; background: #fee2e2; }
+
+    /* 添加技能按钮 */
+    .st-add-btn {
+      display: block;
+      width: 100%;
+      margin-top: 8px;
+      padding: 7px 0;
+      border: 1.5px dashed #c7d2fe;
+      border-radius: 8px;
+      background: transparent;
+      color: #6366f1;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      letter-spacing: 0.01em;
+    }
+    .st-add-btn:hover { background: #eef2ff; border-color: #818cf8; }
+
+    /* ─── 访问密码保护 ──────────────────────────────────────────── */
+    .auth-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 38%, #5b21b6 72%, #6d28d9 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .auth-box {
+      background: #fff;
+      border-radius: 20px;
+      padding: 40px 36px 32px;
+      width: 100%;
+      max-width: 360px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+    .auth-box .auth-icon { font-size: 2rem; margin-bottom: 10px; }
+    .auth-box h2 {
+      margin: 0 0 6px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+    .auth-box p {
+      margin: 0 0 22px;
+      font-size: 0.82rem;
+      color: #64748b;
+    }
+    .auth-input {
+      width: 100%;
+      padding: 11px 14px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      text-align: center;
+      letter-spacing: 0.06em;
+    }
+    .auth-input:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.15); }
+    .auth-input.shake { animation: auth-shake 0.32s ease; border-color: #ef4444; }
+    @keyframes auth-shake {
+      0%,100% { transform: translateX(0); }
+      20%,60%  { transform: translateX(-7px); }
+      40%,80%  { transform: translateX(7px); }
+    }
+    .auth-btn {
+      display: block;
+      width: 100%;
+      margin-top: 12px;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .auth-btn:hover { opacity: 0.88; }
+    .auth-btn:active { transform: scale(0.98); }
+    .auth-err {
+      margin-top: 10px;
+      font-size: 0.76rem;
+      color: #ef4444;
+      min-height: 16px;
+    }
+
+    /* 编辑提示：卡片轮廓 */
+    body.edit-mode .dex-card {
+      transition: outline-color 0.2s;
+      outline: 2px dashed transparent;
+      outline-offset: 2px;
+    }
+    body.edit-mode .dex-card:hover {
+      outline-color: rgba(99,102,241,0.18);
+    }
+  </style>
+</head>
+<body>
+  <!-- 访问密码保护层 -->
+  <div class="auth-overlay" id="authOverlay">
+    <div class="auth-box">
+      <div class="auth-icon">🔐</div>
+      <h2>AI 员工卡片图鉴</h2>
+      <p>请输入访问密码</p>
+      <input class="auth-input" id="authInput" type="password"
+             placeholder="••••••••" autocomplete="current-password" />
+      <button class="auth-btn" id="authBtn">进入</button>
+      <div class="auth-err" id="authErr"></div>
+    </div>
+  </div>
+
+  <div class="mode-controls">
+    <button class="save-btn"   id="localSaveBtn" aria-label="保存到浏览器">💾 保存</button>
+    <button class="export-btn" id="exportBtn"    aria-label="导出为 HTML 文件">📥 导出</button>
+    <button class="mode-toggle" id="modeToggle"  aria-label="切换编辑/预览模式">
+      <span class="mode-icon">✏️</span><span class="mode-label">编辑</span>
+    </button>
+  </div>
+  <div id="save-toast" class="save-toast" role="status" aria-live="polite"></div>
+  <header class="dex-top">
+    <h1>AI 员工全部门卡片图鉴</h1>
+    <div class="stats">
+      <span>8 Agents</span>
+      <span>·</span>
+      <span>BS / HR / Treasury / Compliance / NS-Finance / OSM / Cango</span>
+      <span>·</span>
+      <span>✅ BS Phase 1&amp;2 部分已上线</span>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <nav class="toc" aria-label="目录">
+      <h2>跳转</h2>
+      <ul>
+        <li><a href="#no-001">NO.001 Star</a></li>
+        <li><a href="#no-002">NO.002 Lumi</a></li>
+        <li><a href="#no-003">NO.003 Grant</a></li>
+        <li><a href="#no-004">NO.004 Astro</a></li>
+        <li><a href="#no-005">NO.005 Amy</a></li>
+        <li><a href="#no-006">NO.006 Finley</a></li>
+        <li><a href="#no-007">NO.007 Grove</a></li>
+        <li><a href="#no-008">NO.008 松饼</a></li>
+        <li><a href="#appendix">附录</a></li>
+      </ul>
+    </nav>
+
+    <div class="main-col">
+    <div class="cards-grid">
+
+    <!-- NO.001 Star -->
+    <article id="no-001" class="dex-card theme-bs">
+      <div class="dex-card-head">
+        <div class="dex-avatar-letter" aria-hidden="true">S</div>
+        <div class="dex-head-main">
+          <div class="dex-name-row"><span class="dex-no">NO.001</span><h2>Star</h2></div>
+          <p class="dex-role">BS · 业务支持 · 流程与多线作战</p>
+          <span class="dex-status">✅ 4 已上线 · 🔨 11 开发中 · 📋 1 规划中</span>
+        </div>
+      </div>
+      <p class="dex-tags"><strong>主动积极 · 雷厉风行</strong> · 急性子但有条理，先把目标和业务线复述清楚再拆步骤。</p>
+      <div class="dex-body">
+        <div class="dex-sec">
+          <h3>👤 关于我</h3>
+          <p>我是 Star，在 NS BS 跑流程、跟单子的数字同事。多业务线 <strong>SOP 问答与需求跟进</strong>已上线，<strong>NS 系统数据查询</strong>与<strong>业务线邮件模板</strong>也已就绪，各业务线工作流正全速开发中。不替你做业务判断，但帮你少踩「找谁、下一步是啥」的坑。</p>
+        </div>
+        <div class="dex-sec dex-split">
+          <div class="dex-box">
+            <h4>✦ 找我做</h4>
+            <ul>
+              <li>用 SOP/知识库回答「下一步做什么」、跟需求状态</li>
+              <li>查询 NS 系统数据，理清「现在是什么状态」</li>
+              <li>按业务线起草标准邮件模板</li>
+            </ul>
+          </div>
+          <div class="dex-box">
+            <h4>✦ 别找我做</h4>
+            <ul>
+              <li>不替你背业务风险；复杂事引导工单与责任人</li>
+              <li>NS 系统交互（写入/操作）功能待开发，暂不支持</li>
+            </ul>
+          </div>
+        </div>
+        <div class="dex-sec">
+          <h3>🗣️ 试试这样对我说</h3>
+          <ul class="dex-ask">
+            <li>「请问 NS XX 业务线的框架协议需要几级审批？都是哪几个部门审批？」</li>
+            <li>「查一下这笔需求在 NS 系统里现在是什么状态？」</li>
+            <li>「按量化业务线模板起草一封需求确认邮件。」</li>
+            <li>「请按 BS SOP 列出从提单到 NS 闭环的检查清单。」</li>
+          </ul>
+        </div>
+        <div class="dex-sec">
+          <div class="skill-tree">
+            <div class="st-title-row">
+              <h3 class="st-heading">🧩 技能树</h3>
+              <div class="st-legend"><span>✅ <strong>4</strong> 已上线</span><span>🔨 <strong>11</strong> 开发中</span><span>📋 <strong>1</strong> 规划中</span></div>
+            </div>
+            <div class="st-progress-row">
+              <span class="st-frac"><span class="st-done">4</span><span class="st-sep">/</span><span class="st-total">16</span></span>
+              <div class="st-bar st-bar--mixed" role="progressbar" aria-valuenow="4" aria-valuemin="0" aria-valuemax="16" aria-label="技能交付进度" aria-valuetext="已上线 4，开发中 11，规划中 1，共 16 项">
+                <div class="st-bar-inner" aria-hidden="true">
+                  <span class="st-bar-seg st-bar-seg--on" style="width:25%"></span>
+                  <span class="st-bar-seg st-bar-seg--dev" style="width:68.75%"></span>
+                </div>
+              </div>
+            </div>
+            <div class="st-phase">
+              <h4>Phase 1.0<span class="st-phase-desc">流程入口与需求跟进</span></h4>
+              <div class="st-row"><span class="st-id">BS-01</span><span class="st-name">五业务线流程问答</span><span class="st-st st-st--on">✅ 已上线</span></div>
+              <div class="st-row"><span class="st-id">BS-02</span><span class="st-name">需求接收与流程跟进</span><span class="st-st st-st--on">✅ 已上线</span></div>
+            </div>
+            <div class="st-phase">
+              <h4>Phase 2.0<span class="st-phase-desc">NS 系统 &amp; 沟通工具</span></h4>
+              <div class="st-row"><span class="st-id">BS-03</span><span class="st-name">NS 系统数据查询</span><span class="st-st st-st--on">✅ 已上线</span></div>
+              <div class="st-row"><span class="st-id">BS-04</span><span class="st-name">业务线邮件模板</span><span class="st-st st-st--on">✅ 已上线</span></div>
+              <div class="st-row"><span class="st-id">BS-05</span><span class="st-name">NS 系统交互</span><span class="st-st">📋 规划中</span></div>
+            </div>
+            <div class="st-phase">
+              <h4>分册<span class="st-phase-desc">通用与各业务线工作流</span></h4>
+              <div class="st-row"><span class="st-id">BS-06</span><span class="st-name">BS 通用工作流</span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">BS-07</span><span class="st-name">量化业务线工作流</span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">BS-08</span><span class="st-name">配资业务线工作流</span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">BS-09</span><span class="st-name">质押借贷（内）工作流</span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">BS-10</span><span class="st-name">质押借贷（外）工作流</span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">BS-11</span><span class="st-name">外汇与支付 Pay 工作流</span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">BS-12</span><span class="st-name">机构交易 Trading 工作流</span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">BS-13</span><span class="st-name">RWA 业务线工作流</span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">BS-14</span><span class="st-name">Defi 业务线工作流</span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">BS-15</span><span class="st-name">AE 小流程</span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">BS-16</span><span class="st-name">Mining 合资工作流</span><span class="st-st st-st--dev">🔨 开发中</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- NO.002 Lumi -->
+    <article id="no-002" class="dex-card theme-hr-lumi">
+      <div class="dex-card-head">
+        <img class="dex-avatar" src="./avatars/lumi.png" width="64" height="64" alt="Lumi" />
+        <div class="dex-head-main">
+          <div class="dex-name-row"><span class="dex-no">NO.002</span><h2>Lumi</h2></div>
+          <p class="dex-role">HR · ElevateSphere / Sage · 员工体验</p>
+          <span class="dex-status">📋 待实现 · HR-01 / 02</span>
+        </div>
+      </div>
+      <p class="dex-tags"><strong>温暖耐心 · 亲和细腻</strong> · 边界感强、温柔但坚定；先问实体与国家，敏感区不猜不编。</p>
+      <div class="dex-body">
+        <div class="dex-sec">
+          <h3>👤 关于我</h3>
+          <p>我是 Lumi，做政策与入职引导。年假怎么请、入职卡在哪一步，我愿意慢慢讲清楚；阶段 2 接 Workday，但<strong>不会替你越过 HR 正式流程</strong>。</p>
+        </div>
+        <div class="dex-sec dex-split">
+          <div class="dex-box">
+            <h4>✦ 找我做</h4>
+            <ul>
+              <li>多实体政策问答、入职时间线与「卡在哪一步」</li>
+              <li>阶段 2：白名单与脱敏策略下的 Workday 能力</li>
+            </ul>
+          </div>
+          <div class="dex-box">
+            <h4>✦ 别找我做</h4>
+            <ul>
+              <li>阶段 1 不查个人薪酬；不编政策、不口头承诺福利数字</li>
+              <li>不代替 HR 或 Workday 正式审批</li>
+            </ul>
+          </div>
+        </div>
+        <div class="dex-sec">
+          <h3>🗣️ 试试这样对我说</h3>
+          <ul class="dex-ask">
+            <li>「我是香港的员工，请问婚假是多少天？怎么请假？」</li>
+            <li>「我是大陆的员工，出差去新加坡，怎么订机酒？」</li>
+          </ul>
+        </div>
+        <div class="dex-sec">
+          <div class="skill-tree">
+            <div class="st-title-row">
+              <h3 class="st-heading">🧩 技能树</h3>
+              <div class="st-legend"><span>✅ <strong>0</strong> 已上线</span><span>🔨 <strong>0</strong> 开发中</span><span>📋 <strong>2</strong> 规划中</span></div>
+            </div>
+            <div class="st-progress-row">
+              <span class="st-frac"><span class="st-done">0</span><span class="st-sep">/</span><span class="st-total">2</span></span>
+              <div class="st-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="2" aria-label="已上线技能占比"><div class="st-bar-fill" style="width:0%"></div></div>
+            </div>
+            <div class="st-phase">
+              <h4>Phase 1.0<span class="st-phase-desc">政策与入职</span></h4>
+              <div class="st-row"><span class="st-id">HR-01</span><span class="st-name">Lumi 政策与入职引导（阶段 1）</span><span class="st-st">📋 规划中</span></div>
+            </div>
+            <div class="st-phase">
+              <h4>Phase 2.0<span class="st-phase-desc">Workday</span></h4>
+              <div class="st-row"><span class="st-id">HR-02</span><span class="st-name">Workday 运营助手（阶段 2）</span><span class="st-st">📋 规划中</span></div>
+            </div>
+            <p class="st-footnote">招聘产品线八技能由 <strong>NO.004 Astro</strong> 承载，见 <a href="#no-004">技能树</a> 与 HR CSV「Astro 招聘」行。</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- NO.003 Grant -->
+    <article id="no-003" class="dex-card theme-treasury">
+      <div class="dex-card-head">
+        <div class="dex-avatar-letter">G</div>
+        <div class="dex-head-main">
+          <div class="dex-name-row"><span class="dex-no">NO.003</span><h2>Grant</h2></div>
+          <p class="dex-role">Treasury · 资金运营 · 开户助理</p>
+          <span class="dex-status">📋 待实现 · 3 分册</span>
+        </div>
+      </div>
+      <p class="dex-tags"><strong>严谨认真 · 字斟句酌</strong> · 对外克制稳重，草稿与出处标清楚。</p>
+      <div class="dex-body">
+        <div class="dex-sec"><h3>👤 关于我</h3>
+          <p>专治开户表、银行问卷和付款审核细碎活；帮你抢时间，<strong>签字与对外口径归 Treasury</strong>。</p></div>
+        <div class="dex-sec dex-split">
+          <div class="dex-box"><h4>✦ 找我做</h4><ul><li>材料拢齐、「还差什么」清单</li><li>KYC 出处与日期；付款核对与异常提示</li></ul></div>
+          <div class="dex-box"><h4>✦ 别找我做</h4><ul><li>给银行/客户的句子须 Treasury 点头</li><li>不绕过复核、不自动外发</li></ul></div>
+        </div>
+        <div class="dex-sec"><h3>🗣️ 试试这样对我说</h3>
+          <ul class="dex-ask"><li>「这份开户表按某银行/某产品还差哪些字段？」</li><li>「问卷 UBO/业务描述，按老材料给要点（带出处）。」</li><li>「这笔付款有没有重复支付或账号异常风险？」</li></ul></div>
+        <div class="dex-sec">
+          <div class="skill-tree">
+            <div class="st-title-row">
+              <h3 class="st-heading">🧩 技能树</h3>
+              <div class="st-legend"><span>✅ <strong>0</strong> 已上线</span><span>🔨 <strong>0</strong> 开发中</span><span>📋 <strong>3</strong> 规划中</span></div>
+            </div>
+            <div class="st-progress-row">
+              <span class="st-frac"><span class="st-done">0</span><span class="st-sep">/</span><span class="st-total">3</span></span>
+              <div class="st-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="3" aria-label="已上线技能占比"><div class="st-bar-fill" style="width:0%"></div></div>
+            </div>
+            <div class="st-phase">
+              <h4>Phase 1.0<span class="st-phase-desc">开户与 KYC</span></h4>
+              <div class="st-row"><span class="st-id">Treasury-01</span><span class="st-name">开户表格智能填单</span><span class="st-st">📋 规划中</span></div>
+              <div class="st-row"><span class="st-id">Treasury-02</span><span class="st-name">KYC 知识库与银行答复辅助</span><span class="st-st">📋 规划中</span></div>
+            </div>
+            <div class="st-phase">
+              <h4>Phase 2.0<span class="st-phase-desc">付款侧</span></h4>
+              <div class="st-row"><span class="st-id">Treasury-03</span><span class="st-name">支付审核辅助</span><span class="st-st">📋 规划中</span></div>
+            </div>
+          </div>
+          </div>
+      </div>
+    </article>
+
+    <!-- NO.004 Astro -->
+    <article id="no-004" class="dex-card theme-recruiting">
+      <div class="dex-card-head">
+        <div class="dex-avatar-letter">A</div>
+        <div class="dex-head-main">
+          <div class="dex-name-row"><span class="dex-no">NO.004</span><h2>Astro</h2></div>
+          <p class="dex-role">HR · 招聘产品线 · The Proactive Talent Partner</p>
+          <span class="dex-status">📋 待实现 · Astro-01～08</span>
+        </div>
+      </div>
+      <p class="dex-tags"><strong>热情活泼 · 推进感强</strong> · 主动积极但不越界；Owner + Due 写清楚。</p>
+      <div class="dex-body">
+        <div class="dex-sec"><h3>👤 关于我</h3>
+          <p>从 JD 到 Offer 八块能力可分册验收；对内盯节点与 SLA，对外邮件短、可留档。</p></div>
+        <div class="dex-sec dex-split">
+          <div class="dex-box"><h4>✦ 找我做</h4><ul><li>JD、通知模板、面试材料清单</li><li>Action items：Owner + Due</li></ul></div>
+          <div class="dex-box"><h4>✦ 别找我做</h4><ul><li>不自动发出 Offer</li><li>JD/Offer 须留法务与 HR 审核占位</li></ul></div>
+        </div>
+        <div class="dex-sec"><h3>🗣️ 试试这样对我说</h3>
+          <ul class="dex-ask"><li>「按某地某岗起 JD 草稿，列需法务 HR 审核的点。」</li><li>「这轮面试 Slack/邮件通知模板，带材料清单。」</li></ul></div>
+        <div class="dex-sec">
+          <div class="skill-tree">
+            <div class="st-title-row">
+              <h3 class="st-heading">🧩 技能树</h3>
+              <div class="st-legend"><span>✅ <strong>0</strong> 已上线</span><span>🔨 <strong>0</strong> 开发中</span><span>📋 <strong>8</strong> 规划中</span></div>
+            </div>
+            <div class="st-progress-row">
+              <span class="st-frac"><span class="st-done">0</span><span class="st-sep">/</span><span class="st-total">8</span></span>
+              <div class="st-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="8" aria-label="已上线技能占比"><div class="st-bar-fill" style="width:0%"></div></div>
+            </div>
+            <div class="st-phase">
+              <h4>Phase 1.0<span class="st-phase-desc">JD · 审批 · 寻源 · 筛选</span></h4>
+              <div class="st-row"><span class="st-id">Astro-01</span><span class="st-name">JD Forge</span><span class="st-st">📋 规划中</span></div>
+              <div class="st-row"><span class="st-id">Astro-02</span><span class="st-name">Guardian Approval</span><span class="st-st">📋 规划中</span></div>
+              <div class="st-row"><span class="st-id">Astro-03</span><span class="st-name">Talent Scout / Sourcing</span><span class="st-st">📋 规划中</span></div>
+              <div class="st-row"><span class="st-id">Astro-04</span><span class="st-name">Screening Bot</span><span class="st-st">📋 规划中</span></div>
+            </div>
+            <div class="st-phase">
+              <h4>Phase 2.0<span class="st-phase-desc">面试编排 · Offer · 沉淀</span></h4>
+              <div class="st-row"><span class="st-id">Astro-05</span><span class="st-name">Interview Concierge</span><span class="st-st">📋 规划中</span></div>
+              <div class="st-row"><span class="st-id">Astro-06</span><span class="st-name">Voice/Video Prescreen</span><span class="st-st">📋 规划中</span></div>
+              <div class="st-row"><span class="st-id">Astro-07</span><span class="st-name">Offer Management</span><span class="st-st">📋 规划中</span></div>
+              <div class="st-row"><span class="st-id">Astro-08</span><span class="st-name">JD Repository</span><span class="st-st">📋 规划中</span></div>
+            </div>
+          </div>
+          </div>
+      </div>
+    </article>
+
+    <!-- NO.005 Amy -->
+    <article id="no-005" class="dex-card theme-compliance">
+      <div class="dex-card-head">
+        <img class="dex-avatar dex-avatar--logo" src="./avatars/amy.png" width="64" height="64" alt="Amy" />
+        <div class="dex-head-main">
+          <div class="dex-name-row"><span class="dex-no">NO.005</span><h2>Amy</h2></div>
+          <p class="dex-role">Compliance · AA &amp; NS · AML/KYC</p>
+          <span class="dex-status">📋 待实现 · 6 分册</span>
+        </div>
+      </div>
+      <p class="dex-tags"><strong>严肃客观 · 冷静审慎</strong> · 升级意识强；留痕可审计，高风险必推人工。</p>
+      <div class="dex-body">
+        <div class="dex-sec"><h3>👤 关于我</h3>
+          <p>文档门闸、制裁与 CRA、报告草稿、定期审查与监控扩展；我是<strong>预审台</strong>，盖章与对外发声归人类。</p></div>
+        <div class="dex-sec dex-split">
+          <div class="dex-box"><h4>✦ 找我做</h4><ul><li>清单、规则映射、缺口与建议动作</li><li>制裁命中拆「事实 / 规则 / 升级路径」</li></ul></div>
+          <div class="dex-box"><h4>✦ 别找我做</h4><ul><li>一期非自研 API 约束见 README</li><li>禁止自动对监管或客户发终稿；高敏感强制人工</li></ul></div>
+        </div>
+        <div class="dex-sec"><h3>🗣️ 试试这样对我说</h3>
+          <ul class="dex-ask"><li>「客户档案距调查就绪还差哪些材料？按清单列。」</li><li>「制裁筛查命中一条，拆事实/规则/升级路径。」</li></ul></div>
+        <div class="dex-sec">
+          <div class="skill-tree">
+            <div class="st-title-row">
+              <h3 class="st-heading">🧩 技能树</h3>
+              <div class="st-legend"><span>✅ <strong>0</strong> 已上线</span><span>🔨 <strong>0</strong> 开发中</span><span>📋 <strong>6</strong> 规划中</span></div>
+            </div>
+            <div class="st-progress-row">
+              <span class="st-frac"><span class="st-done">0</span><span class="st-sep">/</span><span class="st-total">6</span></span>
+              <div class="st-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="6" aria-label="已上线技能占比"><div class="st-bar-fill" style="width:0%"></div></div>
+            </div>
+            <div class="st-phase">
+              <h4>Phase 1.0<span class="st-phase-desc">个案、制裁、CRA、报告</span></h4>
+              <div class="st-row"><span class="st-id">Compliance-01</span><span class="st-name">客户文档完备性与调查就绪门闸</span><span class="st-st">📋 规划中</span></div>
+              <div class="st-row"><span class="st-id">Compliance-02</span><span class="st-name">制裁筛查辅助与命中处置草案</span><span class="st-st">📋 规划中</span></div>
+              <div class="st-row"><span class="st-id">Compliance-03</span><span class="st-name">客户风险评级 CRA 五维量化</span><span class="st-st">📋 规划中</span></div>
+              <div class="st-row"><span class="st-id">Compliance-04</span><span class="st-name">AML/KYC 个案叙述与报告草稿</span><span class="st-st">📋 规划中</span></div>
+            </div>
+            <div class="st-phase">
+              <h4>Phase 2.0<span class="st-phase-desc">定期审查</span></h4>
+              <div class="st-row"><span class="st-id">Compliance-05</span><span class="st-name">定期审查日期与通知草稿</span><span class="st-st">📋 规划中</span></div>
+            </div>
+            <div class="st-phase">
+              <h4>Phase 3.0<span class="st-phase-desc">监控扩展</span></h4>
+              <div class="st-row"><span class="st-id">Compliance-06</span><span class="st-name">钱包筛查与交易监控辅助</span><span class="st-st">📋 规划中</span></div>
+            </div>
+          </div>
+          </div>
+      </div>
+    </article>
+
+    <!-- NO.006 Finley -->
+    <article id="no-006" class="dex-card theme-nsfin">
+      <div class="dex-card-head">
+        <div class="dex-avatar-letter">F</div>
+        <div class="dex-head-main">
+          <div class="dex-name-row"><span class="dex-no">NO.006</span><h2>Finley</h2></div>
+          <p class="dex-role">NS-Finance · FinFlow · 加密付款</p>
+          <span class="dex-status">📋 待实现 · NS-01～03</span>
+        </div>
+      </div>
+      <p class="dex-tags"><strong>谨慎克制 · 少说多做</strong> · 理性冷静；「可以付」只留给人类。</p>
+      <div class="dex-body">
+        <div class="dex-sec"><h3>👤 关于我</h3>
+          <p>跟加密付款邮件死磕：规则、地址、Memo、抄送路径压成<strong>一张表</strong>，助你快决策。</p></div>
+        <div class="dex-sec dex-split">
+          <div class="dex-box"><h4>✦ 找我做</h4><ul><li>通过/暂缓/升级建议与抄送 BP/NS</li><li>地址风险等级与原因</li></ul></div>
+          <div class="dex-box"><h4>✦ 别找我做</h4><ul><li>不下最终付款指令</li><li>异常场景偏保守</li></ul></div>
+        </div>
+        <div class="dex-sec"><h3>🗣️ 试试这样对我说</h3>
+          <ul class="dex-ask"><li>「把这封加密付款邮件按现行规则比对一下。」</li><li>「这地址和 Memo 算不算高风险、要抄送谁？」</li></ul></div>
+        <div class="dex-sec">
+          <div class="skill-tree">
+            <div class="st-title-row">
+              <h3 class="st-heading">🧩 技能树</h3>
+              <div class="st-legend"><span>✅ <strong>0</strong> 已上线</span><span>🔨 <strong>0</strong> 开发中</span><span>📋 <strong>3</strong> 规划中</span></div>
+            </div>
+            <div class="st-progress-row">
+              <span class="st-frac"><span class="st-done">0</span><span class="st-sep">/</span><span class="st-total">3</span></span>
+              <div class="st-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="3" aria-label="已上线技能占比"><div class="st-bar-fill" style="width:0%"></div></div>
+            </div>
+            <div class="st-phase">
+              <h4>Phase 1.0<span class="st-phase-desc">规则比对</span></h4>
+              <div class="st-row"><span class="st-id">NS-01</span><span class="st-name">加密付款邮件解析与规则比对</span><span class="st-st">📋 规划中</span></div>
+            </div>
+            <div class="st-phase">
+              <h4>Phase 2.0<span class="st-phase-desc">风险与内部划转</span></h4>
+              <div class="st-row"><span class="st-id">NS-02</span><span class="st-name">高风险地址识别与升级</span><span class="st-st">📋 规划中</span></div>
+              <div class="st-row"><span class="st-id">NS-03</span><span class="st-name">内部划转自动审批建议</span><span class="st-st">📋 规划中</span></div>
+            </div>
+          </div>
+          </div>
+      </div>
+    </article>
+
+    <!-- NO.007 Grove -->
+    <article id="no-007" class="dex-card theme-osm">
+      <div class="dex-card-head">
+        <div class="dex-avatar-letter">P</div>
+        <div class="dex-head-main">
+          <div class="dex-name-row"><span class="dex-no">NO.007</span><h2>Grove</h2></div>
+          <p class="dex-role">OSM · Prime · 电费贷主链</p>
+          <span class="dex-status">📋 待实现 · OSM-01～05</span>
+        </div>
+      </div>
+      <p class="dex-tags"><strong>热情活泼 · 服务到位</strong> · 较真务实、绝不演戏；草稿绝不冒充已发送。</p>
+      <div class="dex-body">
+        <div class="dex-sec"><h3>👤 关于我</h3>
+          <p>拆账、复核、付款申请、对客邮件草稿衔接；同一 Bot 多角色，<strong>人机边界盯死</strong>。</p></div>
+        <div class="dex-sec dex-split">
+          <div class="dex-box"><h4>✦ 找我做</h4><ul><li>主链在哪一步、下一步备什么</li><li>对客确认类邮件草稿（不发送）</li></ul></div>
+          <div class="dex-box"><h4>✦ 别找我做</h4><ul><li>不装已批、已放、已发</li><li>不替代人工审批与对外发送</li></ul></div>
+        </div>
+        <div class="dex-sec"><h3>🗣️ 试试这样对我说</h3>
+          <ul class="dex-ask"><li>「这笔单在主链哪一步、我该备啥？」</li><li>「拟一封对客确认放款，千万别点发送。」</li></ul></div>
+        <div class="dex-sec">
+          <div class="skill-tree">
+            <div class="st-title-row">
+              <h3 class="st-heading">🧩 技能树</h3>
+              <div class="st-legend"><span>✅ <strong>0</strong> 已上线</span><span>🔨 <strong>0</strong> 开发中</span><span>📋 <strong>5</strong> 规划中</span></div>
+            </div>
+            <div class="st-progress-row">
+              <span class="st-frac"><span class="st-done">0</span><span class="st-sep">/</span><span class="st-total">5</span></span>
+              <div class="st-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="5" aria-label="已上线技能占比"><div class="st-bar-fill" style="width:0%"></div></div>
+            </div>
+            <div class="st-phase">
+              <h4>Phase 1.0<span class="st-phase-desc">电费贷主链辅助</span></h4>
+              <div class="st-row"><span class="st-id">OSM-01</span><span class="st-name">拆账计算辅助</span><span class="st-st">📋 规划中</span></div>
+              <div class="st-row"><span class="st-id">OSM-02</span><span class="st-name">电费贷审批数据复核</span><span class="st-st">📋 规划中</span></div>
+              <div class="st-row"><span class="st-id">OSM-03</span><span class="st-name">付款申请执行与邮件衔接</span><span class="st-st">📋 规划中</span></div>
+              <div class="st-row"><span class="st-id">OSM-04</span><span class="st-name">电费贷放款审核发起准备</span><span class="st-st">📋 规划中</span></div>
+              <div class="st-row"><span class="st-id">OSM-05</span><span class="st-name">对客确认邮件草稿</span><span class="st-st">📋 规划中</span></div>
+            </div>
+          </div>
+          </div>
+      </div>
+    </article>
+
+    <!-- NO.008 松饼 -->
+    <article id="no-008" class="dex-card theme-cango">
+      <div class="dex-card-head">
+        <div class="dex-avatar-letter">松</div>
+        <div class="dex-head-main">
+          <div class="dex-name-row"><span class="dex-no">NO.008</span><h2>松饼</h2></div>
+          <p class="dex-role">Cango · 战略部 · 情报与材料</p>
+          <span class="dex-status">📋 待实现 · Cango-01 / 02</span>
+        </div>
+      </div>
+      <p class="dex-tags"><strong>沉稳内敛 · 审慎克制</strong> · 客观冷静；投资决策永远留给你们。</p>
+      <div class="dex-body">
+        <div class="dex-sec"><h3>👤 关于我</h3>
+          <p>啃厚材料、情报汇总与结构提炼；把厚变薄、噪音变信号，<strong>不替投委会判断</strong>。</p></div>
+        <div class="dex-sec dex-split">
+          <div class="dex-box"><h4>✦ 找我做</h4><ul><li>云盘与公开材料结构与会商摘要</li><li>标亮市场、政策与合规红线；引用文件名/页码</li></ul></div>
+          <div class="dex-box"><h4>✦ 别找我做</h4><ul><li>仅战略部内部；不给投资建议结论</li><li>不做「全覆盖」式过度自信表述</li></ul></div>
+        </div>
+        <div class="dex-sec"><h3>🗣️ 试试这样对我说</h3>
+          <ul class="dex-ask"><li>「这份 BP/备忘录压成一页：结论、假设、风险。」</li><li>「某行业/地区监管与市场动静，会不会碰已投项目？」</li></ul></div>
+        <div class="dex-sec">
+          <div class="skill-tree">
+            <div class="st-title-row">
+              <h3 class="st-heading">🧩 技能树</h3>
+              <div class="st-legend"><span>✅ <strong>0</strong> 已上线</span><span>🔨 <strong>0</strong> 开发中</span><span>📋 <strong>2</strong> 规划中</span></div>
+            </div>
+            <div class="st-progress-row">
+              <span class="st-frac"><span class="st-done">0</span><span class="st-sep">/</span><span class="st-total">2</span></span>
+              <div class="st-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="2" aria-label="已上线技能占比"><div class="st-bar-fill" style="width:0%"></div></div>
+            </div>
+            <div class="st-phase">
+              <h4>Phase 1.0<span class="st-phase-desc">情报与材料</span></h4>
+              <div class="st-row"><span class="st-id">Cango-01</span><span class="st-name">项目文档解析与摘要</span><span class="st-st">📋 规划中</span></div>
+              <div class="st-row"><span class="st-id">Cango-02</span><span class="st-name">市场政策合规情报摘要</span><span class="st-st">📋 规划中</span></div>
+            </div>
+          </div>
+          </div>
+      </div>
+    </article>
+    </div><!-- /.cards-grid -->
+
+    <section id="appendix" class="appendix">
+      <strong>附录</strong> · Markdown 全文：<a href="./AI员工全部门卡片汇总.md">AI员工全部门卡片汇总.md</a><br />
+      头像：<code>excels/avatars/lumi.png</code>、<code>amy.png</code>；其余为首字母 / 字占位。请从本 HTML 所在目录打开以加载图片与 CSV 链接。
+    </section>
+
+    <footer class="note">版式与配色参考 <a href="https://raw34.github.io/astro-lumi-dex/" target="_blank" rel="noopener">astro-lumi-dex</a> · 业务口径以 <code>AI员工全部门卡片汇总.md</code> 为准</footer>
+    </div><!-- /.main-col -->
+  </div>
+
+  <a href="#" class="back-top" aria-label="返回顶部">▲ 顶部</a>
+  <script>
+    (function () {
+
+      /* ── 访问密码保护 ────────────────────────────────────────────
+         密码以 XOR 编码存储，key = index*7+42，避免明文出现在源码中
+         通过后在 localStorage 写入 7 天有效的 token               */
+      (function () {
+        var AUTH_KEY = 'dex-auth-v1';
+        var AUTH_TTL = 7 * 24 * 60 * 60 * 1000;
+        /* 密码 "AAgentUniverse_9527" 逐字符 XOR 编码后的值 */
+        var S = [107,112,95,90,40,57,1,53,11,31,21,5,13,224,211,170,175,147,159];
+
+        function verify(input) {
+          if (input.length !== S.length) return false;
+          return S.every(function (c, i) {
+            return (input.charCodeAt(i) ^ (i * 7 + 42)) === c;
+          });
+        }
+
+        var overlay = document.getElementById('authOverlay');
+
+        /* 已有未过期 token，直接通过 */
+        try {
+          var saved = JSON.parse(localStorage.getItem(AUTH_KEY) || '{}');
+          if (saved.t && Date.now() - saved.t < AUTH_TTL) {
+            overlay.remove();
+            return;
+          }
+        } catch (e) {}
+
+        /* 绑定交互 */
+        var inp = document.getElementById('authInput');
+        var btn = document.getElementById('authBtn');
+        var err = document.getElementById('authErr');
+
+        function attempt() {
+          if (verify(inp.value)) {
+            try { localStorage.setItem(AUTH_KEY, JSON.stringify({ t: Date.now() })); } catch(e) {}
+            overlay.style.transition = 'opacity 0.35s';
+            overlay.style.opacity = '0';
+            setTimeout(function () { overlay.remove(); }, 360);
+          } else {
+            err.textContent = '密码错误，请重试';
+            inp.classList.add('shake');
+            inp.value = '';
+            setTimeout(function () { inp.classList.remove('shake'); err.textContent = ''; }, 420);
+          }
+        }
+
+        btn.addEventListener('click', attempt);
+        inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') attempt(); });
+        inp.focus();
+      })();
+
+      /* ── 返回顶部 ──────────────────────────────────────────────── */
+      var backBtn = document.querySelector('.back-top');
+      window.addEventListener('scroll', function () {
+        backBtn.classList.toggle('visible', window.scrollY > 400);
+      }, { passive: true });
+
+      /* ── 编辑 / 预览 模式 ─────────────────────────────────────── */
+      var body      = document.body;
+      var toggleBtn = document.getElementById('modeToggle');
+      var modeIcon  = toggleBtn.querySelector('.mode-icon');
+      var modeLabel = toggleBtn.querySelector('.mode-label');
+      var isEdit    = false;
+
+      /* ── Toast 提示 ──────────────────────────────────────────── */
+      function showToast(msg, isError) {
+        var el = document.getElementById('save-toast');
+        if (!el) return;
+        el.textContent = msg;
+        el.style.background = isError ? '#7f1d1d' : '#1e293b';
+        el.classList.add('show');
+        clearTimeout(el._t);
+        el._t = setTimeout(function () { el.classList.remove('show'); }, 2400);
+      }
+
+      /* ── localStorage 保存 / 恢复 ────────────────────────────── */
+      var STORE_KEY = 'dex-cards-v1';
+
+      /* HTML 转义（重建行时防 XSS） */
+      function esc(s) {
+        return String(s || '')
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      /* 收集单张卡片数据快照 */
+      function collectCard(card) {
+        var d = {};
+        var roleEl = card.querySelector('.dex-role');
+        if (roleEl) d.role = roleEl.textContent;
+
+        /* 关于我（保留 <strong> 等内联标签） */
+        var aboutEl = card.querySelector('.dex-sec > p');
+        if (aboutEl) d.about = aboutEl.innerHTML;
+
+        /* 找我做 / 别找我做 */
+        d.boxes = [];
+        card.querySelectorAll('.dex-split .dex-box').forEach(function (box) {
+          var items = [];
+          box.querySelectorAll('li').forEach(function (li) { items.push(li.textContent); });
+          d.boxes.push(items);
+        });
+
+        /* 示例提示语 */
+        d.asks = [];
+        card.querySelectorAll('.dex-ask li').forEach(function (li) { d.asks.push(li.textContent); });
+
+        /* 技能树各 Phase 行 */
+        d.phases = [];
+        card.querySelectorAll('.st-phase').forEach(function (phase) {
+          var rows = [];
+          phase.querySelectorAll('.st-row').forEach(function (row) {
+            var st = row.querySelector('.st-st');
+            rows.push({
+              id:     (row.querySelector('.st-id')   || {}).textContent || '',
+              name:   (row.querySelector('.st-name') || {}).textContent || '',
+              stText: st ? st.textContent : '📋 规划中',
+              stCls:  st ? st.className   : 'st-st',
+            });
+          });
+          d.phases.push(rows);
+        });
+
+        return d;
+      }
+
+      /* 将快照数据恢复到指定卡片 DOM */
+      function applyCard(card, d) {
+        if (!d) return;
+
+        var roleEl = card.querySelector('.dex-role');
+        if (roleEl && d.role !== undefined) roleEl.textContent = d.role;
+
+        var aboutEl = card.querySelector('.dex-sec > p');
+        if (aboutEl && d.about !== undefined) aboutEl.innerHTML = d.about;
+
+        if (d.boxes) {
+          card.querySelectorAll('.dex-split .dex-box').forEach(function (box, i) {
+            if (!d.boxes[i]) return;
+            var lis = box.querySelectorAll('li');
+            d.boxes[i].forEach(function (text, j) {
+              if (lis[j]) lis[j].textContent = text;
+            });
+          });
+        }
+
+        if (d.asks) {
+          var askLis = card.querySelectorAll('.dex-ask li');
+          d.asks.forEach(function (text, i) {
+            if (askLis[i]) askLis[i].textContent = text;
+          });
+        }
+
+        if (d.phases) {
+          var tree = card.querySelector('.skill-tree');
+          if (!tree) return;
+          var phases = tree.querySelectorAll('.st-phase');
+          d.phases.forEach(function (rows, pi) {
+            var phase = phases[pi];
+            if (!phase) return;
+            phase.querySelectorAll('.st-row').forEach(function (r) { r.remove(); });
+            rows.forEach(function (rd) {
+              var row = document.createElement('div');
+              row.className = 'st-row';
+              row.innerHTML =
+                '<span class="st-id">'   + esc(rd.id)   + '</span>' +
+                '<span class="st-name">' + esc(rd.name) + '</span>' +
+                '<span class="' + esc(rd.stCls) + '">'  + esc(rd.stText) + '</span>';
+              phase.appendChild(row);
+            });
+            updateTree(tree);
+          });
+        }
+      }
+
+      /* 保存全部卡片到 localStorage */
+      function saveLocal() {
+        var snapshot = { v: 1, at: Date.now(), cards: {} };
+        document.querySelectorAll('.dex-card[id]').forEach(function (card) {
+          snapshot.cards[card.id] = collectCard(card);
+        });
+        try {
+          localStorage.setItem(STORE_KEY, JSON.stringify(snapshot));
+          var t = new Date(snapshot.at);
+          var hm = t.getHours() + ':' + String(t.getMinutes()).padStart(2, '0');
+          showToast('✓ 已保存  ' + hm);
+        } catch (e) {
+          showToast('⚠ 保存失败：空间不足', true);
+        }
+      }
+
+      /* 页面加载时从 localStorage 恢复 */
+      function loadLocal() {
+        try {
+          var raw = localStorage.getItem(STORE_KEY);
+          if (!raw) return;
+          var snap = JSON.parse(raw);
+          if (!snap || !snap.cards) return;
+          document.querySelectorAll('.dex-card[id]').forEach(function (card) {
+            applyCard(card, snap.cards[card.id]);
+          });
+        } catch (e) { /* 数据损坏则跳过 */ }
+      }
+
+      /* 自动恢复上次保存的内容 */
+      loadLocal();
+
+      /* 支持内联编辑的元素 */
+      var EDITABLE_SEL = [
+        '.dex-sec > p',
+        '.dex-ask li',
+        '.dex-box li',
+        '.st-name',
+        '.st-id',
+        '.dex-role',
+      ].join(',');
+
+      /* 状态轮换顺序 */
+      var STATUS = [
+        { text: '📋 规划中', cls: '' },
+        { text: '🔨 开发中', cls: 'st-st--dev' },
+        { text: '✅ 已上线', cls: 'st-st--on'  },
+      ];
+
+      /* 轮换单个状态标签 */
+      function cycleStatus(el) {
+        var cur  = el.textContent.trim();
+        var idx  = STATUS.findIndex(function (s) { return s.text === cur; });
+        var next = STATUS[(idx + 1) % STATUS.length];
+        el.textContent = next.text;
+        el.className   = 'st-st ' + next.cls;
+        updateTree(el.closest('.skill-tree'));
+      }
+
+      /* 重新计算技能树全部计数与进度条 */
+      function updateTree(tree) {
+        if (!tree) return;
+        var stSts = tree.querySelectorAll('.st-row .st-st');
+        var total = stSts.length;
+        var on = 0, dev = 0, planned = 0;
+        stSts.forEach(function (el) {
+          var t = el.textContent.trim();
+          if      (t.startsWith('✅')) on++;
+          else if (t.startsWith('🔨')) dev++;
+          else planned++;
+        });
+
+        /* 图例 */
+        var legend = tree.querySelector('.st-legend');
+        if (legend) {
+          legend.innerHTML =
+            '<span>✅ <strong>' + on      + '</strong> 已上线</span>' +
+            '<span>🔨 <strong>' + dev     + '</strong> 开发中</span>' +
+            '<span>📋 <strong>' + planned + '</strong> 规划中</span>';
+        }
+        /* 分数 */
+        var elDone  = tree.querySelector('.st-done');
+        var elTotal = tree.querySelector('.st-total');
+        if (elDone)  elDone.textContent  = on;
+        if (elTotal) elTotal.textContent = total;
+
+        /* 进度条 - 统一使用绿/橙双色混合结构 */
+        var bar = tree.querySelector('.st-bar');
+        if (bar) {
+          if (!bar.classList.contains('st-bar--mixed')) {
+            bar.classList.add('st-bar--mixed');
+            bar.innerHTML =
+              '<div class="st-bar-inner" aria-hidden="true">' +
+              '<span class="st-bar-seg st-bar-seg--on"></span>' +
+              '<span class="st-bar-seg st-bar-seg--dev"></span>' +
+              '</div>';
+          }
+          var segOn  = bar.querySelector('.st-bar-seg--on');
+          var segDev = bar.querySelector('.st-bar-seg--dev');
+          if (segOn)  segOn.style.width  = (total ? on  / total * 100 : 0) + '%';
+          if (segDev) segDev.style.width = (total ? dev / total * 100 : 0) + '%';
+          bar.setAttribute('aria-valuenow',  on);
+          bar.setAttribute('aria-valuemax',  total);
+          bar.setAttribute('aria-valuetext',
+            '已上线 ' + on + '，开发中 ' + dev + '，规划中 ' + planned + '，共 ' + total + ' 项');
+        }
+
+        /* 卡片状态徽章 */
+        var card  = tree.closest('.dex-card');
+        var badge = card && card.querySelector('.dex-status');
+        if (badge) {
+          var parts = [];
+          if (on      > 0) parts.push('✅ ' + on      + ' 已上线');
+          if (dev     > 0) parts.push('🔨 ' + dev     + ' 开发中');
+          if (planned > 0) parts.push('📋 ' + planned + ' 规划中');
+          badge.textContent = parts.join(' · ');
+        }
+      }
+
+      /* 向阶段末尾追加新技能行 */
+      function addSkillRow(phase, tree) {
+        var ids = Array.from(tree.querySelectorAll('.st-id')).map(function (el) {
+          return el.textContent.trim();
+        });
+        var prefix = ids.length
+          ? ids[ids.length - 1].replace(/-\d+$/, '')
+          : 'Skill';
+        var nums = ids.map(function (id) {
+          return parseInt(id.replace(/.*-(\d+)$/, '$1'), 10);
+        }).filter(function (n) { return !isNaN(n); });
+        var maxNum = nums.length ? Math.max.apply(null, nums) : 0;
+        var newId  = prefix + '-' + String(maxNum + 1).padStart(2, '0');
+
+        var row = document.createElement('div');
+        row.className = 'st-row';
+        row.innerHTML =
+          '<span class="st-id"   contenteditable="true">' + newId   + '</span>' +
+          '<span class="st-name" contenteditable="true">新技能</span>' +
+          '<span class="st-st">📋 规划中</span>' +
+          '<button class="st-del-btn" title="删除">×</button>';
+
+        var addBtn = phase.querySelector('.st-add-btn');
+        phase.insertBefore(row, addBtn);
+
+        /* 全选新技能名称 */
+        var nameEl = row.querySelector('.st-name');
+        nameEl.focus();
+        var range = document.createRange();
+        range.selectNodeContents(nameEl);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+
+        updateTree(tree);
+      }
+
+      /* 进入编辑模式 */
+      function enterEdit() {
+        isEdit = true;
+        body.classList.add('edit-mode');
+        modeIcon.textContent  = '👁';
+        modeLabel.textContent = '预览';
+
+        /* 开启 contenteditable */
+        document.querySelectorAll(EDITABLE_SEL).forEach(function (el) {
+          el.contentEditable = 'true';
+        });
+
+        /* 每行追加删除按钮 */
+        document.querySelectorAll('.st-row').forEach(function (row) {
+          if (row.querySelector('.st-del-btn')) return;
+          var btn = document.createElement('button');
+          btn.className   = 'st-del-btn';
+          btn.title       = '删除';
+          btn.textContent = '×';
+          row.appendChild(btn);
+        });
+
+        /* 每个 Phase 追加「+ 添加技能」 */
+        document.querySelectorAll('.st-phase').forEach(function (phase) {
+          var tree = phase.closest('.skill-tree');
+          var btn  = document.createElement('button');
+          btn.className   = 'st-add-btn';
+          btn.textContent = '+ 添加技能';
+          btn.addEventListener('click', function () { addSkillRow(phase, tree); });
+          phase.appendChild(btn);
+        });
+      }
+
+      /* 退出编辑模式 */
+      function exitEdit() {
+        isEdit = false;
+        body.classList.remove('edit-mode');
+        modeIcon.textContent  = '✏️';
+        modeLabel.textContent = '编辑';
+
+        /* 关闭 contenteditable */
+        document.querySelectorAll('[contenteditable="true"]').forEach(function (el) {
+          el.removeAttribute('contenteditable');
+        });
+
+        /* 移除临时按钮 */
+        document.querySelectorAll('.st-add-btn, .st-del-btn').forEach(function (b) {
+          b.remove();
+        });
+      }
+
+      /* 导出当前 DOM 为可部署的 HTML 文件 */
+      function exportHtml() {
+        /* 先退出编辑态，清除临时按钮和 contenteditable */
+        var wasEdit = isEdit;
+        if (wasEdit) exitEdit();
+
+        setTimeout(function () {
+          var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+          var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+          var url  = URL.createObjectURL(blob);
+          var a    = document.createElement('a');
+          a.href     = url;
+          a.download = 'AI员工全部门卡片汇总.html';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          /* 保存完毕后自动重新进入编辑模式 */
+          if (wasEdit) enterEdit();
+        }, 30);
+      }
+
+      /* 模式切换 */
+      toggleBtn.addEventListener('click', function () {
+        if (isEdit) exitEdit(); else enterEdit();
+      });
+
+      document.getElementById('localSaveBtn').addEventListener('click', saveLocal);
+      document.getElementById('exportBtn').addEventListener('click', exportHtml);
+
+      /* 事件委托：状态标签点击轮换 */
+      document.addEventListener('click', function (e) {
+        if (!isEdit) return;
+        if (e.target.closest('button')) return;
+        var st = e.target.closest('.st-st');
+        if (st) cycleStatus(st);
+      });
+
+      /* 事件委托：删除技能行 */
+      document.addEventListener('click', function (e) {
+        if (!isEdit) return;
+        var btn = e.target.closest('.st-del-btn');
+        if (!btn) return;
+        var row  = btn.closest('.st-row');
+        var tree = btn.closest('.skill-tree');
+        if (row) { row.remove(); updateTree(tree); }
+      });
+
+    })();
+  </script>
+</body>
+</html>
