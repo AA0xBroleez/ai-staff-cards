@@ -1574,24 +1574,50 @@
       }
 
       /* 导出当前 DOM 为可部署的 HTML 文件 */
+      /* File System Access API 文件句柄（会话内复用，无需重复选文件） */
+      var _fsHandle = null;
+
       function exportHtml() {
-        /* 先退出编辑态，清除临时按钮和 contenteditable */
         var wasEdit = isEdit;
         if (wasEdit) exitEdit();
 
-        setTimeout(function () {
+        setTimeout(async function () {
           var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+          /* ── File System Access API：首次选文件，之后直接覆盖 ── */
+          if (window.showSaveFilePicker) {
+            try {
+              if (!_fsHandle) {
+                _fsHandle = await window.showSaveFilePicker({
+                  suggestedName: 'index.html',
+                  types: [{ description: 'HTML', accept: { 'text/html': ['.html'] } }]
+                });
+                /* 选好后更新按钮文字，表示后续直接覆盖 */
+                var btn = document.getElementById('exportBtn');
+                if (btn) btn.textContent = '💾 覆盖保存';
+              }
+              var writable = await _fsHandle.createWritable();
+              await writable.write(html);
+              await writable.close();
+              if (wasEdit) enterEdit();
+              showToast('✅ 已覆盖保存到本地文件');
+              return;
+            } catch (e) {
+              if (e.name === 'AbortError') { if (wasEdit) enterEdit(); return; }
+              _fsHandle = null; /* 出错时重置，下次重新选 */
+            }
+          }
+
+          /* ── 降级：直接下载（Firefox / Safari） ── */
           var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
           var url  = URL.createObjectURL(blob);
           var a    = document.createElement('a');
-          a.href     = url;
-          a.download = 'AI员工全部门卡片汇总.html';
-          document.body.appendChild(a);
-          a.click();
+          a.href = url; a.download = 'index.html';
+          document.body.appendChild(a); a.click();
           document.body.removeChild(a);
           URL.revokeObjectURL(url);
-          /* 保存完毕后自动重新进入编辑模式 */
           if (wasEdit) enterEdit();
+          showToast('📥 已下载 index.html，替换本地文件后 git push');
         }, 30);
       }
 
