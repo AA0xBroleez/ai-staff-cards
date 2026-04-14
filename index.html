@@ -704,13 +704,24 @@
     }
   </style>
 </head>
-<body class="">
+<body>
   <!-- 访问密码保护层 -->
-  
+  <div class="auth-overlay" id="authOverlay">
+    <div class="auth-box">
+      <div class="auth-icon">🔐</div>
+      <h2>AI 员工卡片图鉴</h2>
+      <p>请输入访问密码</p>
+      <input class="auth-input" id="authInput" type="password"
+             placeholder="••••••••" autocomplete="current-password" />
+      <button class="auth-btn" id="authBtn">进入</button>
+      <div class="auth-err" id="authErr"></div>
+    </div>
+  </div>
+
 
   <div class="mode-controls">
     <button class="save-btn" id="localSaveBtn" aria-label="保存到浏览器">💾 保存</button>
-    <button class="export-btn" id="exportBtn" aria-label="导出为 HTML 文件">💾 覆盖保存</button>
+    <button class="export-btn" id="exportBtn" aria-label="导出为 HTML 文件">📥 导出</button>
     <button class="mode-toggle" id="modeToggle" aria-label="切换编辑/预览模式">
       <span class="mode-icon">✏️</span><span class="mode-label">编辑</span>
     </button>
@@ -1200,6 +1211,7 @@
         }
 
         var overlay = document.getElementById('authOverlay');
+        if (!overlay) return; /* auth overlay 不存在时跳过（防止导出文件出错） */
 
         /* 已有未过期 token，直接通过 */
         try {
@@ -1214,6 +1226,7 @@
         var inp = document.getElementById('authInput');
         var btn = document.getElementById('authBtn');
         var err = document.getElementById('authErr');
+        if (!inp || !btn) return; /* 防御：输入框不存在时静默退出 */
 
         function attempt() {
           if (verify(inp.value)) {
