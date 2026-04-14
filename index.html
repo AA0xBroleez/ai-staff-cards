@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<html lang="zh-CN"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AI 员工全部门卡片图鉴</title>
   <style>
     :root {
@@ -705,28 +704,18 @@
     }
   </style>
 </head>
-<body>
+<body class="">
   <!-- 访问密码保护层 -->
-  <div class="auth-overlay" id="authOverlay">
-    <div class="auth-box">
-      <div class="auth-icon">🔐</div>
-      <h2>AI 员工卡片图鉴</h2>
-      <p>请输入访问密码</p>
-      <input class="auth-input" id="authInput" type="password"
-             placeholder="••••••••" autocomplete="current-password" />
-      <button class="auth-btn" id="authBtn">进入</button>
-      <div class="auth-err" id="authErr"></div>
-    </div>
-  </div>
+  
 
   <div class="mode-controls">
-    <button class="save-btn"   id="localSaveBtn" aria-label="保存到浏览器">💾 保存</button>
-    <button class="export-btn" id="exportBtn"    aria-label="导出为 HTML 文件">📥 导出</button>
-    <button class="mode-toggle" id="modeToggle"  aria-label="切换编辑/预览模式">
+    <button class="save-btn" id="localSaveBtn" aria-label="保存到浏览器">💾 保存</button>
+    <button class="export-btn" id="exportBtn" aria-label="导出为 HTML 文件">💾 覆盖保存</button>
+    <button class="mode-toggle" id="modeToggle" aria-label="切换编辑/预览模式">
       <span class="mode-icon">✏️</span><span class="mode-label">编辑</span>
     </button>
   </div>
-  <div id="save-toast" class="save-toast" role="status" aria-live="polite"></div>
+  <div id="save-toast" class="save-toast show" role="status" aria-live="polite" style="background: rgb(30, 41, 59);">✅ 已覆盖保存到本地文件</div>
   <header class="dex-top">
     <h1>AI 员工全部门卡片图鉴</h1>
     <div class="stats">
@@ -760,7 +749,7 @@
     <!-- NO.001 Star -->
     <article id="no-001" class="dex-card theme-bs">
       <div class="dex-card-head">
-        <img class="dex-avatar" src="./avatars/star.png" width="64" height="64" alt="Star" />
+        <img class="dex-avatar" src="./avatars/star.png" width="64" height="64" alt="Star">
         <div class="dex-head-main">
           <div class="dex-name-row"><span class="dex-no">NO.001</span><h2>Star</h2></div>
           <p class="dex-role">BS · 业务支持 · 流程与多线作战</p>
@@ -847,11 +836,11 @@
     <!-- NO.002 Lumi -->
     <article id="no-002" class="dex-card theme-hr-lumi">
       <div class="dex-card-head">
-        <img class="dex-avatar" src="./avatars/lumi.png" width="64" height="64" alt="Lumi" />
+        <img class="dex-avatar" src="./avatars/lumi.png" width="64" height="64" alt="Lumi">
         <div class="dex-head-main">
           <div class="dex-name-row"><span class="dex-no">NO.002</span><h2>Lumi</h2></div>
           <p class="dex-role">HR · ElevateSphere / Sage · 员工体验</p>
-          <span class="dex-status">📋 待实现 · HR-01 / 02</span>
+          <span class="dex-status">🔨 1 开发中 · 📋 1 规划中</span>
         </div>
       </div>
       <p class="dex-tags"><strong>温暖耐心 · 亲和细腻</strong> · 边界感强、温柔但坚定；先问实体与国家，敏感区不猜不编。</p>
@@ -887,15 +876,15 @@
           <div class="skill-tree">
             <div class="st-title-row">
               <h3 class="st-heading">🧩 技能树</h3>
-              <div class="st-legend"><span>✅ <strong>0</strong> 已上线</span><span>🔨 <strong>0</strong> 开发中</span><span>📋 <strong>2</strong> 规划中</span></div>
+              <div class="st-legend"><span>✅ <strong>0</strong> 已上线</span><span>🔨 <strong>1</strong> 开发中</span><span>📋 <strong>1</strong> 规划中</span></div>
             </div>
             <div class="st-progress-row">
               <span class="st-frac"><span class="st-done">0</span><span class="st-sep">/</span><span class="st-total">2</span></span>
-              <div class="st-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="2" aria-label="已上线技能占比"><div class="st-bar-fill" style="width:0%"></div></div>
+              <div class="st-bar st-bar--mixed" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="2" aria-label="已上线技能占比" aria-valuetext="已上线 0，开发中 1，规划中 1，共 2 项"><div class="st-bar-inner" aria-hidden="true"><span class="st-bar-seg st-bar-seg--on" style="width: 0%;"></span><span class="st-bar-seg st-bar-seg--dev" style="width: 50%;"></span></div></div>
             </div>
             <div class="st-phase">
               <h4>Phase 1.0<span class="st-phase-desc">政策与入职</span></h4>
-              <div class="st-row"><span class="st-id">HR-01</span><span class="st-name">Lumi 政策与入职引导（阶段 1）</span><span class="st-st">📋 规划中</span></div>
+              <div class="st-row"><span class="st-id">HR-01</span><span class="st-name">Lumi 政策与入职引导（阶段 1）</span><span class="st-st st-st--dev">🔨 开发中</span></div>
             </div>
             <div class="st-phase">
               <h4>Phase 2.0<span class="st-phase-desc">Workday</span></h4>
@@ -910,7 +899,7 @@
     <!-- NO.003 Grant -->
     <article id="no-003" class="dex-card theme-treasury">
       <div class="dex-card-head">
-        <img class="dex-avatar" src="./avatars/grant.png" width="64" height="64" alt="Grant" />
+        <img class="dex-avatar" src="./avatars/grant.png" width="64" height="64" alt="Grant">
         <div class="dex-head-main">
           <div class="dex-name-row"><span class="dex-no">NO.003</span><h2>Grant</h2></div>
           <p class="dex-role">Treasury · 资金运营 · 开户助理</p>
@@ -954,11 +943,11 @@
     <!-- NO.004 Astro -->
     <article id="no-004" class="dex-card theme-recruiting">
       <div class="dex-card-head">
-        <img class="dex-avatar" src="./avatars/astro.png" width="64" height="64" alt="Astro" />
+        <img class="dex-avatar" src="./avatars/astro.png" width="64" height="64" alt="Astro">
         <div class="dex-head-main">
           <div class="dex-name-row"><span class="dex-no">NO.004</span><h2>Astro</h2></div>
           <p class="dex-role">HR · 招聘产品线 · The Proactive Talent Partner</p>
-          <span class="dex-status">📋 待实现 · Astro-01～08</span>
+          <span class="dex-status">🔨 2 开发中 · 📋 6 规划中</span>
         </div>
       </div>
       <p class="dex-tags"><strong>热情活泼 · 推进感强</strong> · 主动积极但不越界；Owner + Due 写清楚。</p>
@@ -975,17 +964,17 @@
           <div class="skill-tree">
             <div class="st-title-row">
               <h3 class="st-heading">🧩 技能树</h3>
-              <div class="st-legend"><span>✅ <strong>0</strong> 已上线</span><span>🔨 <strong>0</strong> 开发中</span><span>📋 <strong>8</strong> 规划中</span></div>
+              <div class="st-legend"><span>✅ <strong>0</strong> 已上线</span><span>🔨 <strong>2</strong> 开发中</span><span>📋 <strong>6</strong> 规划中</span></div>
             </div>
             <div class="st-progress-row">
               <span class="st-frac"><span class="st-done">0</span><span class="st-sep">/</span><span class="st-total">8</span></span>
-              <div class="st-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="8" aria-label="已上线技能占比"><div class="st-bar-fill" style="width:0%"></div></div>
+              <div class="st-bar st-bar--mixed" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="8" aria-label="已上线技能占比" aria-valuetext="已上线 0，开发中 2，规划中 6，共 8 项"><div class="st-bar-inner" aria-hidden="true"><span class="st-bar-seg st-bar-seg--on" style="width: 0%;"></span><span class="st-bar-seg st-bar-seg--dev" style="width: 25%;"></span></div></div>
             </div>
             <div class="st-phase">
               <h4>Phase 1.0<span class="st-phase-desc">JD · 审批 · 寻源 · 筛选</span></h4>
-              <div class="st-row"><span class="st-id">Astro-01</span><span class="st-name">JD Forge</span><span class="st-st">📋 规划中</span></div>
+              <div class="st-row"><span class="st-id">Astro-01</span><span class="st-name">JD Forge</span><span class="st-st st-st--dev">🔨 开发中</span></div>
               <div class="st-row"><span class="st-id">Astro-02</span><span class="st-name">Guardian Approval</span><span class="st-st">📋 规划中</span></div>
-              <div class="st-row"><span class="st-id">Astro-03</span><span class="st-name">Talent Scout / Sourcing</span><span class="st-st">📋 规划中</span></div>
+              <div class="st-row"><span class="st-id">Astro-03</span><span class="st-name">Talent Scout / Sourcing</span><span class="st-st st-st--dev">🔨 开发中</span></div>
               <div class="st-row"><span class="st-id">Astro-04</span><span class="st-name">Screening Bot</span><span class="st-st">📋 规划中</span></div>
             </div>
             <div class="st-phase">
@@ -1003,7 +992,7 @@
     <!-- NO.005 Amy -->
     <article id="no-005" class="dex-card theme-compliance">
       <div class="dex-card-head">
-        <img class="dex-avatar" src="./avatars/amy.png" width="64" height="64" alt="Amy" />
+        <img class="dex-avatar" src="./avatars/amy.png" width="64" height="64" alt="Amy">
         <div class="dex-head-main">
           <div class="dex-name-row"><span class="dex-no">NO.005</span><h2>Amy</h2></div>
           <p class="dex-role">Compliance · AA &amp; NS · AML/KYC</p>
@@ -1053,7 +1042,7 @@
     <!-- NO.006 Finley -->
     <article id="no-006" class="dex-card theme-nsfin">
       <div class="dex-card-head">
-        <img class="dex-avatar" src="./avatars/finley.png" width="64" height="64" alt="Finley" />
+        <img class="dex-avatar" src="./avatars/finley.png" width="64" height="64" alt="Finley">
         <div class="dex-head-main">
           <div class="dex-name-row"><span class="dex-no">NO.006</span><h2>Finley</h2></div>
           <p class="dex-role">NS-Finance · FinFlow · 加密付款</p>
@@ -1097,7 +1086,7 @@
     <!-- NO.007 Grove -->
     <article id="no-007" class="dex-card theme-osm">
       <div class="dex-card-head">
-        <img class="dex-avatar" src="./avatars/grove.png" width="64" height="64" alt="Grove" />
+        <img class="dex-avatar" src="./avatars/grove.png" width="64" height="64" alt="Grove">
         <div class="dex-head-main">
           <div class="dex-name-row"><span class="dex-no">NO.007</span><h2>Grove</h2></div>
           <p class="dex-role">OSM · Prime · 电费贷主链</p>
@@ -1140,7 +1129,7 @@
     <!-- NO.008 松饼 -->
     <article id="no-008" class="dex-card theme-cango">
       <div class="dex-card-head">
-        <img class="dex-avatar" src="./avatars/songbing.png" width="64" height="64" alt="松饼" />
+        <img class="dex-avatar" src="./avatars/songbing.png" width="64" height="64" alt="松饼">
         <div class="dex-head-main">
           <div class="dex-name-row"><span class="dex-no">NO.008</span><h2>松饼</h2></div>
           <p class="dex-role">Cango · 战略部 · 情报与材料</p>
@@ -1179,7 +1168,7 @@
     </div><!-- /.cards-grid -->
 
     <section id="appendix" class="appendix">
-      <strong>附录</strong> · Markdown 全文：<a href="./AI员工全部门卡片汇总.md">AI员工全部门卡片汇总.md</a><br />
+      <strong>附录</strong> · Markdown 全文：<a href="./AI员工全部门卡片汇总.md">AI员工全部门卡片汇总.md</a><br>
       头像：<code>excels/avatars/lumi.png</code>、<code>amy.png</code>；其余为首字母 / 字占位。请从本 HTML 所在目录打开以加载图片与 CSV 链接。
     </section>
 
@@ -1187,8 +1176,11 @@
     </div><!-- /.main-col -->
   </div>
 
-  <a href="#" class="back-top" aria-label="返回顶部">▲ 顶部</a>
+  <a href="#" class="back-top visible" aria-label="返回顶部">▲ 顶部</a>
   <script>
+    /* 在 auth IIFE 运行（可能 remove overlay）之前保存原始 HTML */
+    var _authOverlayHtml = (document.getElementById('authOverlay') || {outerHTML:''}).outerHTML;
+
     (function () {
 
       /* ── 访问密码保护 ────────────────────────────────────────────
@@ -1582,7 +1574,38 @@
         if (wasEdit) exitEdit();
 
         setTimeout(async function () {
-          var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+          /* ── 导出前清理运行时状态，确保导出 HTML 与源文件一致 ── */
+          /* 1. 还原 auth overlay（认证后已被 remove()） */
+          var overlayRestored = false;
+          if (_authOverlayHtml && !document.getElementById('authOverlay')) {
+            var tmp = document.createElement('div');
+            tmp.innerHTML = _authOverlayHtml;
+            document.body.insertBefore(tmp.firstElementChild, document.body.firstElementChild);
+            overlayRestored = true;
+          }
+          /* 2. 隐藏 toast 的 show 状态和 back-top 的 visible 状态 */
+          var toast = document.getElementById('save-toast');
+          var toastShow = toast && toast.classList.contains('show');
+          var toastStyle = toast ? toast.getAttribute('style') : null;
+          if (toast) { toast.classList.remove('show'); toast.removeAttribute('style'); }
+          var backTop = document.querySelector('.back-top');
+          var backTopVisible = backTop && backTop.classList.contains('visible');
+          if (backTopVisible) backTop.classList.remove('visible');
+          /* 3. 清理 body class（编辑模式已由 exitEdit 处理，但防止残留） */
+          document.body.className = '';
+
+          var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML + '\n';
+
+          /* ── 恢复 DOM 到导出前状态 ── */
+          if (overlayRestored) {
+            var el = document.getElementById('authOverlay');
+            if (el) el.remove();
+          }
+          if (toast) {
+            if (toastShow) toast.classList.add('show');
+            if (toastStyle) toast.setAttribute('style', toastStyle);
+          }
+          if (backTopVisible) backTop.classList.add('visible');
 
           /* ── File System Access API：首次选文件，之后直接覆盖 ── */
           if (window.showSaveFilePicker) {
@@ -1649,5 +1672,6 @@
 
     })();
   </script>
-</body>
-</html>
+
+
+</body></html>
