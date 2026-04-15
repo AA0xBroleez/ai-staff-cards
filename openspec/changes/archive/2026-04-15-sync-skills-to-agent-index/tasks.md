@@ -47,6 +47,6 @@
 
 ## 7. Git 提交
 
-- [ ] 7.1 `git add index.html openspec/changes/sync-skills-to-agent-index`（只添加本次变更文件，避免误带入其他未追踪目录）
-- [ ] 7.2 创建 commit，信息描述"sync agent index.html to SKILL plan + add Common capability card"
-- [ ] 7.3 `git push` 到远端 main 分支
+- [x] 7.1 `git add index.html openspec/changes/sync-skills-to-agent-index`（只添加本次变更文件，避免误带入其他未追踪目录）
+- [x] 7.2 创建 commit，信息描述"sync agent index.html to SKILL plan + add Common capability card"（commit 6e49a4d）
+- [x] 7.3 `git push` 到远端 main 分支（7165c99..6e49a4d main -> main）
