@@ -381,6 +381,20 @@
     .theme-osm .chip { background: #dcfce7; color: #14532d; border-color: #bbf7d0; }
     .theme-cango { --accent: #9333ea; border-top: 4px solid #a855f7; }
     .theme-cango .dex-avatar-letter { background: linear-gradient(135deg, #c084fc, #6d28d9); font-size: 1.1rem; }
+    /* NO.009 通用能力：跨部门通用 Skill 聚合卡 */
+    .theme-common { --accent: #4f46e5; border-top: 4px solid #6366f1; }
+    .theme-common .dex-avatar-letter { background: linear-gradient(135deg, #818cf8, #4c1d95); }
+    .theme-common .dex-box h4 { color: #4338ca; }
+    .theme-common .chip { background: #eef2ff; color: #3730a3; border-color: #c7d2fe; }
+
+    /* ⛔ 阻塞状态：红/砖色系，与 ✅ 已上线（绿）/ 🔨 开发中（橙）/ 📋 规划中（灰）区分 */
+    .skill-tree .st-st--blk {
+      color: #b91c1c;
+      font-weight: 600;
+    }
+    .skill-tree .st-bar-seg--blk {
+      background: linear-gradient(90deg, #f87171, #b91c1c);
+    }
 
     .appendix {
       background: var(--card);
@@ -730,9 +744,9 @@
   <header class="dex-top">
     <h1>AI 员工全部门卡片图鉴</h1>
     <div class="stats">
-      <span>8 Agents</span>
+      <span>9 Agents</span>
       <span>·</span>
-      <span>BS / HR / Treasury / Compliance / NS-Finance / OSM / Cango</span>
+      <span>BS / HR / Treasury / Compliance / NS-Finance / OSM / Cango / Common</span>
       <span>·</span>
       <span>✅ BS Phase 1&amp;2 部分已上线</span>
     </div>
@@ -750,6 +764,7 @@
         <li><a href="#no-006">NO.006 Finley</a></li>
         <li><a href="#no-007">NO.007 Grove</a></li>
         <li><a href="#no-008">NO.008 松饼</a></li>
+        <li><a href="#no-009">NO.009 通用能力</a></li>
         <li><a href="#appendix">附录</a></li>
       </ul>
     </nav>
@@ -764,7 +779,7 @@
         <div class="dex-head-main">
           <div class="dex-name-row"><span class="dex-no">NO.001</span><h2>Star</h2></div>
           <p class="dex-role">BS · 业务支持 · 流程与多线作战</p>
-          <span class="dex-status">✅ 4 已上线 · 🔨 11 开发中 · 📋 1 规划中</span>
+          <span class="dex-status">✅ 4 已上线 · 🔨 8 开发中</span>
         </div>
       </div>
       <p class="dex-tags"><strong>严谨可靠 · 主动积极 · 清晰有效沟通 · 情绪稳定有耐心 · 执行力强 · 有责任心 · 细致有温度</strong></p>
@@ -803,14 +818,14 @@
           <div class="skill-tree">
             <div class="st-title-row">
               <h3 class="st-heading">🧩 技能树</h3>
-              <div class="st-legend"><span>✅ <strong>4</strong> 已上线</span><span>🔨 <strong>11</strong> 开发中</span><span>📋 <strong>1</strong> 规划中</span></div>
+              <div class="st-legend"><span>✅ <strong>4</strong> 已上线</span><span>🔨 <strong>8</strong> 开发中</span></div>
             </div>
             <div class="st-progress-row">
-              <span class="st-frac"><span class="st-done">4</span><span class="st-sep">/</span><span class="st-total">16</span></span>
-              <div class="st-bar st-bar--mixed" role="progressbar" aria-valuenow="4" aria-valuemin="0" aria-valuemax="16" aria-label="技能交付进度" aria-valuetext="已上线 4，开发中 11，规划中 1，共 16 项">
+              <span class="st-frac"><span class="st-done">4</span><span class="st-sep">/</span><span class="st-total">12</span></span>
+              <div class="st-bar st-bar--mixed" role="progressbar" aria-valuenow="4" aria-valuemin="0" aria-valuemax="12" aria-label="技能交付进度" aria-valuetext="已上线 4，开发中 8，共 12 项">
                 <div class="st-bar-inner" aria-hidden="true">
-                  <span class="st-bar-seg st-bar-seg--on" style="width:25%"></span>
-                  <span class="st-bar-seg st-bar-seg--dev" style="width:68.75%"></span>
+                  <span class="st-bar-seg st-bar-seg--on" style="width:33.33%"></span>
+                  <span class="st-bar-seg st-bar-seg--dev" style="width:66.67%"></span>
                 </div>
               </div>
             </div>
@@ -823,22 +838,19 @@
               <h4>Phase 2.0<span class="st-phase-desc">NS 系统 &amp; 沟通工具</span></h4>
               <div class="st-row"><span class="st-id">BS-03</span><span class="st-name">NS 系统数据查询</span><span class="st-st st-st--on">✅ 已上线</span></div>
               <div class="st-row"><span class="st-id">BS-04</span><span class="st-name">业务线邮件模板</span><span class="st-st st-st--on">✅ 已上线</span></div>
-              <div class="st-row"><span class="st-id">BS-05</span><span class="st-name">NS 系统交互</span><span class="st-st">📋 规划中</span></div>
             </div>
             <div class="st-phase">
-              <h4>分册<span class="st-phase-desc">通用与各业务线工作流</span></h4>
-              <div class="st-row"><span class="st-id">BS-06</span><span class="st-name">BS 通用工作流</span><span class="st-st st-st--dev">🔨 开发中</span></div>
-              <div class="st-row"><span class="st-id">BS-07</span><span class="st-name">量化业务线工作流</span><span class="st-st st-st--dev">🔨 开发中</span></div>
-              <div class="st-row"><span class="st-id">BS-08</span><span class="st-name">配资业务线工作流</span><span class="st-st st-st--dev">🔨 开发中</span></div>
-              <div class="st-row"><span class="st-id">BS-09</span><span class="st-name">质押借贷（内）工作流</span><span class="st-st st-st--dev">🔨 开发中</span></div>
-              <div class="st-row"><span class="st-id">BS-10</span><span class="st-name">质押借贷（外）工作流</span><span class="st-st st-st--dev">🔨 开发中</span></div>
-              <div class="st-row"><span class="st-id">BS-11</span><span class="st-name">外汇与支付 Pay 工作流</span><span class="st-st st-st--dev">🔨 开发中</span></div>
-              <div class="st-row"><span class="st-id">BS-12</span><span class="st-name">机构交易 Trading 工作流</span><span class="st-st st-st--dev">🔨 开发中</span></div>
-              <div class="st-row"><span class="st-id">BS-13</span><span class="st-name">RWA 业务线工作流</span><span class="st-st st-st--dev">🔨 开发中</span></div>
-              <div class="st-row"><span class="st-id">BS-14</span><span class="st-name">Defi 业务线工作流</span><span class="st-st st-st--dev">🔨 开发中</span></div>
-              <div class="st-row"><span class="st-id">BS-15</span><span class="st-name">AE 小流程</span><span class="st-st st-st--dev">🔨 开发中</span></div>
-              <div class="st-row"><span class="st-id">BS-16</span><span class="st-name">Mining 合资工作流</span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <h4>分册<span class="st-phase-desc">工单处理与业务线工作流（Nexus）</span></h4>
+              <div class="st-row"><span class="st-id">BS-05</span><span class="st-name">需求意图分类 <code>bs-intake-classifying</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">BS-06</span><span class="st-name">工单字段抽取 <code>bs-intake-field-extracting</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">BS-07</span><span class="st-name">工单状态变更通知 <code>bs-intake-status-notifying</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">BS-08</span><span class="st-name">业务线工作流路由 <code>bs-workflow-routing</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">BS-09</span><span class="st-name">BS 通用工作流底层 <code>bs-common-workflow</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">BS-10</span><span class="st-name">AE 新能源小流程 <code>bs-ae-small-flow</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">BS-11</span><span class="st-name">Mining 合资立项与入资 <code>bs-mining-jv-setup</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">BS-12</span><span class="st-name">Mining 合资日常运营 <code>bs-mining-jv-operation</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
             </div>
+            <p class="st-footnote">完整技术标识见 SKILL 索引：<code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。</p>
           </div>
         </div>
       </div>
@@ -851,7 +863,7 @@
         <div class="dex-head-main">
           <div class="dex-name-row"><span class="dex-no">NO.002</span><h2>Lumi</h2></div>
           <p class="dex-role">HR · ElevateSphere / Sage · 员工体验</p>
-          <span class="dex-status">🔨 1 开发中 · 📋 1 规划中</span>
+          <span class="dex-status">🔨 5 开发中 · ⛔ 2 阻塞</span>
         </div>
       </div>
       <p class="dex-tags"><strong>温暖耐心 · 亲和细腻</strong> · 边界感强、温柔但坚定；先问实体与国家，敏感区不猜不编。</p>
@@ -887,21 +899,29 @@
           <div class="skill-tree">
             <div class="st-title-row">
               <h3 class="st-heading">🧩 技能树</h3>
-              <div class="st-legend"><span>✅ <strong>0</strong> 已上线</span><span>🔨 <strong>1</strong> 开发中</span><span>📋 <strong>1</strong> 规划中</span></div>
+              <div class="st-legend"><span>🔨 <strong>5</strong> 开发中</span><span>⛔ <strong>2</strong> 阻塞</span></div>
             </div>
             <div class="st-progress-row">
-              <span class="st-frac"><span class="st-done">0</span><span class="st-sep">/</span><span class="st-total">2</span></span>
-              <div class="st-bar st-bar--mixed" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="2" aria-label="已上线技能占比" aria-valuetext="已上线 0，开发中 1，规划中 1，共 2 项"><div class="st-bar-inner" aria-hidden="true"><span class="st-bar-seg st-bar-seg--on" style="width: 0%;"></span><span class="st-bar-seg st-bar-seg--dev" style="width: 50%;"></span></div></div>
+              <span class="st-frac"><span class="st-done">0</span><span class="st-sep">/</span><span class="st-total">7</span></span>
+              <div class="st-bar st-bar--mixed" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="7" aria-label="技能交付进度" aria-valuetext="已上线 0，开发中 5，阻塞 2，共 7 项"><div class="st-bar-inner" aria-hidden="true"><span class="st-bar-seg st-bar-seg--on" style="width: 0%;"></span><span class="st-bar-seg st-bar-seg--dev" style="width: 71.43%;"></span><span class="st-bar-seg st-bar-seg--blk" style="width: 28.57%;"></span></div></div>
             </div>
             <div class="st-phase">
-              <h4>Phase 1.0<span class="st-phase-desc">政策与入职</span></h4>
-              <div class="st-row"><span class="st-id">HR-01</span><span class="st-name">Lumi 政策与入职引导（阶段 1）</span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <h4>Phase 1.0<span class="st-phase-desc">政策问答与路由（Sage）</span></h4>
+              <div class="st-row"><span class="st-id">HR-01</span><span class="st-name">政策意图分类 <code>hr-policy-intent-classifying</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">HR-02</span><span class="st-name">政策检索与引用回复 <code>hr-policy-retrieving</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">HR-03</span><span class="st-name">敏感/危机升级路由 <code>hr-escalation-routing</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
             </div>
             <div class="st-phase">
-              <h4>Phase 2.0<span class="st-phase-desc">Workday</span></h4>
-              <div class="st-row"><span class="st-id">HR-02</span><span class="st-name">Workday 运营助手（阶段 2）</span><span class="st-st">📋 规划中</span></div>
+              <h4>Phase 2.0<span class="st-phase-desc">入职与绩效素材（Lumi）</span></h4>
+              <div class="st-row"><span class="st-id">HR-04</span><span class="st-name">入职进度跟踪 <code>hr-onboarding-progress-tracking</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">HR-05</span><span class="st-name">绩效素材采集与评语草稿 <code>hr-performance-material-capturing</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
             </div>
-            <p class="st-footnote">招聘产品线八技能由 <strong>NO.004 Astro</strong> 承载，见 <a href="#no-004">技能树</a> 与 HR CSV「Astro 招聘」行。</p>
+            <div class="st-phase">
+              <h4>Phase 3.0<span class="st-phase-desc">Workday 与权限自动化（外部依赖待解）</span></h4>
+              <div class="st-row"><span class="st-id">HR-06</span><span class="st-name" title="Workday 字段白名单需 2026-04-22 前确认（P0）">Workday 字段查询 <code>hr-workday-querying</code></span><span class="st-st st-st--blk">⛔ 阻塞</span></div>
+              <div class="st-row"><span class="st-id">HR-07</span><span class="st-name" title="跨系统权限 API 协议未确认（Phase 2.0）">账户权限自动化 <code>hr-account-permission-automating</code></span><span class="st-st st-st--blk">⛔ 阻塞</span></div>
+            </div>
+            <p class="st-footnote">招聘产品线技能由 <strong>NO.004 Astro</strong> 承载，见 <a href="#no-004">技能树</a>；完整技术标识见 <code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。</p>
           </div>
         </div>
       </div>
@@ -914,7 +934,7 @@
         <div class="dex-head-main">
           <div class="dex-name-row"><span class="dex-no">NO.003</span><h2>Grant</h2></div>
           <p class="dex-role">Treasury · 资金运营 · 开户助理</p>
-          <span class="dex-status">📋 待实现 · 3 分册</span>
+          <span class="dex-status">🔨 2 开发中 · ⛔ 1 阻塞</span>
         </div>
       </div>
       <p class="dex-tags"><strong>严谨认真 · 字斟句酌</strong> · 对外克制稳重，草稿与出处标清楚。</p>
@@ -931,21 +951,22 @@
           <div class="skill-tree">
             <div class="st-title-row">
               <h3 class="st-heading">🧩 技能树</h3>
-              <div class="st-legend"><span>✅ <strong>0</strong> 已上线</span><span>🔨 <strong>0</strong> 开发中</span><span>📋 <strong>3</strong> 规划中</span></div>
+              <div class="st-legend"><span>🔨 <strong>2</strong> 开发中</span><span>⛔ <strong>1</strong> 阻塞</span></div>
             </div>
             <div class="st-progress-row">
               <span class="st-frac"><span class="st-done">0</span><span class="st-sep">/</span><span class="st-total">3</span></span>
-              <div class="st-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="3" aria-label="已上线技能占比"><div class="st-bar-fill" style="width:0%"></div></div>
+              <div class="st-bar st-bar--mixed" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="3" aria-label="技能交付进度" aria-valuetext="已上线 0，开发中 2，阻塞 1，共 3 项"><div class="st-bar-inner" aria-hidden="true"><span class="st-bar-seg st-bar-seg--on" style="width: 0%;"></span><span class="st-bar-seg st-bar-seg--dev" style="width: 66.67%;"></span><span class="st-bar-seg st-bar-seg--blk" style="width: 33.33%;"></span></div></div>
             </div>
             <div class="st-phase">
-              <h4>Phase 1.0<span class="st-phase-desc">开户与 KYC</span></h4>
-              <div class="st-row"><span class="st-id">Treasury-01</span><span class="st-name">开户表格智能填单</span><span class="st-st">📋 规划中</span></div>
-              <div class="st-row"><span class="st-id">Treasury-02</span><span class="st-name">KYC 知识库与银行答复辅助</span><span class="st-st">📋 规划中</span></div>
+              <h4>Phase 1.0<span class="st-phase-desc">开户与 KYC（Vault / KYC）</span></h4>
+              <div class="st-row"><span class="st-id">Treasury-01</span><span class="st-name">开户表格智能填单 <code>treasury-account-form-filling</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">Treasury-02</span><span class="st-name">KYC 全流程处理（retrieve / draft）<code>treasury-kyc-processing</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
             </div>
             <div class="st-phase">
-              <h4>Phase 2.0<span class="st-phase-desc">付款侧</span></h4>
-              <div class="st-row"><span class="st-id">Treasury-03</span><span class="st-name">支付审核辅助</span><span class="st-st">📋 规划中</span></div>
+              <h4>Phase 2.0<span class="st-phase-desc">付款侧（5 项澄清待闭环）</span></h4>
+              <div class="st-row"><span class="st-id">Treasury-03</span><span class="st-name" title="5 项待澄清全部闭环才可开发">支付审核辅助 <code>treasury-payment-reviewing</code></span><span class="st-st st-st--blk">⛔ 阻塞</span></div>
             </div>
+            <p class="st-footnote">完整技术标识见 SKILL 索引：<code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。</p>
           </div>
           </div>
       </div>
@@ -958,7 +979,7 @@
         <div class="dex-head-main">
           <div class="dex-name-row"><span class="dex-no">NO.004</span><h2>Astro</h2></div>
           <p class="dex-role">HR · 招聘产品线 · The Proactive Talent Partner</p>
-          <span class="dex-status">🔨 2 开发中 · 📋 6 规划中</span>
+          <span class="dex-status">🔨 11 开发中 · ⛔ 1 阻塞</span>
         </div>
       </div>
       <p class="dex-tags"><strong>热情活泼 · 推进感强</strong> · 主动积极但不越界；Owner + Due 写清楚。</p>
@@ -975,26 +996,37 @@
           <div class="skill-tree">
             <div class="st-title-row">
               <h3 class="st-heading">🧩 技能树</h3>
-              <div class="st-legend"><span>✅ <strong>0</strong> 已上线</span><span>🔨 <strong>2</strong> 开发中</span><span>📋 <strong>6</strong> 规划中</span></div>
+              <div class="st-legend"><span>🔨 <strong>11</strong> 开发中</span><span>⛔ <strong>1</strong> 阻塞</span></div>
             </div>
             <div class="st-progress-row">
-              <span class="st-frac"><span class="st-done">0</span><span class="st-sep">/</span><span class="st-total">8</span></span>
-              <div class="st-bar st-bar--mixed" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="8" aria-label="已上线技能占比" aria-valuetext="已上线 0，开发中 2，规划中 6，共 8 项"><div class="st-bar-inner" aria-hidden="true"><span class="st-bar-seg st-bar-seg--on" style="width: 0%;"></span><span class="st-bar-seg st-bar-seg--dev" style="width: 25%;"></span></div></div>
+              <span class="st-frac"><span class="st-done">0</span><span class="st-sep">/</span><span class="st-total">12</span></span>
+              <div class="st-bar st-bar--mixed" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="12" aria-label="技能交付进度" aria-valuetext="已上线 0，开发中 11，阻塞 1，共 12 项"><div class="st-bar-inner" aria-hidden="true"><span class="st-bar-seg st-bar-seg--on" style="width: 0%;"></span><span class="st-bar-seg st-bar-seg--dev" style="width: 91.67%;"></span><span class="st-bar-seg st-bar-seg--blk" style="width: 8.33%;"></span></div></div>
             </div>
             <div class="st-phase">
-              <h4>Phase 1.0<span class="st-phase-desc">JD · 审批 · 寻源 · 筛选</span></h4>
-              <div class="st-row"><span class="st-id">Astro-01</span><span class="st-name">JD Forge</span><span class="st-st st-st--dev">🔨 开发中</span></div>
-              <div class="st-row"><span class="st-id">Astro-02</span><span class="st-name">Guardian Approval</span><span class="st-st">📋 规划中</span></div>
-              <div class="st-row"><span class="st-id">Astro-03</span><span class="st-name">Talent Scout / Sourcing</span><span class="st-st st-st--dev">🔨 开发中</span></div>
-              <div class="st-row"><span class="st-id">Astro-04</span><span class="st-name">Screening Bot</span><span class="st-st">📋 规划中</span></div>
+              <h4>Phase 1.0<span class="st-phase-desc">JD 生成与仓库管理</span></h4>
+              <div class="st-row"><span class="st-id">Astro-01</span><span class="st-name">Astro JD 草稿生成 <code>astro-jd-draft-generating</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">Astro-02</span><span class="st-name">Astro JD 仓库管理 <code>astro-jd-repository-managing</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">Astro-03</span><span class="st-name">HR JD 草稿生成 <code>hr-jd-drafting</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">Astro-04</span><span class="st-name">HR JD 仓库管理 <code>hr-jd-repository-managing</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
             </div>
             <div class="st-phase">
-              <h4>Phase 2.0<span class="st-phase-desc">面试编排 · Offer · 沉淀</span></h4>
-              <div class="st-row"><span class="st-id">Astro-05</span><span class="st-name">Interview Concierge</span><span class="st-st">📋 规划中</span></div>
-              <div class="st-row"><span class="st-id">Astro-06</span><span class="st-name">Voice/Video Prescreen</span><span class="st-st">📋 规划中</span></div>
-              <div class="st-row"><span class="st-id">Astro-07</span><span class="st-name">Offer Management</span><span class="st-st">📋 规划中</span></div>
-              <div class="st-row"><span class="st-id">Astro-08</span><span class="st-name">JD Repository</span><span class="st-st">📋 规划中</span></div>
+              <h4>Phase 2.0<span class="st-phase-desc">筛选与面试调度</span></h4>
+              <div class="st-row"><span class="st-id">Astro-05</span><span class="st-name">Astro 初筛调度 <code>astro-screening-scheduling</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">Astro-06</span><span class="st-name">Astro 初筛摘要 <code>astro-screening-summarizing</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">Astro-07</span><span class="st-name">HR 初筛调度 <code>hr-screening-scheduling</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">Astro-08</span><span class="st-name">HR 初筛摘要 <code>hr-screening-summarizing</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
             </div>
+            <div class="st-phase">
+              <h4>Phase 2.5<span class="st-phase-desc">偏见检测 · 渠道语气 · 薪酬 Benchmark</span></h4>
+              <div class="st-row"><span class="st-id">Astro-09</span><span class="st-name">偏见语言检测与改写 <code>hr-bias-detecting-suggesting</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">Astro-10</span><span class="st-name">渠道语气适配 <code>hr-channel-tone-adapting</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">Astro-11</span><span class="st-name">薪酬市场百分位（Phase 2.0）<code>astro-compensation-benchmarking</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+            </div>
+            <div class="st-phase">
+              <h4>Phase 3.0<span class="st-phase-desc">语音/视频面试（平台选型未确认）</span></h4>
+              <div class="st-row"><span class="st-id">Astro-12</span><span class="st-name" title="AI 语音/视频面试平台选型未确认">语音/视频初筛 <code>astro-voice-interview-conducting</code></span><span class="st-st st-st--blk">⛔ 阻塞</span></div>
+            </div>
+            <p class="st-footnote">完整技术标识见 SKILL 索引：<code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。</p>
           </div>
           </div>
       </div>
@@ -1007,7 +1039,7 @@
         <div class="dex-head-main">
           <div class="dex-name-row"><span class="dex-no">NO.005</span><h2>Amy</h2></div>
           <p class="dex-role">Compliance · AA &amp; NS · AML/KYC</p>
-          <span class="dex-status">📋 待实现 · 6 分册</span>
+          <span class="dex-status">🔨 4 开发中 · 📋 1 规划中</span>
         </div>
       </div>
       <p class="dex-tags"><strong>严肃客观 · 冷静审慎</strong> · 升级意识强；留痕可审计，高风险必推人工。</p>
@@ -1024,27 +1056,24 @@
           <div class="skill-tree">
             <div class="st-title-row">
               <h3 class="st-heading">🧩 技能树</h3>
-              <div class="st-legend"><span>✅ <strong>0</strong> 已上线</span><span>🔨 <strong>0</strong> 开发中</span><span>📋 <strong>6</strong> 规划中</span></div>
+              <div class="st-legend"><span>🔨 <strong>4</strong> 开发中</span><span>📋 <strong>1</strong> 规划中</span></div>
             </div>
             <div class="st-progress-row">
-              <span class="st-frac"><span class="st-done">0</span><span class="st-sep">/</span><span class="st-total">6</span></span>
-              <div class="st-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="6" aria-label="已上线技能占比"><div class="st-bar-fill" style="width:0%"></div></div>
+              <span class="st-frac"><span class="st-done">0</span><span class="st-sep">/</span><span class="st-total">5</span></span>
+              <div class="st-bar st-bar--mixed" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="5" aria-label="技能交付进度" aria-valuetext="已上线 0，开发中 4，规划中 1，共 5 项"><div class="st-bar-inner" aria-hidden="true"><span class="st-bar-seg st-bar-seg--on" style="width: 0%;"></span><span class="st-bar-seg st-bar-seg--dev" style="width: 80%;"></span></div></div>
             </div>
             <div class="st-phase">
-              <h4>Phase 1.0<span class="st-phase-desc">个案、制裁、CRA、报告</span></h4>
-              <div class="st-row"><span class="st-id">Compliance-01</span><span class="st-name">客户文档完备性与调查就绪门闸</span><span class="st-st">📋 规划中</span></div>
-              <div class="st-row"><span class="st-id">Compliance-02</span><span class="st-name">制裁筛查辅助与命中处置草案</span><span class="st-st">📋 规划中</span></div>
-              <div class="st-row"><span class="st-id">Compliance-03</span><span class="st-name">客户风险评级 CRA 五维量化</span><span class="st-st">📋 规划中</span></div>
-              <div class="st-row"><span class="st-id">Compliance-04</span><span class="st-name">AML/KYC 个案叙述与报告草稿</span><span class="st-st">📋 规划中</span></div>
+              <h4>Phase 1.0<span class="st-phase-desc">文档门闸 · 制裁 · CRA</span></h4>
+              <div class="st-row"><span class="st-id">Compliance-01</span><span class="st-name">文档完备性检查 <code>compliance-doc-completeness-checking</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">Compliance-02</span><span class="st-name">制裁数据库比对 <code>compliance-sanction-comparing</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">Compliance-03</span><span class="st-name">制裁命中处置草稿 <code>compliance-sanction-disposition-drafting</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">Compliance-04</span><span class="st-name">CRA 五维量化评分 <code>compliance-cra-scoring</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
             </div>
             <div class="st-phase">
-              <h4>Phase 2.0<span class="st-phase-desc">定期审查</span></h4>
-              <div class="st-row"><span class="st-id">Compliance-05</span><span class="st-name">定期审查日期与通知草稿</span><span class="st-st">📋 规划中</span></div>
+              <h4>Phase 2.0<span class="st-phase-desc">定期审查（依赖 CRA 稳定）</span></h4>
+              <div class="st-row"><span class="st-id">Compliance-05</span><span class="st-name">定期审查通知 <code>compliance-periodic-review-notifying</code></span><span class="st-st">📋 规划中</span></div>
             </div>
-            <div class="st-phase">
-              <h4>Phase 3.0<span class="st-phase-desc">监控扩展</span></h4>
-              <div class="st-row"><span class="st-id">Compliance-06</span><span class="st-name">钱包筛查与交易监控辅助</span><span class="st-st">📋 规划中</span></div>
-            </div>
+            <p class="st-footnote">完整技术标识见 SKILL 索引：<code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。</p>
           </div>
           </div>
       </div>
@@ -1057,7 +1086,7 @@
         <div class="dex-head-main">
           <div class="dex-name-row"><span class="dex-no">NO.006</span><h2>Finley</h2></div>
           <p class="dex-role">NS-Finance · FinFlow · 加密付款</p>
-          <span class="dex-status">📋 待实现 · NS-01～03</span>
+          <span class="dex-status">🔨 3 开发中 · ⛔ 1 阻塞</span>
         </div>
       </div>
       <p class="dex-tags"><strong>谨慎克制 · 少说多做</strong> · 理性冷静；「可以付」只留给人类。</p>
@@ -1074,21 +1103,23 @@
           <div class="skill-tree">
             <div class="st-title-row">
               <h3 class="st-heading">🧩 技能树</h3>
-              <div class="st-legend"><span>✅ <strong>0</strong> 已上线</span><span>🔨 <strong>0</strong> 开发中</span><span>📋 <strong>3</strong> 规划中</span></div>
+              <div class="st-legend"><span>🔨 <strong>3</strong> 开发中</span><span>⛔ <strong>1</strong> 阻塞</span></div>
             </div>
             <div class="st-progress-row">
-              <span class="st-frac"><span class="st-done">0</span><span class="st-sep">/</span><span class="st-total">3</span></span>
-              <div class="st-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="3" aria-label="已上线技能占比"><div class="st-bar-fill" style="width:0%"></div></div>
+              <span class="st-frac"><span class="st-done">0</span><span class="st-sep">/</span><span class="st-total">4</span></span>
+              <div class="st-bar st-bar--mixed" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="4" aria-label="技能交付进度" aria-valuetext="已上线 0，开发中 3，阻塞 1，共 4 项"><div class="st-bar-inner" aria-hidden="true"><span class="st-bar-seg st-bar-seg--on" style="width: 0%;"></span><span class="st-bar-seg st-bar-seg--dev" style="width: 75%;"></span><span class="st-bar-seg st-bar-seg--blk" style="width: 25%;"></span></div></div>
             </div>
             <div class="st-phase">
-              <h4>Phase 1.0<span class="st-phase-desc">规则比对</span></h4>
-              <div class="st-row"><span class="st-id">NS-01</span><span class="st-name">加密付款邮件解析与规则比对</span><span class="st-st">📋 规划中</span></div>
+              <h4>Phase 1.0<span class="st-phase-desc">白名单比对 &amp; 风险识别（Nova）</span></h4>
+              <div class="st-row"><span class="st-id">NS-01</span><span class="st-name">地址/账户白名单比对 <code>nsfin-whitelist-comparing</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">NS-02</span><span class="st-name">高风险地址筛查与评分 <code>nsfin-high-risk-address-screening</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">NS-03</span><span class="st-name">不一致项规则解释 <code>nsfin-rule-explaining</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
             </div>
             <div class="st-phase">
-              <h4>Phase 2.0<span class="st-phase-desc">风险与内部划转</span></h4>
-              <div class="st-row"><span class="st-id">NS-02</span><span class="st-name">高风险地址识别与升级</span><span class="st-st">📋 规划中</span></div>
-              <div class="st-row"><span class="st-id">NS-03</span><span class="st-name">内部划转自动审批建议</span><span class="st-st">📋 规划中</span></div>
+              <h4>Phase 2.0<span class="st-phase-desc">内部划转（白名单规则库未就绪）</span></h4>
+              <div class="st-row"><span class="st-id">NS-04</span><span class="st-name" title="内部划转白名单规则库未就绪">内部划转自动审批建议 <code>nsfin-internal-transfer-approval-suggesting</code></span><span class="st-st st-st--blk">⛔ 阻塞</span></div>
             </div>
+            <p class="st-footnote">邮件解析与 Slack 卡片推送已通用化至 <a href="#no-009">NO.009 通用能力</a>；完整技术标识见 <code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。</p>
           </div>
           </div>
       </div>
@@ -1101,7 +1132,7 @@
         <div class="dex-head-main">
           <div class="dex-name-row"><span class="dex-no">NO.007</span><h2>Grove</h2></div>
           <p class="dex-role">OSM · Prime · 电费贷主链</p>
-          <span class="dex-status">📋 待实现 · OSM-01～05</span>
+          <span class="dex-status">🔨 8 开发中</span>
         </div>
       </div>
       <p class="dex-tags"><strong>热情活泼 · 服务到位</strong> · 较真务实、绝不演戏；草稿绝不冒充已发送。</p>
@@ -1118,20 +1149,27 @@
           <div class="skill-tree">
             <div class="st-title-row">
               <h3 class="st-heading">🧩 技能树</h3>
-              <div class="st-legend"><span>✅ <strong>0</strong> 已上线</span><span>🔨 <strong>0</strong> 开发中</span><span>📋 <strong>5</strong> 规划中</span></div>
+              <div class="st-legend"><span>🔨 <strong>8</strong> 开发中</span></div>
             </div>
             <div class="st-progress-row">
-              <span class="st-frac"><span class="st-done">0</span><span class="st-sep">/</span><span class="st-total">5</span></span>
-              <div class="st-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="5" aria-label="已上线技能占比"><div class="st-bar-fill" style="width:0%"></div></div>
+              <span class="st-frac"><span class="st-done">0</span><span class="st-sep">/</span><span class="st-total">8</span></span>
+              <div class="st-bar st-bar--mixed" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="8" aria-label="技能交付进度" aria-valuetext="已上线 0，开发中 8，共 8 项"><div class="st-bar-inner" aria-hidden="true"><span class="st-bar-seg st-bar-seg--on" style="width: 0%;"></span><span class="st-bar-seg st-bar-seg--dev" style="width: 100%;"></span></div></div>
             </div>
             <div class="st-phase">
-              <h4>Phase 1.0<span class="st-phase-desc">电费贷主链辅助</span></h4>
-              <div class="st-row"><span class="st-id">OSM-01</span><span class="st-name">拆账计算辅助</span><span class="st-st">📋 规划中</span></div>
-              <div class="st-row"><span class="st-id">OSM-02</span><span class="st-name">电费贷审批数据复核</span><span class="st-st">📋 规划中</span></div>
-              <div class="st-row"><span class="st-id">OSM-03</span><span class="st-name">付款申请执行与邮件衔接</span><span class="st-st">📋 规划中</span></div>
-              <div class="st-row"><span class="st-id">OSM-04</span><span class="st-name">电费贷放款审核发起准备</span><span class="st-st">📋 规划中</span></div>
-              <div class="st-row"><span class="st-id">OSM-05</span><span class="st-name">对客确认邮件草稿</span><span class="st-st">📋 规划中</span></div>
+              <h4>Phase 1.0<span class="st-phase-desc">电费贷主链（Volt）</span></h4>
+              <div class="st-row"><span class="st-id">OSM-01</span><span class="st-name">放款材料与审核发起 <code>osm-power-loan-disbursement-review-init</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">OSM-02</span><span class="st-name">LTV 规则校验 <code>osm-ltv-checking</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">OSM-03</span><span class="st-name">质押物/矿机价值查询 <code>osm-collateral-lookup</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">OSM-04</span><span class="st-name">ND 多主体资质校验 <code>osm-nd-multi-entity-check</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">OSM-05</span><span class="st-name">在途金额递推计算 <code>osm-transit-amount-calc</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">OSM-06</span><span class="st-name">审批复核回复草稿 <code>osm-review-reply-drafting</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
             </div>
+            <div class="st-phase">
+              <h4>Phase 2.0<span class="st-phase-desc">拆账与对外邮件</span></h4>
+              <div class="st-row"><span class="st-id">OSM-07</span><span class="st-name">月度拆账计算与差异 <code>osm-split-ledger-calc</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">OSM-08</span><span class="st-name">运营邮件草稿（参数化）<code>osm-email-draft-generating</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+            </div>
+            <p class="st-footnote">完整技术标识见 SKILL 索引：<code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。</p>
           </div>
           </div>
       </div>
@@ -1144,7 +1182,7 @@
         <div class="dex-head-main">
           <div class="dex-name-row"><span class="dex-no">NO.008</span><h2>松饼</h2></div>
           <p class="dex-role">Cango · 战略部 · 情报与材料</p>
-          <span class="dex-status">📋 待实现 · Cango-01 / 02</span>
+          <span class="dex-status">⛔ 2 阻塞 · 待前置条件闭环</span>
         </div>
       </div>
       <p class="dex-tags"><strong>沉稳内敛 · 审慎克制</strong> · 客观冷静；投资决策永远留给你们。</p>
@@ -1161,19 +1199,94 @@
           <div class="skill-tree">
             <div class="st-title-row">
               <h3 class="st-heading">🧩 技能树</h3>
-              <div class="st-legend"><span>✅ <strong>0</strong> 已上线</span><span>🔨 <strong>0</strong> 开发中</span><span>📋 <strong>2</strong> 规划中</span></div>
+              <div class="st-legend"><span>⛔ <strong>2</strong> 阻塞</span></div>
             </div>
             <div class="st-progress-row">
               <span class="st-frac"><span class="st-done">0</span><span class="st-sep">/</span><span class="st-total">2</span></span>
-              <div class="st-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="2" aria-label="已上线技能占比"><div class="st-bar-fill" style="width:0%"></div></div>
+              <div class="st-bar st-bar--mixed" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="2" aria-label="技能交付进度" aria-valuetext="已上线 0，开发中 0，阻塞 2，共 2 项"><div class="st-bar-inner" aria-hidden="true"><span class="st-bar-seg st-bar-seg--on" style="width: 0%;"></span><span class="st-bar-seg st-bar-seg--dev" style="width: 0%;"></span><span class="st-bar-seg st-bar-seg--blk" style="width: 100%;"></span></div></div>
             </div>
             <div class="st-phase">
-              <h4>Phase 1.0<span class="st-phase-desc">情报与材料</span></h4>
-              <div class="st-row"><span class="st-id">Cango-01</span><span class="st-name">项目文档解析与摘要</span><span class="st-st">📋 规划中</span></div>
-              <div class="st-row"><span class="st-id">Cango-02</span><span class="st-name">市场政策合规情报摘要</span><span class="st-st">📋 规划中</span></div>
+              <h4>Phase 1.0<span class="st-phase-desc">情报与材料（前置阻塞待解）</span></h4>
+              <div class="st-row"><span class="st-id">Cango-01</span><span class="st-name" title="业务共建字段 Schema 未定义（BLOCKER-01）">项目文档解析与摘要 <code>cango-document-summarizing</code></span><span class="st-st st-st--blk">⛔ 阻塞</span></div>
+              <div class="st-row"><span class="st-id">Cango-02</span><span class="st-name" title="合规数据源白名单未审批通过（BLOCKER-02）">合规网页搜索检索 <code>cango-web-search-retrieving</code></span><span class="st-st st-st--blk">⛔ 阻塞</span></div>
             </div>
+            <p class="st-footnote">完整技术标识见 SKILL 索引：<code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。</p>
           </div>
           </div>
+      </div>
+    </article>
+
+    <!-- NO.009 通用能力 -->
+    <article id="no-009" class="dex-card theme-common">
+      <div class="dex-card-head">
+        <div class="dex-avatar-letter" aria-hidden="true">N</div>
+        <div class="dex-head-main">
+          <div class="dex-name-row"><span class="dex-no">NO.009</span><h2>通用能力</h2></div>
+          <p class="dex-role">Common · 跨部门通用 · 供所有 Agent 复用</p>
+          <span class="dex-status">🔨 5 开发中</span>
+        </div>
+      </div>
+      <p class="dex-tags"><strong>通用化沉淀 · 避免重复造轮子</strong> · 从多个部门反复出现的高频能力中抽离，参数化交付，任何 Agent 都能直接调用。</p>
+      <div class="dex-body">
+        <div class="dex-sec">
+          <h3>👤 关于我</h3>
+          <p>我不是单独一个 Agent，而是一组<strong>跨部门复用的原子能力</strong>：RAG 问答、SLA 催办、邮件解析、Slack 卡片、合规扫描。以前 HR / Osto / BS / Astro / NS-Finance 都各自在造，现在统一由我承接，各 Agent 传入参数即可调用。</p>
+        </div>
+        <div class="dex-sec dex-split">
+          <div class="dex-box">
+            <h4>✦ 找我做</h4>
+            <ul>
+              <li>跨知识库的 RAG 问答（传 `knowledge_base` 参数切换）</li>
+              <li>按 pending 时长多渠道 SLA 催办（首催 / 升级催 / 终催）</li>
+              <li>按调用方 schema 抽取邮件实体，输出标准 JSON</li>
+              <li>Slack Block Kit 卡片推送到指定频道并留痕</li>
+              <li>按地区规则包扫描文本合规风险</li>
+            </ul>
+          </div>
+          <div class="dex-box">
+            <h4>✦ 别找我做</h4>
+            <ul>
+              <li>不做业务决策 —— 我只提供能力，判断归调用方 Agent</li>
+              <li>高风险问题（合规、法律、客户纠纷）路由到人工，不自动答复</li>
+            </ul>
+          </div>
+        </div>
+        <div class="dex-sec">
+          <h3>🗣️ 试试这样对我说</h3>
+          <ul class="dex-ask">
+            <li>「用 `knowledge_base: hr-policy` 调通用 RAG，回答这个年假问题。」</li>
+            <li>「给这笔 pending 超 3 天的工单发一次升级催办卡到 #bs-ops。」</li>
+            <li>「按 BP 付款邮件 schema 抽取关键字段，我要 JSON。」</li>
+          </ul>
+        </div>
+        <div class="dex-sec">
+          <div class="skill-tree">
+            <div class="st-title-row">
+              <h3 class="st-heading">🧩 技能树</h3>
+              <div class="st-legend"><span>🔨 <strong>5</strong> 开发中</span></div>
+            </div>
+            <div class="st-progress-row">
+              <span class="st-frac"><span class="st-done">0</span><span class="st-sep">/</span><span class="st-total">5</span></span>
+              <div class="st-bar st-bar--mixed" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="5" aria-label="技能交付进度" aria-valuetext="已上线 0，开发中 5，共 5 项"><div class="st-bar-inner" aria-hidden="true"><span class="st-bar-seg st-bar-seg--on" style="width: 0%;"></span><span class="st-bar-seg st-bar-seg--dev" style="width: 100%;"></span></div></div>
+            </div>
+            <div class="st-phase">
+              <h4>Phase 1.0<span class="st-phase-desc">通用化沉淀（跨部门共享）</span></h4>
+              <div class="st-row"><span class="st-id">Common-01</span><span class="st-name">通用 RAG 问答 <code>common-rag-qa-responding</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">Common-02</span><span class="st-name">SLA 多阶段催办 <code>common-sla-nudging</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">Common-03</span><span class="st-name">业务邮件结构化解析 <code>common-email-parsing</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">Common-04</span><span class="st-name">Slack 卡片推送 <code>common-slack-card-publishing</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">Common-05</span><span class="st-name">合规文本风险扫描 <code>common-compliance-scanning</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+            </div>
+            <p class="st-footnote">替代来源（已归档 <code>ex/</code>）：<br>
+              · <code>common-rag-qa-responding</code> ← hr-knowledge-rag-answering / osto-expense-qa-responding / osto-tax-policy-qa-responding / bs-workflow-qa<br>
+              · <code>common-sla-nudging</code> ← astro-sla-nudging<br>
+              · <code>common-email-parsing</code> ← nsfin-email-parsing<br>
+              · <code>common-slack-card-publishing</code> ← nsfin-slack-card-publishing<br>
+              · <code>common-compliance-scanning</code> ← astro-compliance-scanning<br>
+              完整技术标识见 <code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。
+            </p>
+          </div>
+        </div>
       </div>
     </article>
     </div><!-- /.cards-grid -->
@@ -1417,6 +1530,7 @@
       var STATUS = [
         { text: '📋 规划中', cls: '' },
         { text: '🔨 开发中', cls: 'st-st--dev' },
+        { text: '⛔ 阻塞',   cls: 'st-st--blk' },
         { text: '✅ 已上线', cls: 'st-st--on'  },
       ];
 
@@ -1435,21 +1549,24 @@
         if (!tree) return;
         var stSts = tree.querySelectorAll('.st-row .st-st');
         var total = stSts.length;
-        var on = 0, dev = 0, planned = 0;
+        var on = 0, dev = 0, blk = 0, planned = 0;
         stSts.forEach(function (el) {
           var t = el.textContent.trim();
           if      (t.startsWith('✅')) on++;
           else if (t.startsWith('🔨')) dev++;
+          else if (t.startsWith('⛔')) blk++;
           else planned++;
         });
 
-        /* 图例 */
+        /* 图例：仅展示计数 >0 的状态，阻塞为 0 时不占位 */
         var legend = tree.querySelector('.st-legend');
         if (legend) {
-          legend.innerHTML =
-            '<span>✅ <strong>' + on      + '</strong> 已上线</span>' +
-            '<span>🔨 <strong>' + dev     + '</strong> 开发中</span>' +
-            '<span>📋 <strong>' + planned + '</strong> 规划中</span>';
+          var legendParts = [];
+          if (on > 0 || (dev === 0 && blk === 0 && planned === 0)) legendParts.push('<span>✅ <strong>' + on + '</strong> 已上线</span>');
+          if (dev > 0)     legendParts.push('<span>🔨 <strong>' + dev     + '</strong> 开发中</span>');
+          if (blk > 0)     legendParts.push('<span>⛔ <strong>' + blk     + '</strong> 阻塞</span>');
+          if (planned > 0) legendParts.push('<span>📋 <strong>' + planned + '</strong> 规划中</span>');
+          legend.innerHTML = legendParts.join('');
         }
         /* 分数 */
         var elDone  = tree.querySelector('.st-done');
@@ -1457,7 +1574,7 @@
         if (elDone)  elDone.textContent  = on;
         if (elTotal) elTotal.textContent = total;
 
-        /* 进度条 - 统一使用绿/橙双色混合结构 */
+        /* 进度条 - 三段：已上线（绿）/ 开发中（橙）/ 阻塞（红），规划中为灰底 */
         var bar = tree.querySelector('.st-bar');
         if (bar) {
           if (!bar.classList.contains('st-bar--mixed')) {
@@ -1466,16 +1583,27 @@
               '<div class="st-bar-inner" aria-hidden="true">' +
               '<span class="st-bar-seg st-bar-seg--on"></span>' +
               '<span class="st-bar-seg st-bar-seg--dev"></span>' +
+              '<span class="st-bar-seg st-bar-seg--blk"></span>' +
               '</div>';
+          } else if (!bar.querySelector('.st-bar-seg--blk')) {
+            /* 老卡片升级：补一段阻塞段 */
+            var inner = bar.querySelector('.st-bar-inner');
+            if (inner) {
+              var blkSeg = document.createElement('span');
+              blkSeg.className = 'st-bar-seg st-bar-seg--blk';
+              inner.appendChild(blkSeg);
+            }
           }
           var segOn  = bar.querySelector('.st-bar-seg--on');
           var segDev = bar.querySelector('.st-bar-seg--dev');
+          var segBlk = bar.querySelector('.st-bar-seg--blk');
           if (segOn)  segOn.style.width  = (total ? on  / total * 100 : 0) + '%';
           if (segDev) segDev.style.width = (total ? dev / total * 100 : 0) + '%';
+          if (segBlk) segBlk.style.width = (total ? blk / total * 100 : 0) + '%';
           bar.setAttribute('aria-valuenow',  on);
           bar.setAttribute('aria-valuemax',  total);
           bar.setAttribute('aria-valuetext',
-            '已上线 ' + on + '，开发中 ' + dev + '，规划中 ' + planned + '，共 ' + total + ' 项');
+            '已上线 ' + on + '，开发中 ' + dev + '，阻塞 ' + blk + '，规划中 ' + planned + '，共 ' + total + ' 项');
         }
 
         /* 卡片状态徽章 */
@@ -1485,6 +1613,7 @@
           var parts = [];
           if (on      > 0) parts.push('✅ ' + on      + ' 已上线');
           if (dev     > 0) parts.push('🔨 ' + dev     + ' 开发中');
+          if (blk     > 0) parts.push('⛔ ' + blk     + ' 阻塞');
           if (planned > 0) parts.push('📋 ' + planned + ' 规划中');
           badge.textContent = parts.join(' · ');
         }
