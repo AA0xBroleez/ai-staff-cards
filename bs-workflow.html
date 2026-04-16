@@ -163,6 +163,20 @@
       background: #f1f5f9; color: var(--slate); border-radius: 6px; padding: 1px 6px;
       border: 1px solid #cbd5e1; font-weight: 600;
     }
+    .fc-sys {
+      display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; justify-content: center;
+    }
+    .fc-sys-tag {
+      font-size: 0.62rem; font-weight: 600; padding: 1px 7px; border-radius: 10px;
+      display: inline-flex; align-items: center; gap: 3px; line-height: 1.5;
+    }
+    .fc-sys-tag.sys-internal { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+    .fc-sys-tag.sys-exchange { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+    .fc-sys-tag.sys-bank { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+    .fc-sys-tag.sys-blockchain { background: #ede9fe; color: #5b21b6; border: 1px solid #c4b5fd; }
+    .fc-sys-tag.sys-mining { background: #ffedd5; color: #9a3412; border: 1px solid #fdba74; }
+    .fc-sys-tag.sys-external { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+    .fc-sys-info { font-size: 0.62rem; color: #64748b; margin-top: 2px; font-style: italic; font-weight: 400; }
 
     /* Step types */
     .wf-start { background: #dcfce7; border: 2px solid var(--green); border-radius: 50px; }
@@ -395,51 +409,86 @@ const BL_DATA = [
       { title: "地址管理", items: [
         { name: "地址创建申请", steps: [
           {t:"start",l:"开始"},{t:"io",l:"接收申请"},{t:"wp",l:"填写地址信息",inp:"链/币种/地址用途/关联项目",agent:true},
-          {t:"wp",l:"提交审批邮件",agent:true},{t:"dec",l:"合规审批"},{t:"wp",l:"创建地址"},{t:"end",l:"结束"}
+          {t:"wp",l:"提交审批邮件",agent:true,sys:[{name:"Email",info:"发送审批邮件至 @am"}]},
+          {t:"dec",l:"合规审批"},
+          {t:"wp",l:"创建地址",sys:[{name:"交易所/Fordefi",info:"调用平台 API 创建钱包地址"},{name:"NS 中台",info:"记录地址与项目关联"}]},
+          {t:"end",l:"结束"}
         ]},
         { name: "多签地址认证", steps: [
-          {t:"start",l:"开始"},{t:"io",l:"接收认证请求"},{t:"wp",l:"准备多签配置",inp:"签名人列表/阈值/链",agent:true},
-          {t:"dec",l:"安全审批"},{t:"wp",l:"执行认证"},{t:"end",l:"结束"}
+          {t:"start",l:"开始"},{t:"io",l:"接收认证请求"},
+          {t:"wp",l:"准备多签配置",inp:"签名人列表/阈值/链",agent:true},
+          {t:"dec",l:"安全审批"},
+          {t:"wp",l:"执行认证",sys:[{name:"Fordefi",info:"配置多签策略/签名人/阈值"}]},
+          {t:"end",l:"结束"}
         ]},
         { name: "外部白名单地址", steps: [
-          {t:"start",l:"开始"},{t:"io",l:"接收白名单请求"},{t:"wp",l:"填写地址详情",inp:"地址/链/来源/用途",agent:true},
-          {t:"dec",l:"风控审批"},{t:"wp",l:"添加白名单"},{t:"end",l:"结束"}
+          {t:"start",l:"开始"},{t:"io",l:"接收白名单请求"},
+          {t:"wp",l:"填写地址详情",inp:"地址/链/来源/用途",agent:true},
+          {t:"dec",l:"风控审批"},
+          {t:"wp",l:"添加白名单",sys:[{name:"交易所",info:"Binance/OKX/Gate 白名单 API"},{name:"NS 中台",info:"登记白名单记录"}]},
+          {t:"end",l:"结束"}
         ]},
         { name: "白名单地址移除", steps: [
-          {t:"start",l:"开始"},{t:"io",l:"接收移除请求"},{t:"wp",l:"确认移除信息",inp:"地址/移除原因",agent:true},
-          {t:"dec",l:"风控审批"},{t:"wp",l:"执行移除"},{t:"end",l:"结束"}
+          {t:"start",l:"开始"},{t:"io",l:"接收移除请求"},
+          {t:"wp",l:"确认移除信息",inp:"地址/移除原因",agent:true,sys:[{name:"交易所",info:"查询地址当前余额"}]},
+          {t:"dec",l:"风控审批"},
+          {t:"wp",l:"执行移除",sys:[{name:"交易所",info:"调用白名单移除 API"}]},
+          {t:"end",l:"结束"}
         ]}
       ]},
       { title: "账户操作", items: [
         { name: "子账户申请", steps: [
-          {t:"start",l:"开始"},{t:"io",l:"接收申请"},{t:"wp",l:"填写账户信息",inp:"交易所/主账户/用途/权限",agent:true},
-          {t:"dec",l:"主管审批"},{t:"wp",l:"创建子账户"},{t:"end",l:"结束"}
+          {t:"start",l:"开始"},{t:"io",l:"接收申请"},
+          {t:"wp",l:"填写账户信息",inp:"交易所/主账户/用途/权限",agent:true},
+          {t:"dec",l:"主管审批"},
+          {t:"wp",l:"创建子账户",sys:[{name:"Binance/OKX",info:"Sub-account Create API"},{name:"NS 中台",info:"登记子账户与项目映射"}]},
+          {t:"end",l:"结束"}
         ]},
         { name: "子账户清理", steps: [
-          {t:"start",l:"开始"},{t:"io",l:"接收清理需求"},{t:"wp",l:"核查账户状态",inp:"子账户ID/余额确认",agent:true},
-          {t:"dec",l:"主管审批"},{t:"wp",l:"执行清理"},{t:"end",l:"结束"}
+          {t:"start",l:"开始"},{t:"io",l:"接收清理需求"},
+          {t:"wp",l:"核查账户状态",inp:"子账户ID/余额确认",agent:true,sys:[{name:"交易所",info:"查询子账户余额/持仓"}]},
+          {t:"dec",l:"主管审批"},
+          {t:"wp",l:"执行清理",sys:[{name:"交易所",info:"子账户删除/冻结 API"},{name:"NS 中台",info:"更新账户状态"}]},
+          {t:"end",l:"结束"}
         ]},
         { name: "增加IP", steps: [
-          {t:"start",l:"开始"},{t:"io",l:"接收IP请求"},{t:"wp",l:"填写IP信息",inp:"IP地址/交易所/子账户",agent:true},
-          {t:"dec",l:"安全审批"},{t:"wp",l:"配置IP"},{t:"end",l:"结束"}
+          {t:"start",l:"开始"},{t:"io",l:"接收IP请求"},
+          {t:"wp",l:"填写IP信息",inp:"IP地址/交易所/子账户",agent:true},
+          {t:"dec",l:"安全审批"},
+          {t:"wp",l:"配置IP",sys:[{name:"交易所",info:"IP Whitelist API 添加"}]},
+          {t:"end",l:"结束"}
         ]},
         { name: "更新IP", steps: [
-          {t:"start",l:"开始"},{t:"io",l:"接收更新请求"},{t:"wp",l:"填写新IP",inp:"旧IP/新IP/原因",agent:true},
-          {t:"dec",l:"安全审批"},{t:"wp",l:"更新配置"},{t:"end",l:"结束"}
+          {t:"start",l:"开始"},{t:"io",l:"接收更新请求"},
+          {t:"wp",l:"填写新IP",inp:"旧IP/新IP/原因",agent:true},
+          {t:"dec",l:"安全审批"},
+          {t:"wp",l:"更新配置",sys:[{name:"交易所",info:"IP Whitelist API 更新"}]},
+          {t:"end",l:"结束"}
         ]}
       ]},
       { title: "开户申请", items: [
         { name: "交易所开户", steps: [
-          {t:"start",l:"开始"},{t:"io",l:"接收开户需求"},{t:"wp",l:"准备KYC材料",inp:"交易所/公司主体/证件/联系人",agent:true},
-          {t:"wp",l:"提交开户申请",agent:true},{t:"dec",l:"交易所审核"},{t:"io",l:"获取账户凭证"},{t:"end",l:"结束"}
+          {t:"start",l:"开始"},{t:"io",l:"接收开户需求"},
+          {t:"wp",l:"准备KYC材料",inp:"交易所/公司主体/证件/联系人",agent:true},
+          {t:"wp",l:"提交开户申请",agent:true,sys:[{name:"交易所",info:"Binance/OKX/Gate 注册页面或 API"}]},
+          {t:"dec",l:"交易所审核"},
+          {t:"io",l:"获取账户凭证",sys:[{name:"交易所",info:"账户ID/API Key/Secret"},{name:"NS 中台",info:"录入账户信息"}]},
+          {t:"end",l:"结束"}
         ]},
         { name: "银行开户", steps: [
-          {t:"start",l:"开始"},{t:"io",l:"接收开户需求"},{t:"wp",l:"准备开户材料",inp:"银行/公司主体/用途/币种"},
-          {t:"wp",l:"提交银行申请"},{t:"dec",l:"银行审核"},{t:"io",l:"获取账户信息"},{t:"end",l:"结束"}
+          {t:"start",l:"开始"},{t:"io",l:"接收开户需求"},
+          {t:"wp",l:"准备开户材料",inp:"银行/公司主体/用途/币种"},
+          {t:"wp",l:"提交银行申请",sys:[{name:"银行",info:"线下/邮件提交开户申请"}]},
+          {t:"dec",l:"银行审核"},
+          {t:"io",l:"获取账户信息",sys:[{name:"银行",info:"账号/SWIFT/ABA"},{name:"NS 中台",info:"录入银行账户"}]},
+          {t:"end",l:"结束"}
         ]},
         { name: "钱包创建", steps: [
-          {t:"start",l:"开始"},{t:"io",l:"接收创建请求"},{t:"wp",l:"配置钱包参数",inp:"链/钱包类型/权限/托管方",agent:true},
-          {t:"dec",l:"安全审批"},{t:"wp",l:"创建钱包"},{t:"end",l:"结束"}
+          {t:"start",l:"开始"},{t:"io",l:"接收创建请求"},
+          {t:"wp",l:"配置钱包参数",inp:"链/钱包类型/权限/托管方",agent:true},
+          {t:"dec",l:"安全审批"},
+          {t:"wp",l:"创建钱包",sys:[{name:"Fordefi",info:"Vault Create API"},{name:"NS 中台",info:"登记钱包地址"}]},
+          {t:"end",l:"结束"}
         ]}
       ]},
       { title: "合同合规", items: [
@@ -476,16 +525,24 @@ const BL_DATA = [
       ]},
       { title: "已上线读操作 (Star Agent)", items: [
         { name: "SOP问答", online: true, steps: [
-          {t:"start",l:"开始"},{t:"io",l:"接收查询"},{t:"read",l:"系统检索SOP"},{t:"io",l:"返回结果"},{t:"end",l:"结束"}
+          {t:"start",l:"开始"},{t:"io",l:"接收查询"},
+          {t:"read",l:"系统检索SOP",sys:[{name:"RAG 知识库",info:"检索5业务线SOP文档/流程/FAQ"}]},
+          {t:"io",l:"返回结果"},{t:"end",l:"结束"}
         ]},
         { name: "NS查询", online: true, steps: [
-          {t:"start",l:"开始"},{t:"io",l:"接收查询"},{t:"read",l:"查询NS系统"},{t:"io",l:"返回结果"},{t:"end",l:"结束"}
+          {t:"start",l:"开始"},{t:"io",l:"接收查询"},
+          {t:"read",l:"查询NS系统",sys:[{name:"NS 中台",info:"Armada Admin API 只读查询：项目/资金/流程/客户"}]},
+          {t:"io",l:"返回结果"},{t:"end",l:"结束"}
         ]},
         { name: "邮件模板", online: true, steps: [
-          {t:"start",l:"开始"},{t:"io",l:"接收请求"},{t:"read",l:"匹配邮件模板"},{t:"io",l:"返回模板"},{t:"end",l:"结束"}
+          {t:"start",l:"开始"},{t:"io",l:"接收请求"},
+          {t:"read",l:"匹配邮件模板",sys:[{name:"内部模板库",info:"34份 docx 模板 → JSON schema 匹配"}]},
+          {t:"io",l:"返回模板"},{t:"end",l:"结束"}
         ]},
         { name: "需求跟进", online: true, steps: [
-          {t:"start",l:"开始"},{t:"io",l:"接收查询"},{t:"read",l:"查询需求状态"},{t:"io",l:"返回进度"},{t:"end",l:"结束"}
+          {t:"start",l:"开始"},{t:"io",l:"接收查询"},
+          {t:"read",l:"查询需求状态",sys:[{name:"Slack",info:"工单线程状态追踪"},{name:"NS 中台",info:"需求工单进度"}]},
+          {t:"io",l:"返回进度"},{t:"end",l:"结束"}
         ]}
       ]}
     ]
@@ -495,7 +552,7 @@ const BL_DATA = [
     groups: [{ title: "Defi 流程", items: [
       { name: "立项申请", steps: [
         {t:"start",l:"开始"},{t:"io",l:"接收立项需求"},{t:"wp",l:"填写立项表",inp:"协议/链/预期收益/风险评估",agent:true},
-        {t:"dec",l:"投研审批"},{t:"dec",l:"风控审批"},{t:"wp",l:"创建项目"},{t:"end",l:"结束"}
+        {t:"dec",l:"投研审批"},{t:"dec",l:"风控审批"},{t:"wp",l:"创建项目",sys:[{name:"NS 中台",info:"创建 DeFi 项目记录/风控参数"}]},{t:"end",l:"结束"}
       ]},
       { name: "分润规则确认", steps: [
         {t:"start",l:"开始"},{t:"io",l:"接收分润需求"},{t:"wp",l:"配置分润规则",inp:"项目/参与方/比例/结算周期",agent:true},
@@ -507,12 +564,18 @@ const BL_DATA = [
     id: "mining", icon: "⛏️", name: "Mining", workflows: 4, read: 0, write: 4,
     groups: [{ title: "Mining 流程", items: [
       { name: "矿工号申请", steps: [
-        {t:"start",l:"开始"},{t:"io",l:"接收申请"},{t:"wp",l:"填写矿工信息",inp:"矿池/币种/钱包地址/算力",agent:true},
-        {t:"dec",l:"运维审批"},{t:"wp",l:"创建矿工号"},{t:"end",l:"结束"}
+        {t:"start",l:"开始"},{t:"io",l:"接收申请"},
+        {t:"wp",l:"填写矿工信息",inp:"矿池/币种/钱包地址/算力",agent:true},
+        {t:"dec",l:"运维审批"},
+        {t:"wp",l:"创建矿工号",sys:[{name:"Antpool/F2pool",info:"矿池管理后台创建 Worker ID"},{name:"NS 中台",info:"登记矿工号与项目映射"}]},
+        {t:"end",l:"结束"}
       ]},
       { name: "切算力指令", steps: [
-        {t:"start",l:"开始"},{t:"io",l:"接收切算力需求"},{t:"wp",l:"准备切算力参数",inp:"源矿工号/目标矿工号/算力比例",agent:true},
-        {t:"dec",l:"运维审批"},{t:"wp",l:"执行切算力"},{t:"end",l:"结束"}
+        {t:"start",l:"开始"},{t:"io",l:"接收切算力需求"},
+        {t:"wp",l:"准备切算力参数",inp:"源矿工号/目标矿工号/算力比例",agent:true},
+        {t:"dec",l:"运维审批"},
+        {t:"wp",l:"执行切算力",sys:[{name:"Antpool/F2pool",info:"切换矿工算力分配比例"},{name:"NS 中台",info:"更新算力分配记录"}]},
+        {t:"end",l:"结束"}
       ]},
       { name: "地址换绑", steps: [
         {t:"start",l:"开始"},{t:"io",l:"接收换绑请求"},{t:"wp",l:"填写换绑信息",inp:"矿工号/旧地址/新地址",agent:true},
@@ -529,15 +592,15 @@ const BL_DATA = [
     groups: [{ title: "RWA 流程", items: [
       { name: "代币铸造", steps: [
         {t:"start",l:"开始"},{t:"io",l:"接收铸造请求"},{t:"wp",l:"配置铸造参数",inp:"资产类型/数量/合约地址/接收地址",agent:true},
-        {t:"dec",l:"合规审批"},{t:"dec",l:"技术审批"},{t:"wp",l:"执行铸造"},{t:"end",l:"结束"}
+        {t:"dec",l:"合规审批"},{t:"dec",l:"技术审批"},{t:"wp",l:"执行铸造",sys:[{name:"区块链",info:"调用智能合约 mint 函数"},{name:"NS 中台",info:"记录铸造交易哈希"}]},{t:"end",l:"结束"}
       ]},
       { name: "代币销毁", steps: [
         {t:"start",l:"开始"},{t:"io",l:"接收销毁请求"},{t:"wp",l:"确认销毁信息",inp:"代币/数量/原因/合约地址",agent:true},
-        {t:"dec",l:"合规审批"},{t:"wp",l:"执行销毁"},{t:"end",l:"结束"}
+        {t:"dec",l:"合规审批"},{t:"wp",l:"执行销毁",sys:[{name:"区块链",info:"调用智能合约 burn 函数"}]},{t:"end",l:"结束"}
       ]},
       { name: "代币部署", steps: [
         {t:"start",l:"开始"},{t:"io",l:"接收部署需求"},{t:"wp",l:"准备部署参数",inp:"链/合约/代币名称/精度/权限",agent:true},
-        {t:"dec",l:"技术审批"},{t:"dec",l:"合规审批"},{t:"wp",l:"部署合约"},{t:"end",l:"结束"}
+        {t:"dec",l:"技术审批"},{t:"dec",l:"合规审批"},{t:"wp",l:"部署合约",sys:[{name:"区块链",info:"deploy 智能合约到目标链"}]},{t:"end",l:"结束"}
       ]}
     ]}]
   },
@@ -555,8 +618,8 @@ const BL_DATA = [
     groups: [{ title: "资金操作", items: [
       { name: "入资", steps: [
         {t:"start",l:"开始"},{t:"io",l:"接收入资需求"},{t:"wp",l:"填写邮件表格",inp:"项目号/CAM号/交易团队/属性/币种/数量/Carry%/平台/策略",agent:true},
-        {t:"wp",l:"发送审批邮件",agent:true},{t:"dec",l:"@BigOrange审批"},
-        {t:"wp",l:"中台创建记录"},{t:"end",l:"结束"}
+        {t:"wp",l:"发送审批邮件",agent:true,sys:[{name:"Email",info:"发送至 @BigOrange NS 审批"}]},{t:"dec",l:"@BigOrange审批"},
+        {t:"wp",l:"中台创建记录",sys:[{name:"NS 中台",info:"创建入资记录/CAM关联"},{name:"Binance/OKX",info:"子账户资金划转"}]},{t:"end",l:"结束"}
       ]},
       { name: "增资", steps: [
         {t:"start",l:"开始"},{t:"io",l:"接收增资需求"},{t:"wp",l:"填写增资表",inp:"项目号/增资金额/币种/原因",agent:true},
@@ -621,7 +684,7 @@ const BL_DATA = [
     groups: [{ title: "外汇支付流程", items: [
       { name: "换汇", steps: [
         {t:"start",l:"开始"},{t:"io",l:"接收换汇需求"},{t:"wp",l:"填写换汇单",inp:"源币种/目标币种/金额/汇率/渠道",agent:true},
-        {t:"dec",l:"财务审批"},{t:"dec",l:"风控审批"},{t:"wp",l:"执行换汇"},{t:"end",l:"结束"}
+        {t:"dec",l:"财务审批"},{t:"dec",l:"风控审批"},{t:"wp",l:"执行换汇",sys:[{name:"交易所/OTC",info:"USD↔USDT 换汇执行"},{name:"银行",info:"法币端银行转账"}]},{t:"end",l:"结束"}
       ]},
       { name: "银行转账", steps: [
         {t:"start",l:"开始"},{t:"io",l:"接收转账需求"},{t:"wp",l:"填写转账信息",inp:"付款行/收款行/金额/币种/附言",agent:true},
@@ -634,11 +697,11 @@ const BL_DATA = [
     groups: [{ title: "内部质押借贷", items: [
       { name: "贷款发起", steps: [
         {t:"start",l:"开始"},{t:"io",l:"接收贷款请求"},{t:"wp",l:"填写贷款申请",inp:"借款方/金额/币种/质押物/LTV",agent:true},
-        {t:"dec",l:"风控审批"},{t:"dec",l:"管理层审批"},{t:"wp",l:"创建贷款"},{t:"end",l:"结束"}
+        {t:"dec",l:"风控审批"},{t:"dec",l:"管理层审批"},{t:"wp",l:"创建贷款",sys:[{name:"NS 中台",info:"创建贷款合约记录/抵押品登记"},{name:"Prime",info:"机构借贷平台创建订单"}]},{t:"end",l:"结束"}
       ]},
       { name: "抵押验证", steps: [
-        {t:"start",l:"开始"},{t:"io",l:"接收验证请求"},{t:"wp",l:"核查抵押品",inp:"质押地址/数量/估值/链上确认",agent:true},
-        {t:"dec",l:"风控确认"},{t:"wp",l:"更新抵押状态"},{t:"end",l:"结束"}
+        {t:"start",l:"开始"},{t:"io",l:"接收验证请求"},{t:"wp",l:"核查抵押品",inp:"质押地址/数量/估值/链上确认",agent:true,sys:[{name:"区块链",info:"查询链上余额/质押状态"}]},
+        {t:"dec",l:"风控确认"},{t:"wp",l:"更新抵押状态",sys:[{name:"NS 中台",info:"更新抵押品估值/LTV"}]},{t:"end",l:"结束"}
       ]},
       { name: "资金释放", steps: [
         {t:"start",l:"开始"},{t:"io",l:"接收释放请求"},{t:"wp",l:"确认释放条件",inp:"贷款ID/释放金额/接收地址",agent:true},
@@ -655,15 +718,15 @@ const BL_DATA = [
     groups: [{ title: "外部质押借贷", items: [
       { name: "贷款确认", steps: [
         {t:"start",l:"开始"},{t:"io",l:"接收确认需求"},{t:"wp",l:"核对贷款条款",inp:"平台/金额/利率/期限/LTV",agent:true},
-        {t:"dec",l:"风控审批"},{t:"wp",l:"确认贷款"},{t:"end",l:"结束"}
+        {t:"dec",l:"风控审批"},{t:"wp",l:"确认贷款",sys:[{name:"Binance/OKX",info:"确认借贷订单/利率/期限"}]},{t:"end",l:"结束"}
       ]},
       { name: "入金抵押", steps: [
         {t:"start",l:"开始"},{t:"io",l:"接收入金需求"},{t:"wp",l:"准备抵押信息",inp:"平台/币种/数量/接收地址",agent:true},
-        {t:"dec",l:"风控审批"},{t:"wp",l:"执行入金"},{t:"io",l:"确认到账"},{t:"end",l:"结束"}
+        {t:"dec",l:"风控审批"},{t:"wp",l:"执行入金",sys:[{name:"Binance/OKX",info:"Crypto Transfer 到借贷保证金账户"}]},{t:"io",l:"确认到账",sys:[{name:"Binance/OKX",info:"查询保证金到账状态"}]},{t:"end",l:"结束"}
       ]},
       { name: "仓位监控", steps: [
         {t:"start",l:"开始"},{t:"io",l:"接收监控需求"},{t:"wp",l:"配置监控参数",inp:"平台/贷款ID/预警LTV/通知渠道",agent:true},
-        {t:"wp",l:"启动监控",agent:true},{t:"dec",l:"预警触发判断"},{t:"wp",l:"执行预警通知",agent:true},{t:"end",l:"结束"}
+        {t:"wp",l:"启动监控",agent:true,sys:[{name:"Binance/OKX",info:"轮询 LTV/保证金率/强平线"}]},{t:"dec",l:"预警触发判断"},{t:"wp",l:"执行预警通知",agent:true,sys:[{name:"Slack",info:"推送 LTV 预警到风控频道"}]},{t:"end",l:"结束"}
       ]},
       { name: "还款执行", steps: [
         {t:"start",l:"开始"},{t:"io",l:"接收还款需求"},{t:"wp",l:"核算还款金额",inp:"贷款ID/本金/利息/币种",agent:true},
@@ -676,7 +739,7 @@ const BL_DATA = [
     groups: [{ title: "AE 流程", items: [
       { name: "付款申请(AE专属)", steps: [
         {t:"start",l:"开始"},{t:"io",l:"接收付款需求"},{t:"wp",l:"填写AE付款单",inp:"项目/供应商/金额/币种/发票号",agent:true},
-        {t:"dec",l:"AE主管审批"},{t:"dec",l:"财务审批"},{t:"wp",l:"执行付款"},{t:"end",l:"结束"}
+        {t:"dec",l:"AE主管审批"},{t:"dec",l:"财务审批"},{t:"wp",l:"执行付款",sys:[{name:"银行",info:"SWIFT 电汇至收款方"},{name:"NS 中台",info:"更新付款状态"}]},{t:"end",l:"结束"}
       ]}
     ]}]
   }
@@ -905,7 +968,26 @@ function renderFlowchart(steps) {
     }
     if (s.agent) badges += '<span class="badge-agent">🤖</span>';
     let inp = s.inp ? `<div class="fc-inputs">需要: ${s.inp}</div>` : "";
-    html += `<div class="${cls}">${badges}${s.l}${inp}</div>`;
+    let sysHtml = "";
+    if (s.sys && s.sys.length) {
+      sysHtml = '<div class="fc-sys">';
+      s.sys.forEach(function(sx) {
+        var sCls = "sys-external";
+        if (/NS|中台|Armada|内部/.test(sx.name)) sCls = "sys-internal";
+        else if (/Binance|OKX|Gate|交易所|Prime/.test(sx.name)) sCls = "sys-exchange";
+        else if (/银行|Bank|SWIFT/.test(sx.name)) sCls = "sys-bank";
+        else if (/链上|合约|Fordefi|区块链/.test(sx.name)) sCls = "sys-blockchain";
+        else if (/矿池|Antpool|F2pool/.test(sx.name)) sCls = "sys-mining";
+        sysHtml += '<span class="fc-sys-tag ' + sCls + '">🔌 ' + sx.name + '</span>';
+      });
+      sysHtml += '</div>';
+      if (s.sys.some(function(sx){ return sx.info; })) {
+        s.sys.forEach(function(sx) {
+          if (sx.info) sysHtml += '<div class="fc-sys-info">↳ ' + sx.info + '</div>';
+        });
+      }
+    }
+    html += `<div class="${cls}">${badges}${s.l}${inp}${sysHtml}</div>`;
   });
   html += "</div>";
   return html;
