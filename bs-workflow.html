@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BS 工作流全景图</title>
+  <style>
+    :root {
+      --ink: #0f172a;
+      --muted: #64748b;
+      --surface: #f8fafc;
+      --card: #ffffff;
+      --radius: 16px;
+      --blue: #3b82f6;
+      --slate: #94a3b8;
+      --indigo: #6366f1;
+      --teal: #0891b2;
+      --green: #22c55e;
+      --red: #ef4444;
+      --violet: #8b5cf6;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "PingFang SC","Microsoft YaHei","Noto Sans SC",ui-sans-serif,system-ui,sans-serif;
+      background: var(--surface);
+      color: var(--ink);
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    /* ── Header ── */
+    .wf-header {
+      background: linear-gradient(135deg, #0c4a6e 0%, #0369a1 40%, #0891b2 100%);
+      color: #e0f2fe;
+      padding: 28px 20px 36px;
+      text-align: center;
+      margin-bottom: 24px;
+      box-shadow: 0 12px 40px rgba(3,105,161,0.3);
+    }
+    .wf-header h1 { margin: 0 0 6px; font-size: 1.55rem; font-weight: 800; color: #fff; letter-spacing: 0.04em; }
+    .wf-header .sub { font-size: 0.88rem; opacity: 0.92; font-weight: 500; }
+    .wf-header .back-link {
+      display: inline-block; margin-top: 14px; color: #bae6fd; text-decoration: none;
+      font-size: 0.82rem; border: 1px solid rgba(186,230,253,0.4); border-radius: 8px; padding: 4px 14px;
+      transition: all 0.2s;
+    }
+    .wf-header .back-link:hover { background: rgba(255,255,255,0.15); color: #fff; }
+
+    /* ── Container ── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+
+    /* ── Stats Bar ── */
+    .stats-bar {
+      display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;
+      margin-bottom: 28px;
+    }
+    .stat-chip {
+      background: var(--card); border-radius: 12px; padding: 10px 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06); font-size: 0.85rem; font-weight: 600;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .stat-chip .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .dot-blue { background: var(--blue); }
+    .dot-slate { background: var(--slate); }
+    .dot-green { background: var(--green); }
+    .dot-indigo { background: var(--indigo); }
+
+    /* ── Section Title ── */
+    .section-title {
+      font-size: 1.1rem; font-weight: 700; margin: 32px 0 16px; padding-left: 12px;
+      border-left: 4px solid var(--teal);
+    }
+
+    /* ── BL Cards Grid ── */
+    .bl-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px;
+    }
+    @media (max-width: 768px) { .bl-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .bl-grid { grid-template-columns: 1fr; } }
+
+    .bl-card {
+      background: var(--card); border-radius: var(--radius); padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06); cursor: pointer;
+      border: 2px solid transparent; transition: all 0.25s;
+      position: relative; overflow: hidden;
+    }
+    .bl-card:hover { border-color: var(--teal); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+    .bl-card .bl-icon { font-size: 1.6rem; margin-bottom: 8px; }
+    .bl-card .bl-name { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+    .bl-card .bl-count { font-size: 0.82rem; color: var(--muted); margin-bottom: 10px; }
+    .bl-bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; background: #e2e8f0; }
+    .bl-bar .bar-read { background: var(--blue); }
+    .bl-bar .bar-write { background: #cbd5e1; }
+    .bl-card .bl-stats { display: flex; gap: 12px; margin-top: 8px; font-size: 0.75rem; color: var(--muted); }
+    .bl-card .bl-stats span { display: flex; align-items: center; gap: 4px; }
+
+    /* ── Heatmap ── */
+    .heatmap-wrap { overflow-x: auto; margin-bottom: 32px; }
+    .heatmap { width: 100%; border-collapse: collapse; font-size: 0.78rem; min-width: 700px; }
+    .heatmap th, .heatmap td { padding: 8px 10px; text-align: center; border: 1px solid #e2e8f0; }
+    .heatmap th { background: #f1f5f9; font-weight: 600; white-space: nowrap; }
+    .heatmap td { font-weight: 600; }
+    .heat-0 { background: #f8fafc; color: #94a3b8; }
+    .heat-1 { background: #dbeafe; color: #1e40af; }
+    .heat-2 { background: #93c5fd; color: #1e3a8a; }
+    .heat-3 { background: #60a5fa; color: #fff; }
+    .heat-4 { background: #3b82f6; color: #fff; }
+    .heat-5 { background: #1d4ed8; color: #fff; }
+
+    /* ── Breadcrumb ── */
+    .breadcrumb {
+      font-size: 0.85rem; color: var(--muted); margin-bottom: 16px;
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    }
+    .breadcrumb a { color: var(--teal); text-decoration: none; cursor: pointer; }
+    .breadcrumb a:hover { text-decoration: underline; }
+
+    /* ── Detail Section ── */
+    .detail-section { display: none; }
+    .detail-section.active { display: block; }
+    .detail-header {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 20px;
+    }
+    .detail-header .dh-icon { font-size: 2rem; }
+    .detail-header .dh-title { font-size: 1.3rem; font-weight: 800; }
+    .detail-header .dh-sub { font-size: 0.85rem; color: var(--muted); }
+
+    /* ── Workflow Card ── */
+    .wf-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+    .wf-item {
+      background: var(--card); border-radius: 12px; overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06); border: 1px solid #e2e8f0;
+    }
+    .wf-item-header {
+      padding: 14px 20px; cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+      font-weight: 600; font-size: 0.92rem; transition: background 0.2s;
+    }
+    .wf-item-header:hover { background: #f8fafc; }
+    .wf-item-header .arrow { transition: transform 0.3s; font-size: 0.8rem; color: var(--muted); }
+    .wf-item-header .arrow.open { transform: rotate(90deg); }
+    .wf-item-body { display: none; padding: 0 20px 20px; }
+    .wf-item-body.open { display: block; }
+
+    /* ── Flowchart ── */
+    .flowchart { display: flex; flex-direction: column; align-items: center; gap: 0; padding: 10px 0; }
+
+    .fc-arrow { color: var(--muted); font-size: 1.1rem; line-height: 1; padding: 4px 0; user-select: none; }
+    .fc-branch { display: flex; gap: 24px; align-items: flex-start; justify-content: center; flex-wrap: wrap; }
+    .fc-branch-label { font-size: 0.72rem; color: var(--muted); text-align: center; margin-bottom: 2px; font-weight: 600; }
+
+    .fc-step {
+      max-width: 360px; width: 100%; padding: 12px 18px; border-radius: 10px; text-align: center;
+      font-size: 0.85rem; font-weight: 600; position: relative; line-height: 1.5;
+    }
+    .fc-step .fc-inputs { font-size: 0.72rem; color: var(--muted); font-weight: 400; margin-top: 4px; }
+    .fc-step .badge-agent {
+      position: absolute; top: -6px; right: -6px; font-size: 0.85rem;
+      background: #fef3c7; border-radius: 50%; width: 22px; height: 22px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+    .fc-step .badge-pending {
+      position: absolute; top: -6px; left: -6px; font-size: 0.6rem;
+      background: #f1f5f9; color: var(--slate); border-radius: 6px; padding: 1px 6px;
+      border: 1px solid #cbd5e1; font-weight: 600;
+    }
+
+    /* Step types */
+    .wf-start { background: #dcfce7; border: 2px solid var(--green); border-radius: 50px; }
+    .wf-end { background: #fef2f2; border: 2px solid var(--red); border-radius: 50px; }
+    .wf-read { background: #eff6ff; border: 2px solid var(--blue); }
+    .wf-write-pending { background: #f8fafc; border: 2px dashed var(--slate); }
+    .wf-decision {
+      background: #f5f3ff; border: 2px solid var(--indigo); border-radius: 4px;
+      transform: rotate(0deg); position: relative;
+    }
+    .wf-decision::before {
+      content: ""; position: absolute; inset: -4px; border: 2px solid var(--indigo);
+      transform: rotate(45deg); border-radius: 4px; pointer-events: none; opacity: 0.2;
+    }
+    .wf-io { background: #ecfeff; border: 2px solid var(--teal); }
+
+    /* ── Priority Panel ── */
+    .priority-panel {
+      background: var(--card); border-radius: var(--radius); padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-top: 32px;
+    }
+    .priority-panel h3 { font-size: 1rem; margin-bottom: 16px; }
+    .priority-group { margin-bottom: 16px; }
+    .priority-group h4 { font-size: 0.88rem; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .p-tag {
+      display: inline-block; padding: 1px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; color: #fff;
+    }
+    .p0 { background: #dc2626; }
+    .p1 { background: #f59e0b; }
+    .p2 { background: #6b7280; }
+    .priority-group ul { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
+    .priority-group li {
+      background: #f1f5f9; border-radius: 8px; padding: 4px 12px; font-size: 0.78rem; font-weight: 500;
+    }
+
+    /* ── WF Group Title ── */
+    .wf-group-title {
+      font-size: 0.92rem; font-weight: 700; color: var(--teal); margin: 20px 0 8px;
+      padding-left: 10px; border-left: 3px solid var(--teal);
+    }
+
+    /* ── Collapse Toggle ── */
+    .panel-toggle {
+      cursor: pointer; user-select: none; font-weight: 700; font-size: 0.95rem;
+      display: flex; align-items: center; gap: 8px; padding: 12px 0;
+    }
+    .panel-toggle .chevron { transition: transform 0.3s; }
+    .panel-toggle .chevron.open { transform: rotate(90deg); }
+  </style>
+</head>
+<body>
+
+<div class="wf-header">
+  <h1>BS 工作流全景图</h1>
+  <p class="sub">10 业务线 &middot; 18 通用流程 &middot; 读写操作分布与 Agent 介入规划</p>
+  <a href="index.html" class="back-link">&larr; 返回 Agent 图鉴</a>
+</div>
+
+<div class="container">
+
+  <!-- ====== LAYER 1: GLOBAL OVERVIEW ====== -->
+  <div id="layer-overview" class="detail-section active">
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      <div class="stat-chip"><span class="dot dot-blue"></span> 已上线读操作: 4 个</div>
+      <div class="stat-chip"><span class="dot dot-slate"></span> 待开发写操作: 47 个</div>
+      <div class="stat-chip"><span class="dot dot-green"></span> Agent 可介入: ~30 个</div>
+      <div class="stat-chip"><span class="dot dot-indigo"></span> 审批节点: ~25 个</div>
+    </div>
+
+    <div class="section-title">业务线概览</div>
+
+    <!-- BL Cards Grid -->
+    <div class="bl-grid" id="blGrid"></div>
+
+    <!-- Heatmap -->
+    <div class="section-title">操作分布热力图</div>
+    <div class="heatmap-wrap">
+      <table class="heatmap" id="heatmapTable"></table>
+    </div>
+
+    <!-- Priority Panel -->
+    <div class="priority-panel">
+      <div class="panel-toggle" onclick="togglePriorityPanel()">
+        <span class="chevron" id="priorityChevron">&#9654;</span>
+        <span>待开发写操作优先级一览</span>
+      </div>
+      <div id="priorityBody" style="display:none;">
+        <div class="priority-group">
+          <h4><span class="p-tag p0">P0</span> 高频高影响</h4>
+          <ul>
+            <li>邮件审批提交</li><li>地址创建申请</li><li>子账户申请</li>
+            <li>子账户清理</li><li>增加IP</li><li>更新IP</li>
+            <li>白名单地址移除</li><li>付款申请(通用)</li>
+          </ul>
+        </div>
+        <div class="priority-group">
+          <h4><span class="p-tag p1">P1</span> 中频中影响</h4>
+          <ul>
+            <li>交易所开户</li><li>银行开户</li><li>钱包创建</li>
+            <li>代币铸造</li><li>代币销毁</li><li>代币部署</li>
+            <li>入资</li><li>增资</li><li>减资</li><li>撤资</li>
+            <li>月度确认</li><li>付款申请(AE)</li><li>换汇</li><li>银行转账</li>
+            <li>贷款发起</li><li>贷款确认</li><li>资金释放</li><li>还款执行</li>
+          </ul>
+        </div>
+        <div class="priority-group">
+          <h4><span class="p-tag p2">P2</span> 低频</h4>
+          <ul>
+            <li>公司注册</li><li>KYC特批申请</li><li>矿工号申请</li>
+            <li>切算力指令</li><li>地址换绑</li><li>白名单登记</li>
+            <li>Fordefi认证</li><li>通用立项</li><li>立项申请(Defi)</li>
+            <li>分润规则确认</li><li>交易执行</li><li>仓位监控</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /layer-overview -->
+
+  <!-- ====== LAYER 2: DETAIL (generated per BL) ====== -->
+  <div id="layer-detail" class="detail-section"></div>
+
+</div><!-- /container -->
+
+<script>
+// ── DATA ──
+const BL_DATA = [
+  {
+    id: "common", icon: "📋", name: "通用流程", workflows: 18, read: 4, write: 14,
+    groups: [
+      { title: "地址管理", items: [
+        { name: "地址创建申请", steps: [
+          {t:"start",l:"开始"},{t:"io",l:"接收申请"},{t:"wp",l:"填写地址信息",inp:"链/币种/地址用途/关联项目",agent:true},
+          {t:"wp",l:"提交审批邮件",agent:true},{t:"dec",l:"合规审批"},{t:"wp",l:"创建地址"},{t:"end",l:"结束"}
+        ]},
+        { name: "多签地址认证", steps: [
+          {t:"start",l:"开始"},{t:"io",l:"接收认证请求"},{t:"wp",l:"准备多签配置",inp:"签名人列表/阈值/链",agent:true},
+          {t:"dec",l:"安全审批"},{t:"wp",l:"执行认证"},{t:"end",l:"结束"}
+        ]},
+        { name: "外部白名单地址", steps: [
+          {t:"start",l:"开始"},{t:"io",l:"接收白名单请求"},{t:"wp",l:"填写地址详情",inp:"地址/链/来源/用途",agent:true},
+          {t:"dec",l:"风控审批"},{t:"wp",l:"添加白名单"},{t:"end",l:"结束"}
+        ]},
+        { name: "白名单地址移除", steps: [
+          {t:"start",l:"开始"},{t:"io",l:"接收移除请求"},{t:"wp",l:"确认移除信息",inp:"地址/移除原因",agent:true},
+          {t:"dec",l:"风控审批"},{t:"wp",l:"执行移除"},{t:"end",l:"结束"}
+        ]}
+      ]},
+      { title: "账户操作", items: [
+        { name: "子账户申请", steps: [
+          {t:"start",l:"开始"},{t:"io",l:"接收申请"},{t:"wp",l:"填写账户信息",inp:"交易所/主账户/用途/权限",agent:true},
+          {t:"dec",l:"主管审批"},{t:"wp",l:"创建子账户"},{t:"end",l:"结束"}
+        ]},
+        { name: "子账户清理", steps: [
+          {t:"start",l:"开始"},{t:"io",l:"接收清理需求"},{t:"wp",l:"核查账户状态",inp:"子账户ID/余额确认",agent:true},
+          {t:"dec",l:"主管审批"},{t:"wp",l:"执行清理"},{t:"end",l:"结束"}
+        ]},
+        { name: "增加IP", steps: [
+          {t:"start",l:"开始"},{t:"io",l:"接收IP请求"},{t:"wp",l:"填写IP信息",inp:"IP地址/交易所/子账户",agent:true},
+          {t:"dec",l:"安全审批"},{t:"wp",l:"配置IP"},{t:"end",l:"结束"}
+        ]},
+        { name: "更新IP", steps: [
+          {t:"start",l:"开始"},{t:"io",l:"接收更新请求"},{t:"wp",l:"填写新IP",inp:"旧IP/新IP/原因",agent:true},
+          {t:"dec",l:"安全审批"},{t:"wp",l:"更新配置"},{t:"end",l:"结束"}
+        ]}
+      ]},
+      { title: "开户申请", items: [
+        { name: "交易所开户", steps: [
+          {t:"start",l:"开始"},{t:"io",l:"接收开户需求"},{t:"wp",l:"准备KYC材料",inp:"交易所/公司主体/证件/联系人",agent:true},
+          {t:"wp",l:"提交开户申请",agent:true},{t:"dec",l:"交易所审核"},{t:"io",l:"获取账户凭证"},{t:"end",l:"结束"}
+        ]},
+        { name: "银行开户", steps: [
+          {t:"start",l:"开始"},{t:"io",l:"接收开户需求"},{t:"wp",l:"准备开户材料",inp:"银行/公司主体/用途/币种"},
+          {t:"wp",l:"提交银行申请"},{t:"dec",l:"银行审核"},{t:"io",l:"获取账户信息"},{t:"end",l:"结束"}
+        ]},
+        { name: "钱包创建", steps: [
+          {t:"start",l:"开始"},{t:"io",l:"接收创建请求"},{t:"wp",l:"配置钱包参数",inp:"链/钱包类型/权限/托管方",agent:true},
+          {t:"dec",l:"安全审批"},{t:"wp",l:"创建钱包"},{t:"end",l:"结束"}
+        ]}
+      ]},
+      { title: "合同合规", items: [
+        { name: "客户确认合同", steps: [
+          {t:"start",l:"开始"},{t:"io",l:"接收合同请求"},{t:"wp",l:"准备合同文件",inp:"合同模板/客户信息/条款",agent:true},
+          {t:"wp",l:"发送确认邮件",agent:true},{t:"dec",l:"客户签署确认"},{t:"end",l:"结束"}
+        ]},
+        { name: "KYC特批申请", steps: [
+          {t:"start",l:"开始"},{t:"io",l:"接收特批请求"},{t:"wp",l:"准备特批材料",inp:"客户/原因/风险说明"},
+          {t:"dec",l:"合规审批"},{t:"dec",l:"高管审批"},{t:"wp",l:"执行特批"},{t:"end",l:"结束"}
+        ]}
+      ]},
+      { title: "其他", items: [
+        { name: "付款申请(通用)", steps: [
+          {t:"start",l:"开始"},{t:"io",l:"接收付款需求"},{t:"wp",l:"填写付款单",inp:"收款方/金额/币种/用途/凭证",agent:true},
+          {t:"dec",l:"财务审批"},{t:"dec",l:"主管审批"},{t:"wp",l:"执行付款"},{t:"end",l:"结束"}
+        ]},
+        { name: "公司注册", steps: [
+          {t:"start",l:"开始"},{t:"io",l:"接收注册需求"},{t:"wp",l:"准备注册材料",inp:"司法管辖区/公司类型/股东/董事"},
+          {t:"dec",l:"法务审批"},{t:"wp",l:"提交注册"},{t:"io",l:"获取注册证书"},{t:"end",l:"结束"}
+        ]},
+        { name: "银行白名单外发", steps: [
+          {t:"start",l:"开始"},{t:"io",l:"接收外发请求"},{t:"wp",l:"准备外发信息",inp:"银行/收款账户/金额",agent:true},
+          {t:"dec",l:"财务审批"},{t:"wp",l:"执行外发"},{t:"end",l:"结束"}
+        ]},
+        { name: "通用立项", steps: [
+          {t:"start",l:"开始"},{t:"io",l:"接收立项需求"},{t:"wp",l:"填写立项表",inp:"项目名/负责人/预算/周期",agent:true},
+          {t:"dec",l:"管理层审批"},{t:"wp",l:"创建项目"},{t:"end",l:"结束"}
+        ]},
+        { name: "Fordefi认证", steps: [
+          {t:"start",l:"开始"},{t:"io",l:"接收认证请求"},{t:"wp",l:"准备认证资料",inp:"Fordefi账户/认证类型/材料"},
+          {t:"dec",l:"安全审批"},{t:"wp",l:"完成认证"},{t:"end",l:"结束"}
+        ]}
+      ]},
+      { title: "已上线读操作 (Star Agent)", items: [
+        { name: "SOP问答", online: true, steps: [
+          {t:"start",l:"开始"},{t:"io",l:"接收查询"},{t:"read",l:"系统检索SOP"},{t:"io",l:"返回结果"},{t:"end",l:"结束"}
+        ]},
+        { name: "NS查询", online: true, steps: [
+          {t:"start",l:"开始"},{t:"io",l:"接收查询"},{t:"read",l:"查询NS系统"},{t:"io",l:"返回结果"},{t:"end",l:"结束"}
+        ]},
+        { name: "邮件模板", online: true, steps: [
+          {t:"start",l:"开始"},{t:"io",l:"接收请求"},{t:"read",l:"匹配邮件模板"},{t:"io",l:"返回模板"},{t:"end",l:"结束"}
+        ]},
+        { name: "需求跟进", online: true, steps: [
+          {t:"start",l:"开始"},{t:"io",l:"接收查询"},{t:"read",l:"查询需求状态"},{t:"io",l:"返回进度"},{t:"end",l:"结束"}
+        ]}
+      ]}
+    ]
+  },
+  {
+    id: "defi", icon: "🔗", name: "Defi", workflows: 2, read: 0, write: 2,
+    groups: [{ title: "Defi 流程", items: [
+      { name: "立项申请", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收立项需求"},{t:"wp",l:"填写立项表",inp:"协议/链/预期收益/风险评估",agent:true},
+        {t:"dec",l:"投研审批"},{t:"dec",l:"风控审批"},{t:"wp",l:"创建项目"},{t:"end",l:"结束"}
+      ]},
+      { name: "分润规则确认", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收分润需求"},{t:"wp",l:"配置分润规则",inp:"项目/参与方/比例/结算周期",agent:true},
+        {t:"dec",l:"财务审批"},{t:"wp",l:"录入系统"},{t:"end",l:"结束"}
+      ]}
+    ]}]
+  },
+  {
+    id: "mining", icon: "⛏️", name: "Mining", workflows: 4, read: 0, write: 4,
+    groups: [{ title: "Mining 流程", items: [
+      { name: "矿工号申请", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收申请"},{t:"wp",l:"填写矿工信息",inp:"矿池/币种/钱包地址/算力",agent:true},
+        {t:"dec",l:"运维审批"},{t:"wp",l:"创建矿工号"},{t:"end",l:"结束"}
+      ]},
+      { name: "切算力指令", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收切算力需求"},{t:"wp",l:"准备切算力参数",inp:"源矿工号/目标矿工号/算力比例",agent:true},
+        {t:"dec",l:"运维审批"},{t:"wp",l:"执行切算力"},{t:"end",l:"结束"}
+      ]},
+      { name: "地址换绑", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收换绑请求"},{t:"wp",l:"填写换绑信息",inp:"矿工号/旧地址/新地址",agent:true},
+        {t:"dec",l:"安全审批"},{t:"wp",l:"执行换绑"},{t:"end",l:"结束"}
+      ]},
+      { name: "白名单登记", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收登记请求"},{t:"wp",l:"填写白名单",inp:"矿池/地址/用途"},
+        {t:"dec",l:"运维审批"},{t:"wp",l:"添加白名单"},{t:"end",l:"结束"}
+      ]}
+    ]}]
+  },
+  {
+    id: "rwa", icon: "🏛️", name: "RWA", workflows: 3, read: 0, write: 3,
+    groups: [{ title: "RWA 流程", items: [
+      { name: "代币铸造", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收铸造请求"},{t:"wp",l:"配置铸造参数",inp:"资产类型/数量/合约地址/接收地址",agent:true},
+        {t:"dec",l:"合规审批"},{t:"dec",l:"技术审批"},{t:"wp",l:"执行铸造"},{t:"end",l:"结束"}
+      ]},
+      { name: "代币销毁", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收销毁请求"},{t:"wp",l:"确认销毁信息",inp:"代币/数量/原因/合约地址",agent:true},
+        {t:"dec",l:"合规审批"},{t:"wp",l:"执行销毁"},{t:"end",l:"结束"}
+      ]},
+      { name: "代币部署", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收部署需求"},{t:"wp",l:"准备部署参数",inp:"链/合约/代币名称/精度/权限",agent:true},
+        {t:"dec",l:"技术审批"},{t:"dec",l:"合规审批"},{t:"wp",l:"部署合约"},{t:"end",l:"结束"}
+      ]}
+    ]}]
+  },
+  {
+    id: "trading", icon: "📈", name: "Trading", workflows: 1, read: 0, write: 1,
+    groups: [{ title: "Trading 流程", items: [
+      { name: "交易执行", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收交易指令"},{t:"wp",l:"准备交易参数",inp:"交易对/方向/数量/价格/平台",agent:true},
+        {t:"dec",l:"风控审批"},{t:"wp",l:"执行交易"},{t:"io",l:"确认成交"},{t:"end",l:"结束"}
+      ]}
+    ]}]
+  },
+  {
+    id: "quant", icon: "🔢", name: "量化", workflows: 8, read: 0, write: 8,
+    groups: [{ title: "资金操作", items: [
+      { name: "入资", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收入资需求"},{t:"wp",l:"填写邮件表格",inp:"项目号/CAM号/交易团队/属性/币种/数量/Carry%/平台/策略",agent:true},
+        {t:"wp",l:"发送审批邮件",agent:true},{t:"dec",l:"@BigOrange审批"},
+        {t:"wp",l:"中台创建记录"},{t:"end",l:"结束"}
+      ]},
+      { name: "增资", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收增资需求"},{t:"wp",l:"填写增资表",inp:"项目号/增资金额/币种/原因",agent:true},
+        {t:"wp",l:"发送审批邮件",agent:true},{t:"dec",l:"@BigOrange审批"},
+        {t:"wp",l:"更新中台记录"},{t:"end",l:"结束"}
+      ]},
+      { name: "减资", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收减资需求"},{t:"wp",l:"填写减资表",inp:"项目号/减资金额/币种/原因",agent:true},
+        {t:"wp",l:"发送审批邮件",agent:true},{t:"dec",l:"@BigOrange审批"},
+        {t:"wp",l:"更新中台记录"},{t:"end",l:"结束"}
+      ]},
+      { name: "撤资", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收撤资需求"},{t:"wp",l:"填写撤资表",inp:"项目号/撤资原因/结算方式",agent:true},
+        {t:"wp",l:"发送审批邮件",agent:true},{t:"dec",l:"@BigOrange审批"},
+        {t:"wp",l:"执行撤资结算"},{t:"end",l:"结束"}
+      ]}
+    ]},
+    { title: "周期操作", items: [
+      { name: "月度确认", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收确认需求"},{t:"wp",l:"汇总月度数据",inp:"项目号/月份/收益/费用",agent:true},
+        {t:"wp",l:"生成确认报告",agent:true},{t:"dec",l:"财务审批"},{t:"wp",l:"发送确认"},{t:"end",l:"结束"}
+      ]}
+    ]},
+    { title: "账户操作", items: [
+      { name: "子账户换绑", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收换绑需求"},{t:"wp",l:"填写换绑信息",inp:"交易所/旧子账户/新子账户/原因",agent:true},
+        {t:"dec",l:"主管审批"},{t:"wp",l:"执行换绑"},{t:"end",l:"结束"}
+      ]},
+      { name: "增加IP", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收IP请求"},{t:"wp",l:"填写IP信息",inp:"IP地址/交易所/子账户",agent:true},
+        {t:"dec",l:"安全审批"},{t:"wp",l:"配置IP"},{t:"end",l:"结束"}
+      ]},
+      { name: "更新IP", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收更新请求"},{t:"wp",l:"填写新IP",inp:"旧IP/新IP/原因",agent:true},
+        {t:"dec",l:"安全审批"},{t:"wp",l:"更新配置"},{t:"end",l:"结束"}
+      ]}
+    ]}]
+  },
+  {
+    id: "peizi", icon: "💰", name: "配资", workflows: 4, read: 0, write: 4,
+    groups: [{ title: "配资流程", items: [
+      { name: "关键信息确认", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收确认需求"},{t:"wp",l:"核对关键信息",inp:"客户/金额/币种/期限/利率",agent:true},
+        {t:"dec",l:"风控审批"},{t:"wp",l:"录入系统"},{t:"end",l:"结束"}
+      ]},
+      { name: "子账户换绑", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收换绑需求"},{t:"wp",l:"填写换绑信息",inp:"交易所/旧子账户/新子账户",agent:true},
+        {t:"dec",l:"主管审批"},{t:"wp",l:"执行换绑"},{t:"end",l:"结束"}
+      ]},
+      { name: "增加IP", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收IP请求"},{t:"wp",l:"填写IP信息",inp:"IP地址/交易所/子账户",agent:true},
+        {t:"dec",l:"安全审批"},{t:"wp",l:"配置IP"},{t:"end",l:"结束"}
+      ]},
+      { name: "更新IP", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收更新请求"},{t:"wp",l:"填写新IP",inp:"旧IP/新IP/原因",agent:true},
+        {t:"dec",l:"安全审批"},{t:"wp",l:"更新配置"},{t:"end",l:"结束"}
+      ]}
+    ]}]
+  },
+  {
+    id: "forex", icon: "💱", name: "外汇支付", workflows: 2, read: 0, write: 2,
+    groups: [{ title: "外汇支付流程", items: [
+      { name: "换汇", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收换汇需求"},{t:"wp",l:"填写换汇单",inp:"源币种/目标币种/金额/汇率/渠道",agent:true},
+        {t:"dec",l:"财务审批"},{t:"dec",l:"风控审批"},{t:"wp",l:"执行换汇"},{t:"end",l:"结束"}
+      ]},
+      { name: "银行转账", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收转账需求"},{t:"wp",l:"填写转账信息",inp:"付款行/收款行/金额/币种/附言",agent:true},
+        {t:"dec",l:"财务审批"},{t:"wp",l:"执行转账"},{t:"io",l:"确认到账"},{t:"end",l:"结束"}
+      ]}
+    ]}]
+  },
+  {
+    id: "lend-in", icon: "🔐", name: "质押借贷(内)", workflows: 4, read: 0, write: 4,
+    groups: [{ title: "内部质押借贷", items: [
+      { name: "贷款发起", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收贷款请求"},{t:"wp",l:"填写贷款申请",inp:"借款方/金额/币种/质押物/LTV",agent:true},
+        {t:"dec",l:"风控审批"},{t:"dec",l:"管理层审批"},{t:"wp",l:"创建贷款"},{t:"end",l:"结束"}
+      ]},
+      { name: "抵押验证", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收验证请求"},{t:"wp",l:"核查抵押品",inp:"质押地址/数量/估值/链上确认",agent:true},
+        {t:"dec",l:"风控确认"},{t:"wp",l:"更新抵押状态"},{t:"end",l:"结束"}
+      ]},
+      { name: "资金释放", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收释放请求"},{t:"wp",l:"确认释放条件",inp:"贷款ID/释放金额/接收地址",agent:true},
+        {t:"dec",l:"财务审批"},{t:"wp",l:"执行释放"},{t:"end",l:"结束"}
+      ]},
+      { name: "贷款结算", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收结算请求"},{t:"wp",l:"核算结算金额",inp:"贷款ID/本金/利息/罚息",agent:true},
+        {t:"dec",l:"财务审批"},{t:"wp",l:"执行结算"},{t:"wp",l:"释放质押物"},{t:"end",l:"结束"}
+      ]}
+    ]}]
+  },
+  {
+    id: "lend-out", icon: "🏦", name: "质押借贷(外)", workflows: 4, read: 0, write: 4,
+    groups: [{ title: "外部质押借贷", items: [
+      { name: "贷款确认", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收确认需求"},{t:"wp",l:"核对贷款条款",inp:"平台/金额/利率/期限/LTV",agent:true},
+        {t:"dec",l:"风控审批"},{t:"wp",l:"确认贷款"},{t:"end",l:"结束"}
+      ]},
+      { name: "入金抵押", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收入金需求"},{t:"wp",l:"准备抵押信息",inp:"平台/币种/数量/接收地址",agent:true},
+        {t:"dec",l:"风控审批"},{t:"wp",l:"执行入金"},{t:"io",l:"确认到账"},{t:"end",l:"结束"}
+      ]},
+      { name: "仓位监控", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收监控需求"},{t:"wp",l:"配置监控参数",inp:"平台/贷款ID/预警LTV/通知渠道",agent:true},
+        {t:"wp",l:"启动监控",agent:true},{t:"dec",l:"预警触发判断"},{t:"wp",l:"执行预警通知",agent:true},{t:"end",l:"结束"}
+      ]},
+      { name: "还款执行", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收还款需求"},{t:"wp",l:"核算还款金额",inp:"贷款ID/本金/利息/币种",agent:true},
+        {t:"dec",l:"财务审批"},{t:"wp",l:"执行还款"},{t:"io",l:"确认还款完成"},{t:"end",l:"结束"}
+      ]}
+    ]}]
+  },
+  {
+    id: "ae", icon: "⚡", name: "AE 新能源", workflows: 1, read: 0, write: 1,
+    groups: [{ title: "AE 流程", items: [
+      { name: "付款申请(AE专属)", steps: [
+        {t:"start",l:"开始"},{t:"io",l:"接收付款需求"},{t:"wp",l:"填写AE付款单",inp:"项目/供应商/金额/币种/发票号",agent:true},
+        {t:"dec",l:"AE主管审批"},{t:"dec",l:"财务审批"},{t:"wp",l:"执行付款"},{t:"end",l:"结束"}
+      ]}
+    ]}]
+  }
+];
+
+// ── Heatmap data ──
+const HEATMAP_ROWS = ["READ","WRITE","APPROVAL","EXTERNAL_API"];
+const HEATMAP_COLS = ["通用","Defi","Mining","RWA","Trading","量化","配资","外汇","借贷内","借贷外","AE"];
+const HEATMAP_VALUES = [
+  [4,0,0,0,0,0,0,0,0,0,0],
+  [14,2,4,3,1,8,4,2,4,4,1],
+  [10,2,2,3,1,6,4,2,4,3,2],
+  [2,0,1,1,1,0,0,1,0,1,0]
+];
+
+// ── RENDER FUNCTIONS ──
+
+function renderBLGrid() {
+  const grid = document.getElementById("blGrid");
+  let html = "";
+  BL_DATA.forEach(bl => {
+    const total = bl.read + bl.write;
+    const readPct = total > 0 ? (bl.read / total * 100) : 0;
+    const writePct = total > 0 ? (bl.write / total * 100) : 0;
+    html += `
+      <div class="bl-card" onclick="showBusinessLine('${bl.id}')">
+        <div class="bl-icon">${bl.icon}</div>
+        <div class="bl-name">${bl.name}</div>
+        <div class="bl-count">${bl.workflows} 个流程</div>
+        <div class="bl-bar">
+          <div class="bar-read" style="width:${readPct}%"></div>
+          <div class="bar-write" style="width:${writePct}%"></div>
+        </div>
+        <div class="bl-stats">
+          <span><span class="dot dot-blue" style="width:8px;height:8px;"></span> 读 ${bl.read}</span>
+          <span><span class="dot dot-slate" style="width:8px;height:8px;"></span> 写 ${bl.write}</span>
+        </div>
+      </div>`;
+  });
+  grid.innerHTML = html;
+}
+
+function renderHeatmap() {
+  const tbl = document.getElementById("heatmapTable");
+  let html = "<thead><tr><th>操作类型</th>";
+  HEATMAP_COLS.forEach(c => { html += `<th>${c}</th>`; });
+  html += "</tr></thead><tbody>";
+  HEATMAP_ROWS.forEach((row, ri) => {
+    html += `<tr><th>${row}</th>`;
+    HEATMAP_VALUES[ri].forEach(v => {
+      let cls = "heat-0";
+      if (v >= 10) cls = "heat-5";
+      else if (v >= 6) cls = "heat-4";
+      else if (v >= 4) cls = "heat-3";
+      else if (v >= 2) cls = "heat-2";
+      else if (v >= 1) cls = "heat-1";
+      html += `<td class="${cls}">${v}</td>`;
+    });
+    html += "</tr>";
+  });
+  html += "</tbody>";
+  tbl.innerHTML = html;
+}
+
+function renderFlowchart(steps) {
+  let html = '<div class="flowchart">';
+  steps.forEach((s, i) => {
+    if (i > 0) html += '<div class="fc-arrow">&darr;</div>';
+    let cls = "fc-step ";
+    let badges = "";
+    switch (s.t) {
+      case "start": cls += "wf-start"; break;
+      case "end": cls += "wf-end"; break;
+      case "read": cls += "wf-read"; break;
+      case "wp": cls += "wf-write-pending"; badges += '<span class="badge-pending">待开发</span>'; break;
+      case "dec": cls += "wf-decision"; break;
+      case "io": cls += "wf-io"; break;
+    }
+    if (s.agent) badges += '<span class="badge-agent">🤖</span>';
+    let inp = s.inp ? `<div class="fc-inputs">需要: ${s.inp}</div>` : "";
+    html += `<div class="${cls}">${badges}${s.l}${inp}</div>`;
+  });
+  html += "</div>";
+  return html;
+}
+
+function showLayer(layer) {
+  document.getElementById("layer-overview").classList.remove("active");
+  document.getElementById("layer-detail").classList.remove("active");
+  document.getElementById("layer-" + layer).classList.add("active");
+}
+
+function showBusinessLine(id) {
+  const bl = BL_DATA.find(b => b.id === id);
+  if (!bl) return;
+  const detail = document.getElementById("layer-detail");
+  let html = `
+    <div class="breadcrumb">
+      <a onclick="showLayer('overview')">全局概览</a> <span>&rsaquo;</span> <span>${bl.name}</span>
+    </div>
+    <div class="detail-header">
+      <div class="dh-icon">${bl.icon}</div>
+      <div>
+        <div class="dh-title">${bl.name}</div>
+        <div class="dh-sub">${bl.workflows} 个流程 &middot; 读 ${bl.read} &middot; 写 ${bl.write}</div>
+      </div>
+    </div>
+    <div class="wf-list">`;
+  bl.groups.forEach(g => {
+    html += `<div class="wf-group-title">${g.title}</div>`;
+    g.items.forEach(item => {
+      const wfId = bl.id + "-" + item.name;
+      const tag = item.online
+        ? '<span style="color:#22c55e;font-size:0.78rem;margin-left:8px;">&#9679; 已上线</span>'
+        : '<span style="color:#94a3b8;font-size:0.78rem;margin-left:8px;">&#9675; 待开发</span>';
+      html += `
+        <div class="wf-item">
+          <div class="wf-item-header" onclick="toggleWorkflow(this)">
+            <span>${item.name}${tag}</span>
+            <span class="arrow">&#9654;</span>
+          </div>
+          <div class="wf-item-body">
+            ${renderFlowchart(item.steps)}
+          </div>
+        </div>`;
+    });
+  });
+  html += "</div>";
+  detail.innerHTML = html;
+  showLayer("detail");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function toggleWorkflow(header) {
+  const arrow = header.querySelector(".arrow");
+  const body = header.nextElementSibling;
+  const isOpen = body.classList.contains("open");
+  body.classList.toggle("open");
+  arrow.classList.toggle("open");
+}
+
+function togglePriorityPanel() {
+  const body = document.getElementById("priorityBody");
+  const chevron = document.getElementById("priorityChevron");
+  const isOpen = body.style.display !== "none";
+  body.style.display = isOpen ? "none" : "block";
+  chevron.classList.toggle("open");
+}
+
+// ── INIT ──
+renderBLGrid();
+renderHeatmap();
+</script>
+</body>
+</html>
