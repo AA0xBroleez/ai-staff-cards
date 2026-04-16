@@ -313,6 +313,17 @@
     .tn-step-end > .tn-label { background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b; }
     .tn-sys { font-size: 0.6rem; color: #64748b; padding: 0 0 0 24px; margin-top: 1px; }
     .tn-sys span { margin-right: 6px; }
+    .tn-skills {
+      padding: 4px 0 2px 24px; display: flex; flex-wrap: wrap; gap: 4px;
+    }
+    .tn-skill-tag {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 0.62rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; line-height: 1.5;
+    }
+    .tn-skill-on { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+    .tn-skill-dev { background: #fff7ed; color: #c2410c; border: 1px solid #fdba74; }
+    .tn-skill-plan { background: #f1f5f9; color: #64748b; border: 1px dashed #94a3b8; }
+    .tn-skill-label { font-size: 0.6rem; color: var(--muted); padding-left: 24px; margin-bottom: 2px; font-weight: 600; }
 
     /* collapse toggle */
     .tn-toggle { cursor: pointer; user-select: none; }
@@ -1027,6 +1038,78 @@ function renderFlowchartHorizontal(steps) {
   return html;
 }
 
+// SKILL mapping: workflow name → required SKILLs
+// st: "on"=已上线, "dev"=开发中, "plan"=待规划
+const SKILL_MAP = {
+  // ── 通用流程 ──
+  "SOP问答": [{id:"bs-common-workflow",n:"BS通用工作流",st:"dev"},{id:"common-rag-qa-responding",n:"通用RAG问答",st:"dev"}],
+  "NS查询": [{id:"star-ns-query",n:"NS系统查询(内置)",st:"on"}],
+  "邮件模板": [{id:"star-email-tpl",n:"邮件模板(内置)",st:"on"}],
+  "需求跟进": [{id:"bs-intake-status-notifying",n:"工单状态通知",st:"dev"},{id:"common-slack-card-publishing",n:"Slack卡片推送",st:"dev"}],
+  "地址创建申请": [{id:"common-email-parsing",n:"邮件解析",st:"dev"},{id:"skill-address-create",n:"地址创建(待规划)",st:"plan"}],
+  "多签地址认证": [{id:"skill-multisig-auth",n:"多签认证(待规划)",st:"plan"}],
+  "外部白名单地址": [{id:"skill-whitelist-add",n:"白名单添加(待规划)",st:"plan"}],
+  "白名单地址移除": [{id:"skill-whitelist-remove",n:"白名单移除(待规划)",st:"plan"}],
+  "子账户申请": [{id:"common-email-parsing",n:"邮件解析",st:"dev"},{id:"skill-subaccount-create",n:"子账户创建(待规划)",st:"plan"}],
+  "子账户清理": [{id:"skill-subaccount-cleanup",n:"子账户清理(待规划)",st:"plan"}],
+  "增加IP": [{id:"skill-ip-manage",n:"IP白名单管理(待规划)",st:"plan"}],
+  "更新IP": [{id:"skill-ip-manage",n:"IP白名单管理(待规划)",st:"plan"}],
+  "交易所开户": [{id:"skill-exchange-onboard",n:"交易所开户(待规划)",st:"plan"}],
+  "银行开户": [{id:"skill-bank-onboard",n:"银行开户(待规划)",st:"plan"}],
+  "钱包创建": [{id:"skill-wallet-create",n:"钱包创建(待规划)",st:"plan"}],
+  "客户确认合同": [{id:"common-email-parsing",n:"邮件解析",st:"dev"},{id:"skill-contract-confirm",n:"合同确认(待规划)",st:"plan"}],
+  "KYC特批申请": [{id:"skill-kyc-bypass",n:"KYC特批(待规划)",st:"plan"}],
+  "付款申请(通用)": [{id:"common-email-parsing",n:"邮件解析",st:"dev"},{id:"skill-payment-submit",n:"付款提交(待规划)",st:"plan"}],
+  "公司注册": [{id:"skill-company-register",n:"公司注册(待规划)",st:"plan"}],
+  "银行白名单外发": [{id:"common-email-parsing",n:"邮件解析",st:"dev"}],
+  "通用立项": [{id:"common-email-parsing",n:"邮件解析",st:"dev"},{id:"skill-project-init",n:"立项(待规划)",st:"plan"}],
+  "Fordefi认证": [{id:"skill-fordefi-auth",n:"Fordefi认证(待规划)",st:"plan"}],
+  // ── Defi ──
+  "立项申请": [{id:"common-email-parsing",n:"邮件解析",st:"dev"},{id:"skill-project-init",n:"立项(待规划)",st:"plan"}],
+  "分润规则确认": [{id:"common-email-parsing",n:"邮件解析",st:"dev"}],
+  // ── Mining ──
+  "矿工号申请": [{id:"skill-miner-manage",n:"矿工号管理(待规划)",st:"plan"}],
+  "切算力指令": [{id:"skill-hashrate-switch",n:"算力切换(待规划)",st:"plan"}],
+  "地址换绑": [{id:"skill-address-rebind",n:"地址换绑(待规划)",st:"plan"}],
+  "白名单登记": [{id:"skill-whitelist-add",n:"白名单添加(待规划)",st:"plan"}],
+  // ── RWA ──
+  "代币铸造": [{id:"skill-token-mint",n:"代币铸造(待规划)",st:"plan"}],
+  "代币销毁": [{id:"skill-token-burn",n:"代币销毁(待规划)",st:"plan"}],
+  "代币部署": [{id:"skill-token-deploy",n:"代币部署(待规划)",st:"plan"}],
+  // ── Trading ──
+  "交易执行": [{id:"skill-trade-exec",n:"交易执行(待规划)",st:"plan"}],
+  // ── 量化 ──
+  "入资": [{id:"common-email-parsing",n:"邮件解析",st:"dev"},{id:"skill-capital-op",n:"资金操作(待规划)",st:"plan"}],
+  "增资": [{id:"common-email-parsing",n:"邮件解析",st:"dev"},{id:"skill-capital-op",n:"资金操作(待规划)",st:"plan"}],
+  "减资": [{id:"common-email-parsing",n:"邮件解析",st:"dev"},{id:"skill-capital-op",n:"资金操作(待规划)",st:"plan"}],
+  "撤资": [{id:"common-email-parsing",n:"邮件解析",st:"dev"},{id:"skill-capital-op",n:"资金操作(待规划)",st:"plan"}],
+  "月度确认": [{id:"common-email-parsing",n:"邮件解析",st:"dev"},{id:"skill-monthly-recon",n:"月度确认(待规划)",st:"plan"}],
+  "子账户换绑": [{id:"skill-subaccount-rebind",n:"子账户换绑(待规划)",st:"plan"}],
+  // ── 配资 ──
+  "关键信息确认": [{id:"common-email-parsing",n:"邮件解析",st:"dev"},{id:"skill-loan-info-confirm",n:"信息确认(待规划)",st:"plan"}],
+  // ── 外汇支付 ──
+  "换汇": [{id:"skill-fx-exchange",n:"换汇执行(待规划)",st:"plan"}],
+  "银行转账": [{id:"skill-bank-transfer",n:"银行转账(待规划)",st:"plan"}],
+  // ── 质押借贷内 ──
+  "贷款发起": [{id:"skill-loan-initiate",n:"贷款发起(待规划)",st:"plan"}],
+  "抵押验证": [{id:"skill-collateral-verify",n:"抵押验证(待规划)",st:"plan"}],
+  "资金释放": [{id:"skill-fund-release",n:"资金释放(待规划)",st:"plan"}],
+  "贷款结算": [{id:"skill-loan-settle",n:"贷款结算(待规划)",st:"plan"}],
+  // ── 质押借贷外 ──
+  "贷款确认": [{id:"skill-ext-loan-confirm",n:"外部贷款确认(待规划)",st:"plan"}],
+  "入金抵押": [{id:"skill-ext-deposit",n:"入金抵押(待规划)",st:"plan"}],
+  "仓位监控": [{id:"skill-position-monitor",n:"仓位监控(待规划)",st:"plan"}],
+  "还款执行": [{id:"skill-repayment",n:"还款执行(待规划)",st:"plan"}],
+  // ── AE ──
+  "付款申请(AE专属)": [{id:"common-email-parsing",n:"邮件解析",st:"dev"},{id:"skill-ae-payment",n:"AE付款(待规划)",st:"plan"}],
+};
+// Cross-cutting SKILLs that apply to ALL workflows with email steps
+const CROSS_SKILLS = [
+  {id:"bs-intake-classifying",n:"意图分类",st:"dev"},
+  {id:"bs-intake-field-extracting",n:"字段抽取",st:"dev"},
+  {id:"bs-workflow-routing",n:"工作流路由",st:"dev"},
+];
+
 function renderTree() {
   var container = document.getElementById("treeView");
   var totalWf = 0;
@@ -1098,6 +1181,19 @@ function renderTree() {
           }
           html += '</li>';
         });
+
+        // SKILL requirements after steps
+        var wfSkills = SKILL_MAP[item.name] || [];
+        if (wfSkills.length > 0) {
+          html += '<li class="tn tn-step"><div class="tn-skill-label">🧩 需要 SKILL:</div>';
+          html += '<div class="tn-skills">';
+          wfSkills.forEach(function(sk) {
+            var skCls = sk.st === "on" ? "tn-skill-on" : sk.st === "dev" ? "tn-skill-dev" : "tn-skill-plan";
+            var skIcon = sk.st === "on" ? "✅" : sk.st === "dev" ? "🔨" : "📋";
+            html += '<span class="tn-skill-tag ' + skCls + '">' + skIcon + ' ' + sk.n + ' <code style="font-size:0.55rem;opacity:0.7">' + sk.id + '</code></span>';
+          });
+          html += '</div></li>';
+        }
 
         html += '</ul></li>';
       });
