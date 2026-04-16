@@ -266,6 +266,64 @@
     .pano-foundation .pf-title { font-weight: 700; font-size: 0.85rem; color: #1e40af; white-space: nowrap; }
     .pano-foundation .pano-tag { font-size: 0.72rem; }
 
+    /* ── Tree View (树状图) ── */
+    .tree-wrap { margin-bottom: 32px; }
+    .tree-root { padding: 0; margin: 0; list-style: none; }
+    .tree-root ul { list-style: none; padding-left: 0; margin: 0; }
+
+    /* tree node */
+    .tn {
+      position: relative; padding: 3px 0 3px 24px;
+    }
+    .tn::before {
+      content: ""; position: absolute; left: 8px; top: 0; bottom: 0;
+      border-left: 2px solid #cbd5e1;
+    }
+    .tn:last-child::before { bottom: 50%; }
+    .tn::after {
+      content: ""; position: absolute; left: 8px; top: 50%;
+      width: 14px; border-top: 2px solid #cbd5e1;
+    }
+
+    /* Level 0 root: no lines */
+    .tree-root > .tn { padding-left: 0; }
+    .tree-root > .tn::before, .tree-root > .tn::after { display: none; }
+
+    .tn-label {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px; border-radius: 8px; font-size: 0.78rem; font-weight: 600;
+      cursor: default; line-height: 1.5; position: relative;
+    }
+    .tn-label .tn-icon { font-size: 0.9rem; }
+    .tn-label .tn-count { font-size: 0.62rem; color: var(--muted); font-weight: 500; }
+
+    /* Level styles */
+    .tn-root > .tn-label { background: linear-gradient(135deg,#0c4a6e,#0891b2); color: #fff; font-size: 1rem; padding: 8px 18px; border-radius: 12px; font-weight: 800; }
+    .tn-bl > .tn-label { background: #f0f9ff; border: 2px solid #0ea5e9; color: #0c4a6e; }
+    .tn-group > .tn-label { background: #f8fafc; border: 1px solid #e2e8f0; color: var(--ink); font-size: 0.75rem; }
+    .tn-wf > .tn-label { font-weight: 500; font-size: 0.75rem; padding: 3px 10px; border-radius: 6px; }
+    .tn-wf-online > .tn-label { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+    .tn-wf-pending > .tn-label { background: #f8fafc; color: #64748b; border: 1px dashed #94a3b8; }
+    .tn-step > .tn-label { font-size: 0.68rem; padding: 2px 8px; border-radius: 4px; font-weight: 500; }
+    .tn-step-read > .tn-label { background: #eff6ff; border: 1px solid #93c5fd; color: #1e40af; }
+    .tn-step-wp > .tn-label { background: #f8fafc; border: 1px dashed #94a3b8; color: #64748b; }
+    .tn-step-dec > .tn-label { background: #f5f3ff; border: 1px solid #c4b5fd; color: #5b21b6; }
+    .tn-step-io > .tn-label { background: #ecfeff; border: 1px solid #67e8f9; color: #155e75; }
+    .tn-step-start > .tn-label { background: #dcfce7; border: 1px solid #86efac; color: #166534; }
+    .tn-step-end > .tn-label { background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b; }
+    .tn-sys { font-size: 0.6rem; color: #64748b; padding: 0 0 0 24px; margin-top: 1px; }
+    .tn-sys span { margin-right: 6px; }
+
+    /* collapse toggle */
+    .tn-toggle { cursor: pointer; user-select: none; }
+    .tn-toggle > .tn-label::before {
+      content: "▸"; display: inline-block; width: 12px; font-size: 0.7rem; color: var(--muted);
+      transition: transform 0.2s;
+    }
+    .tn-toggle.open > .tn-label::before { transform: rotate(90deg); }
+    .tn-toggle > ul { display: none; }
+    .tn-toggle.open > ul { display: block; }
+
     /* ── Full Map (全流程大图) ── */
     .fullmap-section { margin-bottom: 40px; }
     .fullmap-bl {
@@ -390,6 +448,10 @@
         <div id="panoGrid"></div>
       </div>
     </div>
+
+    <!-- Tree View 树状图 -->
+    <div class="section-title" id="treeTitle">流程树 — 四级展开（Agent → 业务线 → 流程组 → 工作流 → 步骤）</div>
+    <div class="tree-wrap" id="treeView"></div>
 
     <!-- Full Map 全流程大图 -->
     <div class="section-title" id="fullMapTitle">全流程大图 — 51 个工作流完整展开</div>
@@ -965,6 +1027,101 @@ function renderFlowchartHorizontal(steps) {
   return html;
 }
 
+function renderTree() {
+  var container = document.getElementById("treeView");
+  var totalWf = 0;
+  BL_DATA.forEach(function(bl) { bl.groups.forEach(function(g) { totalWf += g.items.length; }); });
+
+  function stepClass(t) {
+    switch(t) {
+      case "start": return "tn-step-start";
+      case "end": return "tn-step-end";
+      case "read": return "tn-step-read";
+      case "wp": return "tn-step-wp";
+      case "dec": return "tn-step-dec";
+      case "io": return "tn-step-io";
+      default: return "";
+    }
+  }
+  function stepIcon(t) {
+    switch(t) {
+      case "start": return "▶";
+      case "end": return "■";
+      case "read": return "📖";
+      case "wp": return "✏️";
+      case "dec": return "◇";
+      case "io": return "📥";
+      default: return "·";
+    }
+  }
+
+  var html = '<ul class="tree-root">';
+  // Root node
+  html += '<li class="tn tn-root tn-toggle open">';
+  html += '<div class="tn-label"><span class="tn-icon">🌟</span>BS Agent (Star) <span class="tn-count">' + BL_DATA.length + ' 业务线 · ' + totalWf + ' 流程</span></div>';
+  html += '<ul>';
+
+  BL_DATA.forEach(function(bl) {
+    var wfCount = 0;
+    bl.groups.forEach(function(g) { wfCount += g.items.length; });
+    html += '<li class="tn tn-bl tn-toggle">';
+    html += '<div class="tn-label"><span class="tn-icon">' + bl.icon + '</span>' + bl.name + ' <span class="tn-count">读' + bl.read + ' 写' + bl.write + ' (' + wfCount + ')</span></div>';
+    html += '<ul>';
+
+    bl.groups.forEach(function(g) {
+      html += '<li class="tn tn-group tn-toggle">';
+      html += '<div class="tn-label">' + g.title + ' <span class="tn-count">(' + g.items.length + ')</span></div>';
+      html += '<ul>';
+
+      g.items.forEach(function(item) {
+        var wfCls = item.online ? "tn-wf-online" : "tn-wf-pending";
+        var tag = item.online ? "✅" : "⬜";
+        html += '<li class="tn tn-wf ' + wfCls + ' tn-toggle">';
+        html += '<div class="tn-label">' + tag + ' ' + item.name + '</div>';
+        html += '<ul>';
+
+        item.steps.forEach(function(s) {
+          var sCls = stepClass(s.t);
+          var icon = stepIcon(s.t);
+          var agentMark = s.agent ? " 🤖" : "";
+          html += '<li class="tn tn-step ' + sCls + '">';
+          html += '<div class="tn-label">' + icon + ' ' + s.l + agentMark + '</div>';
+          if (s.inp) {
+            html += '<div class="tn-sys">📝 ' + s.inp + '</div>';
+          }
+          if (s.sys && s.sys.length) {
+            html += '<div class="tn-sys">';
+            s.sys.forEach(function(sx) {
+              html += '<span>🔌 ' + sx.name + (sx.info ? '(' + sx.info + ')' : '') + '</span>';
+            });
+            html += '</div>';
+          }
+          html += '</li>';
+        });
+
+        html += '</ul></li>';
+      });
+
+      html += '</ul></li>';
+    });
+
+    html += '</ul></li>';
+  });
+
+  html += '</ul></li></ul>';
+  container.innerHTML = html;
+
+  // Toggle click handler
+  container.addEventListener('click', function(e) {
+    var label = e.target.closest('.tn-label');
+    if (!label) return;
+    var li = label.parentElement;
+    if (li.classList.contains('tn-toggle')) {
+      li.classList.toggle('open');
+    }
+  });
+}
+
 function renderFullMap() {
   var container = document.getElementById("fullMap");
   var html = "";
@@ -1018,6 +1175,7 @@ function renderTOC() {
   }
   html += '<div class="toc-sep">页面锚点</div>';
   html += '<a class="toc-item" onclick="document.getElementById(\'panoGrid\').scrollIntoView({behavior:\'smooth\'})"><span class="toc-icon">🗺️</span><span class="toc-name">任务矩阵</span></a>';
+  html += '<a class="toc-item" onclick="document.getElementById(\'treeTitle\').scrollIntoView({behavior:\'smooth\'})"><span class="toc-icon">🌳</span><span class="toc-name">流程树</span></a>';
   html += '<a class="toc-item" onclick="document.getElementById(\'fullMapTitle\').scrollIntoView({behavior:\'smooth\'})"><span class="toc-icon">📐</span><span class="toc-name">全流程大图</span></a>';
   html += '<a class="toc-item" onclick="document.getElementById(\'heatmapTable\').scrollIntoView({behavior:\'smooth\'})"><span class="toc-icon">📊</span><span class="toc-name">操作分布热力图</span></a>';
   html += '<a class="toc-item" onclick="togglePriorityPanel();document.querySelector(\'.priority-panel\').scrollIntoView({behavior:\'smooth\'})"><span class="toc-icon">⚡</span><span class="toc-name">待开发优先级</span></a>';
@@ -1177,6 +1335,7 @@ function togglePriorityPanel() {
 
 // ── INIT ──
 renderPanorama();
+renderTree();
 renderFullMap();
 renderTOC();
 renderBLGrid();
