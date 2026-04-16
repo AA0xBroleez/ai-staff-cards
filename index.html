@@ -716,6 +716,100 @@
     body.edit-mode .dex-card:hover {
       outline-color: rgba(99,102,241,0.18);
     }
+
+    /* ─── 二级页：BS SKILL 数据流 ─────────────────────────────── */
+    .page-view.is-hidden { display: none !important; }
+    body.subpage-flow-bs .mode-controls,
+    body.subpage-flow-bs .back-top { display: none; }
+
+    .flow-page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 16px 48px;
+    }
+    .flow-page-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .flow-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--dex-iris);
+      text-decoration: none;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid #c7d2fe;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+    }
+    .flow-back:hover { background: #eef2ff; }
+    .flow-page h1 {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: 0.02em;
+    }
+    .flow-page .lead {
+      margin: 8px 0 0;
+      font-size: 0.84rem;
+      color: var(--muted);
+      max-width: 720px;
+      line-height: 1.65;
+    }
+    .flow-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      font-size: 0.72rem;
+      color: #64748b;
+      margin: 16px 0 14px;
+      padding: 10px 14px;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+    }
+    .flow-legend span { display: inline-flex; align-items: center; gap: 4px; }
+    .flow-diagram {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius);
+      padding: 20px 12px 24px;
+      box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
+      overflow-x: auto;
+    }
+    .flow-diagram svg { display: block; margin: 0 auto; min-width: 920px; }
+    .flow-node {
+      fill: #f8fafc;
+      stroke: #94a3b8;
+      stroke-width: 1.25;
+    }
+    .flow-node--on { fill: #ecfdf5; stroke: #22c55e; }
+    .flow-node--dev { fill: #fff7ed; stroke: #ea580c; }
+    .flow-node--common { fill: #eef2ff; stroke: #6366f1; }
+    .flow-node--sys { fill: #e0f2fe; stroke: #0284c7; }
+    .flow-label { font-size: 11px; fill: #0f172a; font-family: "PingFang SC", "Microsoft YaHei", ui-sans-serif, sans-serif; }
+    .flow-label-sm { font-size: 9.5px; fill: #475569; font-family: ui-monospace, Menlo, monospace; }
+    .flow-arrow { stroke: #64748b; stroke-width: 1.4; fill: none; marker-end: url(#arrowhead-bs); }
+    .flow-arrow--dash { stroke-dasharray: 4 3; opacity: 0.85; }
+    .flow-note {
+      margin-top: 18px;
+      font-size: 0.78rem;
+      color: #64748b;
+      line-height: 1.65;
+      padding: 12px 14px;
+      background: #f8fafc;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+    }
+    .flow-note code { font-size: 0.74rem; }
   </style>
 </head>
 <body>
@@ -741,6 +835,8 @@
     </button>
   </div>
   <div id="save-toast" class="save-toast show" role="status" aria-live="polite" style="background: rgb(30, 41, 59);">✅ 已覆盖保存到本地文件</div>
+
+  <div id="view-main" class="page-view">
   <header class="dex-top">
     <h1>AI 员工全部门卡片图鉴</h1>
     <div class="stats">
@@ -749,6 +845,8 @@
       <span>BS / HR / Treasury / Compliance / NS-Finance / OSM / Cango / Common</span>
       <span>·</span>
       <span>✅ BS Phase 1&amp;2 部分已上线</span>
+      <span>·</span>
+      <span><a href="#flow-bs" class="ref" id="headerFlowBsLink">BS SKILL 数据流 →</a></span>
     </div>
   </header>
 
@@ -765,6 +863,7 @@
         <li><a href="#no-007">NO.007 Grove</a></li>
         <li><a href="#no-008">NO.008 松饼</a></li>
         <li><a href="#no-009">NO.009 通用能力</a></li>
+        <li><a href="#flow-bs" id="tocFlowBs">BS SKILL 数据流</a></li>
         <li><a href="#appendix">附录</a></li>
       </ul>
     </nav>
@@ -850,7 +949,8 @@
               <div class="st-row"><span class="st-id">BS-11</span><span class="st-name">Mining 合资立项与入资 <code>bs-mining-jv-setup</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
               <div class="st-row"><span class="st-id">BS-12</span><span class="st-name">Mining 合资日常运营 <code>bs-mining-jv-operation</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
             </div>
-            <p class="st-footnote">完整技术标识见 SKILL 索引：<code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。</p>
+            <p class="st-footnote">完整技术标识见 SKILL 索引：<code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。<br>
+              <a href="#flow-bs" class="ref" style="color: var(--dex-iris); font-weight: 700;">查看 BS SKILL 数据流可视化 →</a></p>
           </div>
         </div>
       </div>
@@ -1299,6 +1399,121 @@
     <footer class="note">版式与配色参考 <a href="https://raw34.github.io/astro-lumi-dex/" target="_blank" rel="noopener">astro-lumi-dex</a> · 业务口径以 <code>AI员工全部门卡片汇总.md</code> 为准</footer>
     </div><!-- /.main-col -->
   </div>
+  </div><!-- /#view-main -->
+
+  <div id="view-flow-bs" class="page-view is-hidden" aria-hidden="true">
+    <header class="dex-top" style="margin-bottom: 20px; padding-bottom: 28px;">
+      <h1>BS · Agent SKILL 数据流</h1>
+      <p class="sub" style="margin-top: 8px;">NO.001 Star（Nexus 工单链 + 已上线能力）· 示意与依赖关系</p>
+    </header>
+    <div class="flow-page">
+      <div class="flow-page-head">
+        <div>
+          <h1>数据怎么在 SKILL 之间流动</h1>
+          <p class="lead">从渠道进线到分类、字段抽取、工作流路由与通知；已上线能力并行提供 SOP / NS 只读查询 / 邮件模板。通用能力（Common）为可选依赖，按实际编排接入。</p>
+        </div>
+        <a href="#" class="flow-back" id="flowBsBack">← 返回卡片图鉴</a>
+      </div>
+      <div class="flow-legend" role="list">
+        <span>■ <strong>已上线</strong>（绿）</span>
+        <span>■ <strong>开发中</strong>（橙）</span>
+        <span>■ <strong>通用 / 外部</strong>（紫 / 蓝）</span>
+        <span>虚线 = 可选或配置型依赖</span>
+      </div>
+      <div class="flow-diagram" role="img" aria-label="BS Agent SKILL 数据流示意图">
+        <svg viewBox="0 0 980 520" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <marker id="arrowhead-bs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+              <polygon points="0 0, 8 4, 0 8" fill="#64748b"/>
+            </marker>
+          </defs>
+          <text x="24" y="28" class="flow-label" font-weight="800">入口与上下文</text>
+          <rect class="flow-node" x="20" y="40" width="100" height="44" rx="10"/><text x="70" y="68" text-anchor="middle" class="flow-label">Slack</text>
+          <rect class="flow-node" x="130" y="40" width="100" height="44" rx="10"/><text x="180" y="68" text-anchor="middle" class="flow-label">邮件</text>
+          <rect class="flow-node" x="240" y="40" width="100" height="44" rx="10"/><text x="290" y="68" text-anchor="middle" class="flow-label">用户对话</text>
+          <rect class="flow-node--sys" x="350" y="40" width="120" height="44" rx="10"/><text x="410" y="62" text-anchor="middle" class="flow-label">NS（只读）</text><text x="410" y="76" text-anchor="middle" class="flow-label-sm">BS-03</text>
+
+          <text x="24" y="130" class="flow-label" font-weight="800">Nexus 工单主链（开发中）</text>
+          <rect class="flow-node--dev" x="20" y="142" width="130" height="52" rx="10"/>
+          <text x="85" y="166" text-anchor="middle" class="flow-label">意图分类</text>
+          <text x="85" y="182" text-anchor="middle" class="flow-label-sm">bs-intake-classifying</text>
+          <rect class="flow-node--dev" x="170" y="142" width="130" height="52" rx="10"/>
+          <text x="235" y="166" text-anchor="middle" class="flow-label">字段抽取</text>
+          <text x="235" y="182" text-anchor="middle" class="flow-label-sm">bs-intake-field-extracting</text>
+          <rect class="flow-node--dev" x="320" y="142" width="130" height="52" rx="10"/>
+          <text x="385" y="166" text-anchor="middle" class="flow-label">工作流路由</text>
+          <text x="385" y="182" text-anchor="middle" class="flow-label-sm">bs-workflow-routing</text>
+          <rect class="flow-node--dev" x="470" y="142" width="130" height="52" rx="10"/>
+          <text x="535" y="166" text-anchor="middle" class="flow-label">通用工作流</text>
+          <text x="535" y="182" text-anchor="middle" class="flow-label-sm">bs-common-workflow</text>
+
+          <path class="flow-arrow" d="M120 62 L170 62"/>
+          <path class="flow-arrow" d="M230 62 L240 62"/>
+          <path class="flow-arrow" d="M340 62 L350 62"/>
+          <path class="flow-arrow" d="M150 168 L170 168"/>
+          <path class="flow-arrow" d="M300 168 L320 168"/>
+          <path class="flow-arrow" d="M450 168 L470 168"/>
+
+          <text x="24" y="248" class="flow-label" font-weight="800">业务线分册（RAG / 配置）</text>
+          <rect class="flow-node--dev" x="20" y="260" width="150" height="48" rx="10"/>
+          <text x="95" y="282" text-anchor="middle" class="flow-label">AE 新能源小流程</text>
+          <text x="95" y="296" text-anchor="middle" class="flow-label-sm">bs-ae-small-flow</text>
+          <rect class="flow-node--dev" x="185" y="260" width="150" height="48" rx="10"/>
+          <text x="260" y="282" text-anchor="middle" class="flow-label">Mining 立项与入资</text>
+          <text x="260" y="296" text-anchor="middle" class="flow-label-sm">bs-mining-jv-setup</text>
+          <rect class="flow-node--dev" x="350" y="260" width="150" height="48" rx="10"/>
+          <text x="425" y="282" text-anchor="middle" class="flow-label">Mining 日常运营</text>
+          <text x="425" y="296" text-anchor="middle" class="flow-label-sm">bs-mining-jv-operation</text>
+
+          <path class="flow-arrow flow-arrow--dash" d="M535 194 L535 220 L95 220 L95 260"/>
+          <path class="flow-arrow flow-arrow--dash" d="M535 194 L535 232 L260 232 L260 260"/>
+          <path class="flow-arrow flow-arrow--dash" d="M535 194 L535 244 L425 244 L425 260"/>
+
+          <text x="24" y="358" class="flow-label" font-weight="800">输出与留痕</text>
+          <rect class="flow-node--dev" x="20" y="370" width="150" height="48" rx="10"/>
+          <text x="95" y="392" text-anchor="middle" class="flow-label">状态变更通知</text>
+          <text x="95" y="406" text-anchor="middle" class="flow-label-sm">bs-intake-status-notifying</text>
+          <rect class="flow-node--common" x="190" y="370" width="150" height="48" rx="10"/>
+          <text x="265" y="392" text-anchor="middle" class="flow-label">Slack 卡片（可选）</text>
+          <text x="265" y="406" text-anchor="middle" class="flow-label-sm">common-slack-card-publishing</text>
+          <rect class="flow-node--common" x="360" y="370" width="150" height="48" rx="10"/>
+          <text x="435" y="392" text-anchor="middle" class="flow-label">SLA 催办（可选）</text>
+          <text x="435" y="406" text-anchor="middle" class="flow-label-sm">common-sla-nudging</text>
+          <rect class="flow-node--common" x="530" y="370" width="150" height="48" rx="10"/>
+          <text x="605" y="392" text-anchor="middle" class="flow-label">邮件解析（可选）</text>
+          <text x="605" y="406" text-anchor="middle" class="flow-label-sm">common-email-parsing</text>
+
+          <path class="flow-arrow" d="M95 308 L95 370"/>
+          <path class="flow-arrow" d="M260 308 L260 340 L95 340 L95 370"/>
+          <path class="flow-arrow" d="M425 308 L425 352 L95 352 L95 370"/>
+          <path class="flow-arrow flow-arrow--dash" d="M170 394 L190 394"/>
+          <path class="flow-arrow flow-arrow--dash" d="M340 394 L360 394"/>
+          <path class="flow-arrow flow-arrow--dash" d="M510 394 L530 394"/>
+
+          <text x="24" y="458" class="flow-label" font-weight="800">已上线并行能力（Phase 1–2）</text>
+          <rect class="flow-node--on" x="20" y="468" width="140" height="44" rx="10"/>
+          <text x="90" y="490" text-anchor="middle" class="flow-label">五业务线流程问答</text>
+          <text x="90" y="504" text-anchor="middle" class="flow-label-sm">BS-01 · RAG/SOP</text>
+          <rect class="flow-node--on" x="175" y="468" width="140" height="44" rx="10"/>
+          <text x="245" y="490" text-anchor="middle" class="flow-label">需求接收与跟进</text>
+          <text x="245" y="504" text-anchor="middle" class="flow-label-sm">BS-02</text>
+          <rect class="flow-node--on" x="330" y="468" width="130" height="44" rx="10"/>
+          <text x="395" y="490" text-anchor="middle" class="flow-label">NS 数据查询</text>
+          <text x="395" y="504" text-anchor="middle" class="flow-label-sm">BS-03</text>
+          <rect class="flow-node--on" x="475" y="468" width="130" height="44" rx="10"/>
+          <text x="540" y="490" text-anchor="middle" class="flow-label">业务线邮件模板</text>
+          <text x="540" y="504" text-anchor="middle" class="flow-label-sm">BS-04</text>
+
+          <path class="flow-arrow flow-arrow--dash" d="M410 84 L410 120 L600 120 L600 142"/>
+          <path class="flow-arrow flow-arrow--dash" d="M290 84 L290 110 L85 110 L85 142"/>
+        </svg>
+      </div>
+      <p class="flow-note">
+        SKILL 设计文档目录（与图鉴脚注一致）：<code>AI Agent Skills Analysis/SKILLS/&lt;skill-id&gt;/SKILL.md</code>。<br>
+        类型标注参考仓库内依赖矩阵：Nexus 链上多为 Type D（纯 LLM）+ Type C（RAG）；与 NS、Slack、邮件的衔接以实际 Agent 编排为准。
+      </p>
+    </div>
+  </div><!-- /#view-flow-bs -->
 
   <a href="#" class="back-top visible" aria-label="返回顶部">▲ 顶部</a>
   <script>
@@ -1790,6 +2005,65 @@
       toggleBtn.addEventListener('click', function () {
         if (isEdit) exitEdit(); else enterEdit();
       });
+
+      /* ── BS SKILL 数据流 二级页（#flow-bs）──────────────────── */
+      var viewMain = document.getElementById('view-main');
+      var viewFlow = document.getElementById('view-flow-bs');
+
+      function switchToFlowBs() {
+        if (!viewMain || !viewFlow) return;
+        viewMain.classList.add('is-hidden');
+        viewFlow.classList.remove('is-hidden');
+        viewFlow.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('subpage-flow-bs');
+        window.scrollTo(0, 0);
+        try { history.replaceState(null, '', '#flow-bs'); } catch (e) {}
+      }
+
+      function switchToMainFromFlow() {
+        if (!viewMain || !viewFlow) return;
+        viewFlow.classList.add('is-hidden');
+        viewFlow.setAttribute('aria-hidden', 'true');
+        viewMain.classList.remove('is-hidden');
+        document.body.classList.remove('subpage-flow-bs');
+        window.scrollTo(0, 0);
+        try { history.replaceState(null, '', location.pathname + location.search); } catch (e2) {}
+      }
+
+      function onHashRoute() {
+        if (location.hash === '#flow-bs') switchToFlowBs();
+        else if (viewMain && viewFlow && !viewFlow.classList.contains('is-hidden')) {
+          /* 从数据流页切到其他锚点时回到主视图 */
+          switchToMainFromFlow();
+        }
+      }
+
+      window.addEventListener('hashchange', onHashRoute);
+      if (location.hash === '#flow-bs') switchToFlowBs();
+
+      document.addEventListener('click', function (e) {
+        var link = e.target.closest('a[href^="#"]');
+        if (!link) return;
+        var h = link.getAttribute('href') || '';
+        if (h === '#flow-bs') {
+          e.preventDefault();
+          switchToFlowBs();
+          try { history.replaceState(null, '', '#flow-bs'); } catch (e3) {}
+          return;
+        }
+        /* 数据流页内点到其他章节锚点：先切回主视图再交给浏览器滚动 */
+        if (h.length > 1 && viewFlow && !viewFlow.classList.contains('is-hidden')) {
+          switchToMainFromFlow();
+        }
+      }, true);
+
+      var flowBack = document.getElementById('flowBsBack');
+      if (flowBack) {
+        flowBack.addEventListener('click', function (e) {
+          e.preventDefault();
+          switchToMainFromFlow();
+        });
+      }
 
       document.getElementById('localSaveBtn').addEventListener('click', saveLocal);
       document.getElementById('exportBtn').addEventListener('click', exportHtml);
