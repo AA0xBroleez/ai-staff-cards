@@ -2836,7 +2836,8 @@
         var overlay = document.getElementById('authOverlay');
         if (!overlay) return; /* auth overlay 不存在时跳过（防止导出文件出错） */
 
-        /* 已有未过期 token，直接通过 */
+        /* 已有未过期 token，直接通过 — 缓存已禁用，每次都需要输入密码 */
+        /* --- CACHE DISABLED ---
         try {
           var saved = JSON.parse(localStorage.getItem(AUTH_KEY) || '{}');
           if (saved.t && Date.now() - saved.t < AUTH_TTL) {
@@ -2844,6 +2845,7 @@
             return;
           }
         } catch (e) {}
+        --- CACHE DISABLED --- */
 
         /* 绑定交互 */
         var inp = document.getElementById('authInput');
@@ -2853,7 +2855,7 @@
 
         function attempt() {
           if (verify(inp.value)) {
-            try { localStorage.setItem(AUTH_KEY, JSON.stringify({ t: Date.now() })); } catch(e) {}
+            /* --- CACHE DISABLED --- try { localStorage.setItem(AUTH_KEY, JSON.stringify({ t: Date.now() })); } catch(e) {} --- */
             overlay.style.transition = 'opacity 0.35s';
             overlay.style.opacity = '0';
             setTimeout(function () { overlay.remove(); }, 360);
@@ -2994,8 +2996,9 @@
         }
       }
 
-      /* 保存全部卡片到 localStorage */
+      /* 保存全部卡片到 localStorage — 已禁用 */
       function saveLocal() {
+        /* --- CACHE DISABLED ---
         var snapshot = { v: 1, at: Date.now(), cards: {} };
         document.querySelectorAll('.dex-card[id]').forEach(function (card) {
           snapshot.cards[card.id] = collectCard(card);
@@ -3008,10 +3011,13 @@
         } catch (e) {
           showToast('⚠ 保存失败：空间不足', true);
         }
+        --- CACHE DISABLED --- */
+        showToast('缓存功能已禁用');
       }
 
-      /* 页面加载时从 localStorage 恢复 */
+      /* 页面加载时从 localStorage 恢复 — 已禁用 */
       function loadLocal() {
+        /* --- CACHE DISABLED ---
         try {
           var raw = localStorage.getItem(STORE_KEY);
           if (!raw) return;
@@ -3020,11 +3026,12 @@
           document.querySelectorAll('.dex-card[id]').forEach(function (card) {
             applyCard(card, snap.cards[card.id]);
           });
-        } catch (e) { /* 数据损坏则跳过 */ }
+        } catch (e) {}
+        --- CACHE DISABLED --- */
       }
 
-      /* 自动恢复上次保存的内容 */
-      loadLocal();
+      /* 自动恢复上次保存的内容 — 已禁用 */
+      /* loadLocal(); */
 
       /* 支持内联编辑的元素 */
       var EDITABLE_SEL = [
