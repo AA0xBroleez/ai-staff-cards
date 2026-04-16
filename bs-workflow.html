@@ -204,6 +204,35 @@
       padding-left: 10px; border-left: 3px solid var(--teal);
     }
 
+    /* ── TOC Directory ── */
+    .toc-panel {
+      background: var(--card); border-radius: var(--radius); padding: 20px 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 28px;
+      border: 1px solid #e2e8f0;
+    }
+    .toc-panel h3 {
+      font-size: 0.92rem; font-weight: 700; margin: 0 0 12px; color: var(--ink);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .toc-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px 16px;
+    }
+    @media (max-width: 768px) { .toc-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .toc-grid { grid-template-columns: 1fr; } }
+    .toc-item {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.82rem; padding: 5px 8px; border-radius: 8px;
+      cursor: pointer; transition: background 0.15s; color: var(--ink); text-decoration: none;
+    }
+    .toc-item:hover { background: #f1f5f9; }
+    .toc-item .toc-icon { font-size: 0.9rem; flex-shrink: 0; }
+    .toc-item .toc-name { font-weight: 600; }
+    .toc-item .toc-count { font-size: 0.72rem; color: var(--muted); margin-left: auto; }
+    .toc-sep {
+      grid-column: 1 / -1; border-top: 1px solid #f1f5f9;
+      margin: 4px 0; font-size: 0.72rem; color: var(--muted); padding-top: 6px; font-weight: 600;
+    }
+
     /* ── Collapse Toggle ── */
     .panel-toggle {
       cursor: pointer; user-select: none; font-weight: 700; font-size: 0.95rem;
@@ -232,6 +261,12 @@
       <div class="stat-chip"><span class="dot dot-slate"></span> 待开发写操作: 47 个</div>
       <div class="stat-chip"><span class="dot dot-green"></span> Agent 可介入: ~30 个</div>
       <div class="stat-chip"><span class="dot dot-indigo"></span> 审批节点: ~25 个</div>
+    </div>
+
+    <!-- TOC Directory -->
+    <div class="toc-panel">
+      <h3>📑 目录导航</h3>
+      <div class="toc-grid" id="tocGrid"></div>
     </div>
 
     <div class="section-title">业务线概览</div>
@@ -597,6 +632,34 @@ const HEATMAP_VALUES = [
 
 // ── RENDER FUNCTIONS ──
 
+function renderTOC() {
+  const grid = document.getElementById("tocGrid");
+  let html = '<div class="toc-sep">业务线</div>';
+  BL_DATA.forEach(bl => {
+    if (bl.id === "common") return; // common goes to second section
+    html += `<a class="toc-item" onclick="showBusinessLine('${bl.id}')">
+      <span class="toc-icon">${bl.icon}</span>
+      <span class="toc-name">${bl.name}</span>
+      <span class="toc-count">${bl.workflows}</span>
+    </a>`;
+  });
+  html += '<div class="toc-sep">跨业务线通用</div>';
+  const common = BL_DATA.find(b => b.id === "common");
+  if (common) {
+    common.groups.forEach(g => {
+      html += `<a class="toc-item" onclick="showBusinessLine('common')">
+        <span class="toc-icon">📋</span>
+        <span class="toc-name">${g.title}</span>
+        <span class="toc-count">${g.items.length}</span>
+      </a>`;
+    });
+  }
+  html += '<div class="toc-sep">页面锚点</div>';
+  html += '<a class="toc-item" onclick="document.getElementById(\'heatmapTable\').scrollIntoView({behavior:\'smooth\'})"><span class="toc-icon">📊</span><span class="toc-name">操作分布热力图</span></a>';
+  html += '<a class="toc-item" onclick="togglePriorityPanel();document.querySelector(\'.priority-panel\').scrollIntoView({behavior:\'smooth\'})"><span class="toc-icon">⚡</span><span class="toc-name">待开发优先级</span></a>';
+  grid.innerHTML = html;
+}
+
 function renderBLGrid() {
   const grid = document.getElementById("blGrid");
   let html = "";
@@ -730,6 +793,7 @@ function togglePriorityPanel() {
 }
 
 // ── INIT ──
+renderTOC();
 renderBLGrid();
 renderHeatmap();
 </script>
