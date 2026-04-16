@@ -266,6 +266,52 @@
     .pano-foundation .pf-title { font-weight: 700; font-size: 0.85rem; color: #1e40af; white-space: nowrap; }
     .pano-foundation .pano-tag { font-size: 0.72rem; }
 
+    /* ── Full Map (全流程大图) ── */
+    .fullmap-section { margin-bottom: 40px; }
+    .fullmap-bl {
+      margin-bottom: 28px; background: var(--card); border-radius: var(--radius);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; border: 1px solid #e2e8f0;
+    }
+    .fullmap-bl-head {
+      display: flex; align-items: center; gap: 10px; padding: 14px 20px;
+      background: linear-gradient(135deg, #0c4a6e, #0891b2); color: #fff;
+      font-weight: 700; font-size: 0.95rem;
+    }
+    .fullmap-bl-head .fmh-icon { font-size: 1.3rem; }
+    .fullmap-bl-head .fmh-stat { margin-left: auto; font-size: 0.75rem; opacity: 0.85; font-weight: 500; }
+    .fullmap-group {
+      padding: 12px 16px 4px; border-bottom: 1px solid #f1f5f9;
+    }
+    .fullmap-group:last-child { border-bottom: none; }
+    .fullmap-group-title {
+      font-size: 0.82rem; font-weight: 700; color: var(--teal); margin-bottom: 8px;
+      padding-left: 8px; border-left: 3px solid var(--teal);
+    }
+    .fullmap-wf {
+      margin-bottom: 12px; padding: 10px 12px; background: #fafbfc; border-radius: 10px;
+      border: 1px solid #e2e8f0;
+    }
+    .fullmap-wf-title {
+      font-size: 0.82rem; font-weight: 700; margin-bottom: 6px;
+      display: flex; align-items: center; gap: 8px; color: var(--ink);
+    }
+    .fullmap-wf-title .fmw-tag {
+      font-size: 0.62rem; padding: 1px 8px; border-radius: 6px; font-weight: 600;
+    }
+    .fmw-online { background: #dbeafe; color: #1e40af; }
+    .fmw-pending { background: #f1f5f9; color: #64748b; }
+    /* Compact flowchart in full map: horizontal layout */
+    .fc-horizontal { display: flex; align-items: center; gap: 0; overflow-x: auto; padding: 6px 0; flex-wrap: nowrap; }
+    .fc-horizontal .fc-step {
+      max-width: none; width: auto; min-width: 80px; padding: 6px 10px;
+      font-size: 0.72rem; flex-shrink: 0; white-space: nowrap;
+    }
+    .fc-horizontal .fc-step .fc-inputs { font-size: 0.6rem; white-space: normal; max-width: 140px; }
+    .fc-horizontal .fc-step .fc-sys { justify-content: flex-start; }
+    .fc-horizontal .fc-step .fc-sys-tag { font-size: 0.58rem; }
+    .fc-horizontal .fc-step .fc-sys-info { font-size: 0.58rem; }
+    .fc-horizontal .fc-harrow { color: var(--muted); font-size: 0.9rem; padding: 0 2px; flex-shrink: 0; user-select: none; }
+
     /* ── TOC Directory ── */
     .toc-panel {
       background: var(--card); border-radius: var(--radius); padding: 20px 24px;
@@ -344,6 +390,10 @@
         <div id="panoGrid"></div>
       </div>
     </div>
+
+    <!-- Full Map 全流程大图 -->
+    <div class="section-title" id="fullMapTitle">全流程大图 — 51 个工作流完整展开</div>
+    <div class="fullmap-section" id="fullMap"></div>
 
     <div class="section-title">业务线概览</div>
 
@@ -876,6 +926,74 @@ function renderPanorama() {
   container.innerHTML = html;
 }
 
+function renderFlowchartHorizontal(steps) {
+  var html = '<div class="fc-horizontal">';
+  steps.forEach(function(s, i) {
+    if (i > 0) html += '<span class="fc-harrow">→</span>';
+    var cls = "fc-step ";
+    var badges = "";
+    switch (s.t) {
+      case "start": cls += "wf-start"; break;
+      case "end": cls += "wf-end"; break;
+      case "read": cls += "wf-read"; break;
+      case "wp": cls += "wf-write-pending"; badges += '<span class="badge-pending">待开发</span>'; break;
+      case "dec": cls += "wf-decision"; break;
+      case "io": cls += "wf-io"; break;
+    }
+    if (s.agent) badges += '<span class="badge-agent">🤖</span>';
+    var inp = s.inp ? '<div class="fc-inputs">需要: ' + s.inp + '</div>' : "";
+    var sysHtml = "";
+    if (s.sys && s.sys.length) {
+      sysHtml = '<div class="fc-sys">';
+      s.sys.forEach(function(sx) {
+        var sCls = "sys-external";
+        if (/NS|中台|Armada|内部|RAG|模板/.test(sx.name)) sCls = "sys-internal";
+        else if (/Binance|OKX|Gate|交易所|Prime/.test(sx.name)) sCls = "sys-exchange";
+        else if (/银行|Bank|SWIFT/.test(sx.name)) sCls = "sys-bank";
+        else if (/链上|合约|Fordefi|区块链/.test(sx.name)) sCls = "sys-blockchain";
+        else if (/矿池|Antpool|F2pool/.test(sx.name)) sCls = "sys-mining";
+        sysHtml += '<span class="fc-sys-tag ' + sCls + '">🔌 ' + sx.name + '</span>';
+      });
+      sysHtml += '</div>';
+      s.sys.forEach(function(sx) {
+        if (sx.info) sysHtml += '<div class="fc-sys-info">↳ ' + sx.info + '</div>';
+      });
+    }
+    html += '<div class="' + cls + '">' + badges + s.l + inp + sysHtml + '</div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+function renderFullMap() {
+  var container = document.getElementById("fullMap");
+  var html = "";
+  BL_DATA.forEach(function(bl) {
+    var wfCount = 0;
+    bl.groups.forEach(function(g) { wfCount += g.items.length; });
+    html += '<div class="fullmap-bl">';
+    html += '<div class="fullmap-bl-head">';
+    html += '<span class="fmh-icon">' + bl.icon + '</span>' + bl.name;
+    html += '<span class="fmh-stat">读 ' + bl.read + ' · 写 ' + bl.write + ' · 共 ' + wfCount + ' 流程</span>';
+    html += '</div>';
+    bl.groups.forEach(function(g) {
+      html += '<div class="fullmap-group">';
+      html += '<div class="fullmap-group-title">' + g.title + '</div>';
+      g.items.forEach(function(item) {
+        var tagCls = item.online ? "fmw-online" : "fmw-pending";
+        var tagText = item.online ? "✅ 已上线" : "⬜ 待开发";
+        html += '<div class="fullmap-wf">';
+        html += '<div class="fullmap-wf-title">' + item.name + ' <span class="fmw-tag ' + tagCls + '">' + tagText + '</span></div>';
+        html += renderFlowchartHorizontal(item.steps);
+        html += '</div>';
+      });
+      html += '</div>';
+    });
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
 function renderTOC() {
   const grid = document.getElementById("tocGrid");
   let html = '<div class="toc-sep">业务线</div>';
@@ -899,7 +1017,8 @@ function renderTOC() {
     });
   }
   html += '<div class="toc-sep">页面锚点</div>';
-  html += '<a class="toc-item" onclick="document.getElementById(\'panoGrid\').scrollIntoView({behavior:\'smooth\'})"><span class="toc-icon">🗺️</span><span class="toc-name">全貌图</span></a>';
+  html += '<a class="toc-item" onclick="document.getElementById(\'panoGrid\').scrollIntoView({behavior:\'smooth\'})"><span class="toc-icon">🗺️</span><span class="toc-name">任务矩阵</span></a>';
+  html += '<a class="toc-item" onclick="document.getElementById(\'fullMapTitle\').scrollIntoView({behavior:\'smooth\'})"><span class="toc-icon">📐</span><span class="toc-name">全流程大图</span></a>';
   html += '<a class="toc-item" onclick="document.getElementById(\'heatmapTable\').scrollIntoView({behavior:\'smooth\'})"><span class="toc-icon">📊</span><span class="toc-name">操作分布热力图</span></a>';
   html += '<a class="toc-item" onclick="togglePriorityPanel();document.querySelector(\'.priority-panel\').scrollIntoView({behavior:\'smooth\'})"><span class="toc-icon">⚡</span><span class="toc-name">待开发优先级</span></a>';
   grid.innerHTML = html;
@@ -1058,6 +1177,7 @@ function togglePriorityPanel() {
 
 // ── INIT ──
 renderPanorama();
+renderFullMap();
 renderTOC();
 renderBLGrid();
 renderHeatmap();
