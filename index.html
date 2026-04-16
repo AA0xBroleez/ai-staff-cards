@@ -724,12 +724,22 @@
 
     /* ─── 二级页：BS SKILL 数据流 ─────────────────────────────── */
     .page-view.is-hidden { display: none !important; }
-    body.subpage-flow-bs {
+    body.subpage-active {
       overflow-x: hidden;
       background: var(--surface);
     }
+    body.subpage-active .mode-controls,
+    body.subpage-active .back-top { display: none; }
+    /* 向前兼容旧 class */
+    body.subpage-flow-bs { overflow-x: hidden; background: var(--surface); }
     body.subpage-flow-bs .mode-controls,
     body.subpage-flow-bs .back-top { display: none; }
+
+    .page-view[data-subpage] {
+      max-width: 100%;
+      box-sizing: border-box;
+      padding-bottom: 32px;
+    }
 
     #view-flow-bs {
       max-width: 100%;
@@ -799,16 +809,15 @@
       width: 100%;
     }
     .flow-legend span { display: inline-flex; align-items: center; gap: 4px; }
-    /* 横向滚动只发生在图形容器内，避免整页被撑出横向滚动条 */
+    /* 纵向流转图：单列自适应宽度，无横向滚动 */
     .flow-diagram {
       background: #fff;
       border: 1px solid #e2e8f0;
       border-radius: var(--radius);
-      padding: 16px 8px 20px;
+      padding: 16px 12px 20px;
       box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
-      overflow-x: auto;
+      overflow-x: hidden;
       overflow-y: visible;
-      -webkit-overflow-scrolling: touch;
       width: 100%;
       max-width: 100%;
       box-sizing: border-box;
@@ -816,10 +825,10 @@
     .flow-diagram svg {
       display: block;
       margin: 0 auto;
-      width: 980px;
-      max-width: none;
+      width: 100%;
+      max-width: 440px;
       height: auto;
-      min-width: 720px;
+      min-width: 0;
       overflow: visible;
       shape-rendering: geometricPrecision;
     }
@@ -864,6 +873,60 @@
       .flow-back { width: 100%; }
       .flow-diagram { padding: 12px 4px 16px; }
     }
+
+    /* ─── SOP 三栏卡片组件 ─────────────────────────────────── */
+    .sop-section { margin-top: 32px; }
+    .sop-section > h2 {
+      font-size: 1.05rem; font-weight: 800; color: var(--ink);
+      margin: 0 0 16px; padding-bottom: 8px; border-bottom: 2px solid #e2e8f0;
+    }
+    .sop-card {
+      background: #fff; border: 1px solid #e2e8f0; border-radius: 14px;
+      margin-bottom: 16px; overflow: hidden;
+      box-shadow: 0 2px 12px rgba(15,23,42,0.05);
+    }
+    .sop-card-head {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px;
+      padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0;
+    }
+    .sop-card-head .sop-id { font-size: 0.72rem; font-weight: 700; color: #64748b; }
+    .sop-card-head .sop-name { font-size: 0.88rem; font-weight: 700; color: var(--ink); }
+    .sop-card-head code { font-size: 0.72rem; color: #64748b; }
+    .sop-card-head .sop-status { font-size: 0.72rem; margin-left: auto; }
+    .sop-auto-bar {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.72rem; color: #0e7490; font-weight: 600;
+      background: #ecfeff; padding: 3px 10px; border-radius: 999px;
+    }
+    .sop-auto-bar--blk { color: #b91c1c; background: #fef2f2; }
+    .sop-cols {
+      display: grid; grid-template-columns: 1fr 1.6fr 1fr; gap: 0;
+      padding: 0; min-height: 80px;
+    }
+    .sop-col {
+      padding: 14px 16px; font-size: 0.78rem; line-height: 1.7; color: #334155;
+    }
+    .sop-col:not(:last-child) { border-right: 1px solid #f1f5f9; }
+    .sop-col h5 {
+      margin: 0 0 8px; font-size: 0.72rem; font-weight: 700;
+      color: #94a3b8; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .sop-col ul { margin: 0; padding: 0; list-style: none; }
+    .sop-col li { padding: 2px 0; }
+    .sop-col li::before { content: "· "; color: #94a3b8; font-weight: 700; }
+    .sop-step { padding: 4px 0; display: flex; align-items: flex-start; gap: 6px; }
+    .sop-step-tag {
+      flex-shrink: 0; font-size: 0.68rem; font-weight: 700;
+      padding: 1px 6px; border-radius: 4px; white-space: nowrap;
+    }
+    .sop-step-agent .sop-step-tag { background: #ecfeff; color: #0e7490; }
+    .sop-step-human .sop-step-tag { background: #fffbeb; color: #b45309; }
+    .sop-step-collab .sop-step-tag { background: #eff6ff; color: #1d4ed8; }
+    .sop-step-desc { flex: 1; }
+    @media (max-width: 768px) {
+      .sop-cols { grid-template-columns: 1fr; }
+      .sop-col:not(:last-child) { border-right: none; border-bottom: 1px solid #f1f5f9; }
+    }
   </style>
 </head>
 <body>
@@ -900,7 +963,7 @@
       <span>·</span>
       <span>✅ BS Phase 1&amp;2 部分已上线</span>
       <span>·</span>
-      <span><a href="#flow-bs" class="ref" id="headerFlowBsLink">BS SKILL 数据流 →</a></span>
+      <span>数据流：<a href="#flow-bs" class="ref">BS</a> · <a href="#flow-hr" class="ref">HR</a> · <a href="#flow-treasury" class="ref">Treasury</a> · <a href="#flow-astro" class="ref">Astro</a> · <a href="#flow-compliance" class="ref">Compliance</a> · <a href="#flow-nsfin" class="ref">NS-Fin</a> · <a href="#flow-osm" class="ref">OSM</a> · <a href="#flow-cango" class="ref">Cango</a> · <a href="#flow-common" class="ref">Common</a> · <a href="#flow-osto" class="ref">Osto</a></span>
     </div>
   </header>
 
@@ -919,6 +982,15 @@
         <li><a href="#no-009">NO.009 通用能力</a></li>
         <li><a href="#no-010">NO.010 Osto</a></li>
         <li><a href="#flow-bs" id="tocFlowBs">BS SKILL 数据流</a></li>
+        <li><a href="#flow-hr">HR SKILL 数据流</a></li>
+        <li><a href="#flow-treasury">Treasury SKILL 数据流</a></li>
+        <li><a href="#flow-astro">Astro SKILL 数据流</a></li>
+        <li><a href="#flow-compliance">Compliance SKILL 数据流</a></li>
+        <li><a href="#flow-nsfin">NS-Finance SKILL 数据流</a></li>
+        <li><a href="#flow-osm">OSM SKILL 数据流</a></li>
+        <li><a href="#flow-cango">Cango SKILL 数据流</a></li>
+        <li><a href="#flow-common">Common SKILL 数据流</a></li>
+        <li><a href="#flow-osto">Osto SKILL 数据流</a></li>
         <li><a href="#appendix">附录</a></li>
       </ul>
     </nav>
@@ -1076,7 +1148,8 @@
               <div class="st-row"><span class="st-id">HR-06</span><span class="st-name" title="Workday 字段白名单需 2026-04-22 前确认（P0）">Workday 字段查询 <code>hr-workday-querying</code></span><span class="st-st st-st--blk">⛔ 阻塞</span></div>
               <div class="st-row"><span class="st-id">HR-07</span><span class="st-name" title="跨系统权限 API 协议未确认（Phase 2.0）">账户权限自动化 <code>hr-account-permission-automating</code></span><span class="st-st st-st--blk">⛔ 阻塞</span></div>
             </div>
-            <p class="st-footnote">招聘产品线技能由 <strong>NO.004 Astro</strong> 承载，见 <a href="#no-004">技能树</a>；完整技术标识见 <code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。</p>
+            <p class="st-footnote">招聘产品线技能由 <strong>NO.004 Astro</strong> 承载，见 <a href="#no-004">技能树</a>；完整技术标识见 <code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。<br>
+              <a href="#flow-hr" class="ref" style="color: var(--dex-iris); font-weight: 700;">查看 HR SKILL 数据流可视化 →</a></p>
           </div>
         </div>
       </div>
@@ -1121,7 +1194,8 @@
               <h4>Phase 2.0<span class="st-phase-desc">付款侧（5 项澄清待闭环）</span></h4>
               <div class="st-row"><span class="st-id">Treasury-03</span><span class="st-name" title="5 项待澄清全部闭环才可开发">支付审核辅助 <code>treasury-payment-reviewing</code></span><span class="st-st st-st--blk">⛔ 阻塞</span></div>
             </div>
-            <p class="st-footnote">完整技术标识见 SKILL 索引：<code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。</p>
+            <p class="st-footnote">完整技术标识见 SKILL 索引：<code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。<br>
+              <a href="#flow-treasury" class="ref" style="color: var(--dex-iris); font-weight: 700;">查看 Treasury SKILL 数据流可视化 →</a></p>
           </div>
           </div>
       </div>
@@ -1181,7 +1255,8 @@
               <h4>Phase 3.0<span class="st-phase-desc">语音/视频面试（平台选型未确认）</span></h4>
               <div class="st-row"><span class="st-id">Astro-12</span><span class="st-name" title="AI 语音/视频面试平台选型未确认">语音/视频初筛 <code>astro-voice-interview-conducting</code></span><span class="st-st st-st--blk">⛔ 阻塞</span></div>
             </div>
-            <p class="st-footnote">完整技术标识见 SKILL 索引：<code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。</p>
+            <p class="st-footnote">完整技术标识见 SKILL 索引：<code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。<br>
+              <a href="#flow-astro" class="ref" style="color: var(--dex-iris); font-weight: 700;">查看 Astro SKILL 数据流可视化 →</a></p>
           </div>
           </div>
       </div>
@@ -1228,7 +1303,8 @@
               <h4>Phase 2.0<span class="st-phase-desc">定期审查（依赖 CRA 稳定）</span></h4>
               <div class="st-row"><span class="st-id">Compliance-05</span><span class="st-name">定期审查通知 <code>compliance-periodic-review-notifying</code></span><span class="st-st">📋 规划中</span></div>
             </div>
-            <p class="st-footnote">完整技术标识见 SKILL 索引：<code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。</p>
+            <p class="st-footnote">完整技术标识见 SKILL 索引：<code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。<br>
+              <a href="#flow-compliance" class="ref" style="color: var(--dex-iris); font-weight: 700;">查看 Compliance SKILL 数据流可视化 →</a></p>
           </div>
           </div>
       </div>
@@ -1274,7 +1350,8 @@
               <h4>Phase 2.0<span class="st-phase-desc">内部划转（白名单规则库未就绪）</span></h4>
               <div class="st-row"><span class="st-id">NS-04</span><span class="st-name" title="内部划转白名单规则库未就绪">内部划转自动审批建议 <code>nsfin-internal-transfer-approval-suggesting</code></span><span class="st-st st-st--blk">⛔ 阻塞</span></div>
             </div>
-            <p class="st-footnote">邮件解析与 Slack 卡片推送已通用化至 <a href="#no-009">NO.009 通用能力</a>；完整技术标识见 <code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。</p>
+            <p class="st-footnote">邮件解析与 Slack 卡片推送已通用化至 <a href="#no-009">NO.009 通用能力</a>；完整技术标识见 <code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。<br>
+              <a href="#flow-nsfin" class="ref" style="color: var(--dex-iris); font-weight: 700;">查看 NS-Finance SKILL 数据流可视化 →</a></p>
           </div>
           </div>
       </div>
@@ -1324,7 +1401,8 @@
               <div class="st-row"><span class="st-id">OSM-07</span><span class="st-name">月度拆账计算与差异 <code>osm-split-ledger-calc</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
               <div class="st-row"><span class="st-id">OSM-08</span><span class="st-name">运营邮件草稿（参数化）<code>osm-email-draft-generating</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
             </div>
-            <p class="st-footnote">完整技术标识见 SKILL 索引：<code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。</p>
+            <p class="st-footnote">完整技术标识见 SKILL 索引：<code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。<br>
+              <a href="#flow-osm" class="ref" style="color: var(--dex-iris); font-weight: 700;">查看 OSM SKILL 数据流可视化 →</a></p>
           </div>
           </div>
       </div>
@@ -1365,7 +1443,8 @@
               <div class="st-row"><span class="st-id">Cango-01</span><span class="st-name" title="业务共建字段 Schema 未定义（BLOCKER-01）">项目文档解析与摘要 <code>cango-document-summarizing</code></span><span class="st-st st-st--blk">⛔ 阻塞</span></div>
               <div class="st-row"><span class="st-id">Cango-02</span><span class="st-name" title="合规数据源白名单未审批通过（BLOCKER-02）">合规网页搜索检索 <code>cango-web-search-retrieving</code></span><span class="st-st st-st--blk">⛔ 阻塞</span></div>
             </div>
-            <p class="st-footnote">完整技术标识见 SKILL 索引：<code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。</p>
+            <p class="st-footnote">完整技术标识见 SKILL 索引：<code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。<br>
+              <a href="#flow-cango" class="ref" style="color: var(--dex-iris); font-weight: 700;">查看 Cango SKILL 数据流可视化 →</a></p>
           </div>
           </div>
       </div>
@@ -1438,7 +1517,8 @@
               · <code>common-email-parsing</code> ← nsfin-email-parsing<br>
               · <code>common-slack-card-publishing</code> ← nsfin-slack-card-publishing<br>
               · <code>common-compliance-scanning</code> ← astro-compliance-scanning<br>
-              完整技术标识见 <code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。
+              完整技术标识见 <code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。<br>
+              <a href="#flow-common" class="ref" style="color: var(--dex-iris); font-weight: 700;">查看 Common SKILL 数据流可视化 →</a>
             </p>
           </div>
         </div>
@@ -1535,7 +1615,8 @@
               · Phase 1.0 全部为 Type A（需脚本开发 + 共享工具），P0 优先级<br>
               · Phase 2.0 含 Type A（P1/P2）+ Type B（osto-audit-material-preprocessing）<br>
               · Phase 3.0 含 Type C（平台内置）+ Type D（纯 LLM）<br>
-              · ⛔ fin-fpa-report-exporting 阻塞原因：bp-api/oracle-api 授权待确认（Open Q2）
+              · ⛔ fin-fpa-report-exporting 阻塞原因：bp-api/oracle-api 授权待确认（Open Q2）<br>
+              <a href="#flow-osto" class="ref" style="color: var(--dex-iris); font-weight: 700;">查看 Osto SKILL 数据流可视化 →</a>
             </p>
           </div>
         </div>
@@ -1572,92 +1653,101 @@
         <span>■ <strong>通用 / 外部</strong>（紫 / 蓝）</span>
         <span>虚线 = 可选或配置型依赖</span>
       </div>
-      <div class="flow-diagram" role="img" aria-label="BS Agent SKILL 数据流示意图">
-        <svg viewBox="0 0 980 528" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" font-size="14">
+      <div class="flow-diagram" role="img" aria-label="BS Agent SKILL 数据流示意图（纵向）">
+        <!-- 单列纵向：boxW=360，标题与 skill id 分两行，框高避免文字溢出 -->
+        <svg viewBox="0 0 440 1500" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" font-size="13">
           <defs>
             <marker id="arrowhead-bs" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
               <polygon points="0 0, 10 5, 0 10" fill="#64748b"/>
             </marker>
           </defs>
-          <text x="24" y="28" class="flow-label" font-weight="800">入口与上下文</text>
-          <rect class="flow-node" x="20" y="40" width="100" height="44" rx="10"/><text x="70" y="68" text-anchor="middle" class="flow-label">Slack</text>
-          <rect class="flow-node" x="130" y="40" width="100" height="44" rx="10"/><text x="180" y="68" text-anchor="middle" class="flow-label">邮件</text>
-          <rect class="flow-node" x="240" y="40" width="100" height="44" rx="10"/><text x="290" y="68" text-anchor="middle" class="flow-label">用户对话</text>
-          <rect class="flow-node--sys" x="350" y="40" width="120" height="44" rx="10"/><text x="410" y="62" text-anchor="middle" class="flow-label">NS（只读）</text><text x="410" y="76" text-anchor="middle" class="flow-label-sm">BS-03</text>
+          <style><![CDATA[
+            .flow-v-title { font-size: 0.92em; font-weight: 800; fill: #334155; }
+            .flow-v-hint { font-size: 0.72em; fill: #94a3b8; font-style: italic; }
+          ]]></style>
 
-          <text x="24" y="130" class="flow-label" font-weight="800">Nexus 工单主链（开发中）</text>
-          <rect class="flow-node--dev" x="20" y="142" width="130" height="52" rx="10"/>
-          <text x="85" y="166" text-anchor="middle" class="flow-label">意图分类</text>
-          <text x="85" y="182" text-anchor="middle" class="flow-label-sm">bs-intake-classifying</text>
-          <rect class="flow-node--dev" x="170" y="142" width="130" height="52" rx="10"/>
-          <text x="235" y="166" text-anchor="middle" class="flow-label">字段抽取</text>
-          <text x="235" y="182" text-anchor="middle" class="flow-label-sm">bs-intake-field-extracting</text>
-          <rect class="flow-node--dev" x="320" y="142" width="130" height="52" rx="10"/>
-          <text x="385" y="166" text-anchor="middle" class="flow-label">工作流路由</text>
-          <text x="385" y="182" text-anchor="middle" class="flow-label-sm">bs-workflow-routing</text>
-          <rect class="flow-node--dev" x="470" y="142" width="130" height="52" rx="10"/>
-          <text x="535" y="166" text-anchor="middle" class="flow-label">通用工作流</text>
-          <text x="535" y="182" text-anchor="middle" class="flow-label-sm">bs-common-workflow</text>
+          <text x="40" y="26" class="flow-label flow-v-title">入口与上下文</text>
+          <rect class="flow-node" x="40" y="36" width="360" height="40" rx="10"/>
+          <text x="220" y="62" text-anchor="middle" class="flow-label">Slack</text>
+          <path class="flow-arrow" d="M220 76 L220 90"/>
+          <rect class="flow-node" x="40" y="90" width="360" height="40" rx="10"/>
+          <text x="220" y="116" text-anchor="middle" class="flow-label">邮件</text>
+          <path class="flow-arrow" d="M220 130 L220 144"/>
+          <rect class="flow-node" x="40" y="144" width="360" height="40" rx="10"/>
+          <text x="220" y="170" text-anchor="middle" class="flow-label">用户对话</text>
+          <path class="flow-arrow" d="M220 184 L220 198"/>
+          <rect class="flow-node--sys" x="40" y="198" width="360" height="48" rx="10"/>
+          <text x="220" y="222" text-anchor="middle" class="flow-label">NS 系统（只读查询）</text>
+          <text x="220" y="238" text-anchor="middle" class="flow-label-sm">与 BS-03 已上线能力对齐 · 非 Nexus 写入</text>
 
-          <path class="flow-arrow" d="M120 62 L170 62"/>
-          <path class="flow-arrow" d="M230 62 L240 62"/>
-          <path class="flow-arrow" d="M340 62 L350 62"/>
-          <path class="flow-arrow" d="M150 168 L170 168"/>
-          <path class="flow-arrow" d="M300 168 L320 168"/>
-          <path class="flow-arrow" d="M450 168 L470 168"/>
+          <text x="40" y="278" class="flow-label flow-v-title">Nexus 工单主链（开发中）</text>
+          <text x="40" y="296" class="flow-label-sm flow-v-hint">自上而下顺序执行</text>
+          <rect class="flow-node--dev" x="40" y="306" width="360" height="56" rx="10"/>
+          <text x="220" y="332" text-anchor="middle" class="flow-label">意图分类</text>
+          <text x="220" y="350" text-anchor="middle" class="flow-label-sm">bs-intake-classifying</text>
+          <path class="flow-arrow" d="M220 362 L220 376"/>
+          <rect class="flow-node--dev" x="40" y="376" width="360" height="56" rx="10"/>
+          <text x="220" y="402" text-anchor="middle" class="flow-label">工单字段抽取</text>
+          <text x="220" y="420" text-anchor="middle" class="flow-label-sm">bs-intake-field-extracting</text>
+          <path class="flow-arrow" d="M220 432 L220 446"/>
+          <rect class="flow-node--dev" x="40" y="446" width="360" height="56" rx="10"/>
+          <text x="220" y="472" text-anchor="middle" class="flow-label">业务线工作流路由</text>
+          <text x="220" y="490" text-anchor="middle" class="flow-label-sm">bs-workflow-routing</text>
+          <path class="flow-arrow" d="M220 502 L220 516"/>
+          <rect class="flow-node--dev" x="40" y="516" width="360" height="56" rx="10"/>
+          <text x="220" y="542" text-anchor="middle" class="flow-label">BS 通用工作流底层</text>
+          <text x="220" y="560" text-anchor="middle" class="flow-label-sm">bs-common-workflow</text>
 
-          <text x="24" y="248" class="flow-label" font-weight="800">业务线分册（RAG / 配置）</text>
-          <rect class="flow-node--dev" x="20" y="260" width="150" height="48" rx="10"/>
-          <text x="95" y="282" text-anchor="middle" class="flow-label">AE 新能源小流程</text>
-          <text x="95" y="296" text-anchor="middle" class="flow-label-sm">bs-ae-small-flow</text>
-          <rect class="flow-node--dev" x="185" y="260" width="150" height="48" rx="10"/>
-          <text x="260" y="282" text-anchor="middle" class="flow-label">Mining 立项与入资</text>
-          <text x="260" y="296" text-anchor="middle" class="flow-label-sm">bs-mining-jv-setup</text>
-          <rect class="flow-node--dev" x="350" y="260" width="150" height="48" rx="10"/>
-          <text x="425" y="282" text-anchor="middle" class="flow-label">Mining 日常运营</text>
-          <text x="425" y="296" text-anchor="middle" class="flow-label-sm">bs-mining-jv-operation</text>
+          <text x="40" y="598" class="flow-label flow-v-title">业务线分册（并行编排）</text>
+          <text x="40" y="616" class="flow-label-sm flow-v-hint">虚线：自 bs-common-workflow 编排切入 · RAG / 配置</text>
+          <path class="flow-arrow flow-arrow--dash" d="M220 572 L220 624"/>
+          <rect class="flow-node--dev" x="40" y="628" width="360" height="56" rx="10"/>
+          <text x="220" y="654" text-anchor="middle" class="flow-label">AE 新能源小流程</text>
+          <text x="220" y="672" text-anchor="middle" class="flow-label-sm">bs-ae-small-flow</text>
+          <path class="flow-arrow" d="M220 684 L220 698"/>
+          <rect class="flow-node--dev" x="40" y="698" width="360" height="56" rx="10"/>
+          <text x="220" y="724" text-anchor="middle" class="flow-label">Mining 合资立项与入资</text>
+          <text x="220" y="742" text-anchor="middle" class="flow-label-sm">bs-mining-jv-setup</text>
+          <path class="flow-arrow" d="M220 754 L220 768"/>
+          <rect class="flow-node--dev" x="40" y="768" width="360" height="56" rx="10"/>
+          <text x="220" y="794" text-anchor="middle" class="flow-label">Mining 合资日常运营</text>
+          <text x="220" y="812" text-anchor="middle" class="flow-label-sm">bs-mining-jv-operation</text>
 
-          <path class="flow-arrow flow-arrow--dash" d="M535 194 L535 220 L95 220 L95 260"/>
-          <path class="flow-arrow flow-arrow--dash" d="M535 194 L535 232 L260 232 L260 260"/>
-          <path class="flow-arrow flow-arrow--dash" d="M535 194 L535 244 L425 244 L425 260"/>
+          <text x="40" y="852" class="flow-label flow-v-title">输出与留痕</text>
+          <path class="flow-arrow" d="M220 824 L220 856"/>
+          <rect class="flow-node--dev" x="40" y="858" width="360" height="56" rx="10"/>
+          <text x="220" y="884" text-anchor="middle" class="flow-label">工单状态变更通知</text>
+          <text x="220" y="902" text-anchor="middle" class="flow-label-sm">bs-intake-status-notifying</text>
+          <path class="flow-arrow" d="M220 914 L220 928"/>
+          <rect class="flow-node--common" x="40" y="928" width="360" height="56" rx="10"/>
+          <text x="220" y="952" text-anchor="middle" class="flow-label">Slack 卡片推送（可选）</text>
+          <text x="220" y="970" text-anchor="middle" class="flow-label-sm">common-slack-card-publishing</text>
+          <path class="flow-arrow flow-arrow--dash" d="M220 984 L220 998"/>
+          <rect class="flow-node--common" x="40" y="998" width="360" height="56" rx="10"/>
+          <text x="220" y="1022" text-anchor="middle" class="flow-label">SLA 多阶段催办（可选）</text>
+          <text x="220" y="1040" text-anchor="middle" class="flow-label-sm">common-sla-nudging</text>
+          <path class="flow-arrow flow-arrow--dash" d="M220 1054 L220 1068"/>
+          <rect class="flow-node--common" x="40" y="1068" width="360" height="56" rx="10"/>
+          <text x="220" y="1092" text-anchor="middle" class="flow-label">业务邮件结构化解析（可选）</text>
+          <text x="220" y="1110" text-anchor="middle" class="flow-label-sm">common-email-parsing</text>
 
-          <text x="24" y="358" class="flow-label" font-weight="800">输出与留痕</text>
-          <rect class="flow-node--dev" x="20" y="370" width="150" height="48" rx="10"/>
-          <text x="95" y="392" text-anchor="middle" class="flow-label">状态变更通知</text>
-          <text x="95" y="406" text-anchor="middle" class="flow-label-sm">bs-intake-status-notifying</text>
-          <rect class="flow-node--common" x="190" y="370" width="150" height="48" rx="10"/>
-          <text x="265" y="392" text-anchor="middle" class="flow-label">Slack 卡片（可选）</text>
-          <text x="265" y="406" text-anchor="middle" class="flow-label-sm">common-slack-card-publishing</text>
-          <rect class="flow-node--common" x="360" y="370" width="150" height="48" rx="10"/>
-          <text x="435" y="392" text-anchor="middle" class="flow-label">SLA 催办（可选）</text>
-          <text x="435" y="406" text-anchor="middle" class="flow-label-sm">common-sla-nudging</text>
-          <rect class="flow-node--common" x="530" y="370" width="150" height="48" rx="10"/>
-          <text x="605" y="392" text-anchor="middle" class="flow-label">邮件解析（可选）</text>
-          <text x="605" y="406" text-anchor="middle" class="flow-label-sm">common-email-parsing</text>
-
-          <path class="flow-arrow" d="M95 308 L95 370"/>
-          <path class="flow-arrow" d="M260 308 L260 340 L95 340 L95 370"/>
-          <path class="flow-arrow" d="M425 308 L425 352 L95 352 L95 370"/>
-          <path class="flow-arrow flow-arrow--dash" d="M170 394 L190 394"/>
-          <path class="flow-arrow flow-arrow--dash" d="M340 394 L360 394"/>
-          <path class="flow-arrow flow-arrow--dash" d="M510 394 L530 394"/>
-
-          <text x="24" y="458" class="flow-label" font-weight="800">已上线并行能力（Phase 1–2）</text>
-          <rect class="flow-node--on" x="20" y="468" width="140" height="44" rx="10"/>
-          <text x="90" y="490" text-anchor="middle" class="flow-label">五业务线流程问答</text>
-          <text x="90" y="504" text-anchor="middle" class="flow-label-sm">BS-01 · RAG/SOP</text>
-          <rect class="flow-node--on" x="175" y="468" width="140" height="44" rx="10"/>
-          <text x="245" y="490" text-anchor="middle" class="flow-label">需求接收与跟进</text>
-          <text x="245" y="504" text-anchor="middle" class="flow-label-sm">BS-02</text>
-          <rect class="flow-node--on" x="330" y="468" width="130" height="44" rx="10"/>
-          <text x="395" y="490" text-anchor="middle" class="flow-label">NS 数据查询</text>
-          <text x="395" y="504" text-anchor="middle" class="flow-label-sm">BS-03</text>
-          <rect class="flow-node--on" x="475" y="468" width="130" height="44" rx="10"/>
-          <text x="540" y="490" text-anchor="middle" class="flow-label">业务线邮件模板</text>
-          <text x="540" y="504" text-anchor="middle" class="flow-label-sm">BS-04</text>
-
-          <path class="flow-arrow flow-arrow--dash" d="M410 84 L410 120 L600 120 L600 142"/>
-          <path class="flow-arrow flow-arrow--dash" d="M290 84 L290 110 L85 110 L85 142"/>
+          <text x="40" y="1150" class="flow-label flow-v-title">已上线并行能力（Phase 1–2）</text>
+          <text x="40" y="1168" class="flow-label-sm flow-v-hint">与 Nexus 链并行，不阻塞主链示意</text>
+          <rect class="flow-node--on" x="40" y="1178" width="360" height="56" rx="10"/>
+          <text x="220" y="1204" text-anchor="middle" class="flow-label">五业务线流程问答</text>
+          <text x="220" y="1222" text-anchor="middle" class="flow-label-sm">BS-01 · RAG / SOP</text>
+          <path class="flow-arrow flow-arrow--dash" d="M220 1234 L220 1248"/>
+          <rect class="flow-node--on" x="40" y="1248" width="360" height="56" rx="10"/>
+          <text x="220" y="1274" text-anchor="middle" class="flow-label">需求接收与流程跟进</text>
+          <text x="220" y="1292" text-anchor="middle" class="flow-label-sm">BS-02</text>
+          <path class="flow-arrow flow-arrow--dash" d="M220 1304 L220 1318"/>
+          <rect class="flow-node--on" x="40" y="1318" width="360" height="56" rx="10"/>
+          <text x="220" y="1344" text-anchor="middle" class="flow-label">NS 系统数据查询</text>
+          <text x="220" y="1362" text-anchor="middle" class="flow-label-sm">BS-03</text>
+          <path class="flow-arrow flow-arrow--dash" d="M220 1374 L220 1388"/>
+          <rect class="flow-node--on" x="40" y="1388" width="360" height="56" rx="10"/>
+          <text x="220" y="1414" text-anchor="middle" class="flow-label">业务线邮件模板</text>
+          <text x="220" y="1432" text-anchor="middle" class="flow-label-sm">BS-04</text>
         </svg>
       </div>
       <p class="flow-note">
@@ -2158,64 +2248,89 @@
         if (isEdit) exitEdit(); else enterEdit();
       });
 
-      /* ── BS SKILL 数据流 二级页（#flow-bs）──────────────────── */
+      /* ── 通用子页面路由（支持 #flow-bs, #flow-hr, ... #flow-osto）─── */
       var viewMain = document.getElementById('view-main');
-      var viewFlow = document.getElementById('view-flow-bs');
-
-      function switchToFlowBs() {
-        if (!viewMain || !viewFlow) return;
-        viewMain.classList.add('is-hidden');
-        viewFlow.classList.remove('is-hidden');
-        viewFlow.setAttribute('aria-hidden', 'false');
-        document.body.classList.add('subpage-flow-bs');
-        window.scrollTo(0, 0);
-        try { history.replaceState(null, '', '#flow-bs'); } catch (e) {}
+      var _subpages = {};
+      var _activeSubpage = null;
+      document.querySelectorAll('.page-view[data-subpage]').forEach(function (el) {
+        _subpages[el.getAttribute('data-subpage')] = el;
+      });
+      /* 向前兼容：#view-flow-bs 没有 data-subpage 时手动注册 */
+      if (!_subpages['flow-bs']) {
+        var bsEl = document.getElementById('view-flow-bs');
+        if (bsEl) _subpages['flow-bs'] = bsEl;
       }
 
-      function switchToMainFromFlow() {
-        if (!viewMain || !viewFlow) return;
-        viewFlow.classList.add('is-hidden');
-        viewFlow.setAttribute('aria-hidden', 'true');
+      function switchToSubpage(id) {
+        var target = _subpages[id];
+        if (!viewMain || !target) return;
+        /* 先关闭当前活动子页面 */
+        if (_activeSubpage && _activeSubpage !== target) {
+          _activeSubpage.classList.add('is-hidden');
+          _activeSubpage.setAttribute('aria-hidden', 'true');
+        }
+        viewMain.classList.add('is-hidden');
+        target.classList.remove('is-hidden');
+        target.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('subpage-active');
+        document.body.classList.add('subpage-' + id);
+        _activeSubpage = target;
+        window.scrollTo(0, 0);
+        try { history.replaceState(null, '', '#' + id); } catch (e) {}
+      }
+
+      function switchToMain() {
+        if (!viewMain) return;
+        if (_activeSubpage) {
+          _activeSubpage.classList.add('is-hidden');
+          _activeSubpage.setAttribute('aria-hidden', 'true');
+          document.body.classList.remove('subpage-' + (_activeSubpage.getAttribute('data-subpage') || 'flow-bs'));
+        }
         viewMain.classList.remove('is-hidden');
+        document.body.classList.remove('subpage-active');
         document.body.classList.remove('subpage-flow-bs');
+        _activeSubpage = null;
         window.scrollTo(0, 0);
         try { history.replaceState(null, '', location.pathname + location.search); } catch (e2) {}
       }
 
       function onHashRoute() {
-        if (location.hash === '#flow-bs') switchToFlowBs();
-        else if (viewMain && viewFlow && !viewFlow.classList.contains('is-hidden')) {
-          /* 从数据流页切到其他锚点时回到主视图 */
-          switchToMainFromFlow();
+        var hash = location.hash.replace('#', '');
+        if (_subpages[hash]) {
+          switchToSubpage(hash);
+        } else if (_activeSubpage) {
+          switchToMain();
         }
       }
 
       window.addEventListener('hashchange', onHashRoute);
-      if (location.hash === '#flow-bs') switchToFlowBs();
+      /* 页面加载时检测 hash */
+      (function () {
+        var hash = location.hash.replace('#', '');
+        if (_subpages[hash]) switchToSubpage(hash);
+      })();
 
       document.addEventListener('click', function (e) {
         var link = e.target.closest('a[href^="#"]');
         if (!link) return;
-        var h = link.getAttribute('href') || '';
-        if (h === '#flow-bs') {
+        var h = (link.getAttribute('href') || '').replace('#', '');
+        if (_subpages[h]) {
           e.preventDefault();
-          switchToFlowBs();
-          try { history.replaceState(null, '', '#flow-bs'); } catch (e3) {}
+          switchToSubpage(h);
+          try { history.replaceState(null, '', '#' + h); } catch (e3) {}
           return;
         }
-        /* 数据流页内点到其他章节锚点：先切回主视图再交给浏览器滚动 */
-        if (h.length > 1 && viewFlow && !viewFlow.classList.contains('is-hidden')) {
-          switchToMainFromFlow();
+        /* 子页面内点击其他锚点：先切回主视图再交给浏览器滚动 */
+        if (h.length > 0 && _activeSubpage) {
+          switchToMain();
         }
       }, true);
 
-      var flowBack = document.getElementById('flowBsBack');
-      if (flowBack) {
-        flowBack.addEventListener('click', function (e) {
-          e.preventDefault();
-          switchToMainFromFlow();
-        });
-      }
+      /* 所有返回按钮统一委托 */
+      document.addEventListener('click', function (e) {
+        var back = e.target.closest('.flow-back');
+        if (back) { e.preventDefault(); switchToMain(); }
+      });
 
       document.getElementById('localSaveBtn').addEventListener('click', saveLocal);
       document.getElementById('exportBtn').addEventListener('click', exportHtml);
