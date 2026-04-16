@@ -1623,100 +1623,103 @@
         <span class="sop-auto-bar">自动化覆盖 41/50 步 (82.0%)</span>
       </div>
       <div class="flow-diagram" role="img" aria-label="BS Agent SKILL 数据流示意图（纵向）">
-        <!-- 单列纵向：boxW=360，标题与 skill id 分两行，框高避免文字溢出 -->
-        <svg viewBox="0 0 440 1500" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" font-size="13">
+        <svg viewBox="0 0 440 1060" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" font-size="13">
           <defs>
             <marker id="arrowhead-bs" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
               <polygon points="0 0, 10 5, 0 10" fill="#64748b"/>
             </marker>
           </defs>
-          <style><![CDATA[
-            .flow-v-title { font-size: 0.92em; font-weight: 800; fill: #334155; }
-            .flow-v-hint { font-size: 0.72em; fill: #94a3b8; font-style: italic; }
-          ]]></style>
 
-          <text x="40" y="26" class="flow-label flow-v-title">入口与上下文</text>
-          <rect class="flow-node" x="40" y="36" width="360" height="40" rx="10"/>
-          <text x="220" y="62" text-anchor="middle" class="flow-label">Slack</text>
-          <path class="flow-arrow" d="M220 76 L220 90"/>
-          <rect class="flow-node" x="40" y="90" width="360" height="40" rx="10"/>
-          <text x="220" y="116" text-anchor="middle" class="flow-label">邮件</text>
-          <path class="flow-arrow" d="M220 130 L220 144"/>
-          <rect class="flow-node" x="40" y="144" width="360" height="40" rx="10"/>
-          <text x="220" y="170" text-anchor="middle" class="flow-label">用户对话</text>
-          <path class="flow-arrow" d="M220 184 L220 198"/>
-          <rect class="flow-node--sys" x="40" y="198" width="360" height="48" rx="10"/>
-          <text x="220" y="222" text-anchor="middle" class="flow-label">NS 系统（只读查询）</text>
-          <text x="220" y="238" text-anchor="middle" class="flow-label-sm">与 BS-03 已上线能力对齐 · 非 Nexus 写入</text>
+          <!-- ═══ 入口渠道（并联） ═══ -->
+          <text x="20" y="20" class="flow-label" font-weight="800">入口渠道（并联）</text>
+          <rect class="flow-node" x="20" y="32" width="120" height="48" rx="10"/>
+          <text x="80" y="58" text-anchor="middle" class="flow-label">Slack</text>
+          <rect class="flow-node" x="155" y="32" width="120" height="48" rx="10"/>
+          <text x="215" y="58" text-anchor="middle" class="flow-label">邮件</text>
+          <rect class="flow-node" x="290" y="32" width="120" height="48" rx="10"/>
+          <text x="350" y="58" text-anchor="middle" class="flow-label">用户对话</text>
+          <!-- 三入口汇聚 → 主链 -->
+          <path class="flow-arrow" d="M80 80 L80 96 L220 96 L220 112"/>
+          <path style="stroke:#64748b;stroke-width:1.6;fill:none" d="M215 80 L215 96"/>
+          <path style="stroke:#64748b;stroke-width:1.6;fill:none" d="M350 80 L350 96 L220 96"/>
 
-          <text x="40" y="278" class="flow-label flow-v-title">Nexus 工单主链（开发中）</text>
-          <text x="40" y="296" class="flow-label-sm flow-v-hint">自上而下顺序执行</text>
-          <rect class="flow-node--dev" x="40" y="306" width="360" height="56" rx="10"/>
-          <text x="220" y="332" text-anchor="middle" class="flow-label">意图分类</text>
-          <text x="220" y="350" text-anchor="middle" class="flow-label-sm">bs-intake-classifying</text>
-          <path class="flow-arrow" d="M220 362 L220 376"/>
-          <rect class="flow-node--dev" x="40" y="376" width="360" height="56" rx="10"/>
-          <text x="220" y="402" text-anchor="middle" class="flow-label">工单字段抽取</text>
-          <text x="220" y="420" text-anchor="middle" class="flow-label-sm">bs-intake-field-extracting</text>
-          <path class="flow-arrow" d="M220 432 L220 446"/>
-          <rect class="flow-node--dev" x="40" y="446" width="360" height="56" rx="10"/>
-          <text x="220" y="472" text-anchor="middle" class="flow-label">业务线工作流路由</text>
-          <text x="220" y="490" text-anchor="middle" class="flow-label-sm">bs-workflow-routing</text>
-          <path class="flow-arrow" d="M220 502 L220 516"/>
-          <rect class="flow-node--dev" x="40" y="516" width="360" height="56" rx="10"/>
-          <text x="220" y="542" text-anchor="middle" class="flow-label">BS 通用工作流底层</text>
-          <text x="220" y="560" text-anchor="middle" class="flow-label-sm">bs-common-workflow</text>
+          <!-- 并联：NS 只读数据源 -->
+          <rect class="flow-node--sys" x="290" y="112" width="120" height="48" rx="10"/>
+          <text x="350" y="134" text-anchor="middle" class="flow-label">NS（只读）</text>
+          <text x="350" y="148" text-anchor="middle" class="flow-label-sm">BS-03</text>
+          <path class="flow-arrow flow-arrow--dash" d="M290 136 L260 136"/>
 
-          <text x="40" y="598" class="flow-label flow-v-title">业务线分册（并行编排）</text>
-          <text x="40" y="616" class="flow-label-sm flow-v-hint">虚线：自 bs-common-workflow 编排切入 · RAG / 配置</text>
-          <path class="flow-arrow flow-arrow--dash" d="M220 572 L220 624"/>
-          <rect class="flow-node--dev" x="40" y="628" width="360" height="56" rx="10"/>
-          <text x="220" y="654" text-anchor="middle" class="flow-label">AE 新能源小流程</text>
-          <text x="220" y="672" text-anchor="middle" class="flow-label-sm">bs-ae-small-flow</text>
-          <path class="flow-arrow" d="M220 684 L220 698"/>
-          <rect class="flow-node--dev" x="40" y="698" width="360" height="56" rx="10"/>
-          <text x="220" y="724" text-anchor="middle" class="flow-label">Mining 合资立项与入资</text>
-          <text x="220" y="742" text-anchor="middle" class="flow-label-sm">bs-mining-jv-setup</text>
-          <path class="flow-arrow" d="M220 754 L220 768"/>
-          <rect class="flow-node--dev" x="40" y="768" width="360" height="56" rx="10"/>
-          <text x="220" y="794" text-anchor="middle" class="flow-label">Mining 合资日常运营</text>
-          <text x="220" y="812" text-anchor="middle" class="flow-label-sm">bs-mining-jv-operation</text>
+          <!-- ═══ Nexus 工单主链（串联） ═══ -->
+          <text x="20" y="108" class="flow-label" font-weight="800">Nexus 工单主链</text>
+          <rect class="flow-node--dev" x="30" y="112" width="230" height="48" rx="10"/>
+          <text x="145" y="134" text-anchor="middle" class="flow-label">意图分类</text>
+          <text x="145" y="148" text-anchor="middle" class="flow-label-sm">bs-intake-classifying</text>
+          <path class="flow-arrow" d="M145 160 L145 176"/>
+          <rect class="flow-node--dev" x="30" y="176" width="230" height="48" rx="10"/>
+          <text x="145" y="198" text-anchor="middle" class="flow-label">工单字段抽取</text>
+          <text x="145" y="212" text-anchor="middle" class="flow-label-sm">bs-intake-field-extracting</text>
+          <path class="flow-arrow" d="M145 224 L145 240"/>
+          <rect class="flow-node--dev" x="30" y="240" width="230" height="48" rx="10"/>
+          <text x="145" y="262" text-anchor="middle" class="flow-label">业务线工作流路由</text>
+          <text x="145" y="276" text-anchor="middle" class="flow-label-sm">bs-workflow-routing</text>
+          <path class="flow-arrow" d="M145 288 L145 304"/>
+          <rect class="flow-node--dev" x="30" y="304" width="230" height="48" rx="10"/>
+          <text x="145" y="326" text-anchor="middle" class="flow-label">BS 通用工作流底层</text>
+          <text x="145" y="340" text-anchor="middle" class="flow-label-sm">bs-common-workflow</text>
 
-          <text x="40" y="852" class="flow-label flow-v-title">输出与留痕</text>
-          <path class="flow-arrow" d="M220 824 L220 856"/>
-          <rect class="flow-node--dev" x="40" y="858" width="360" height="56" rx="10"/>
-          <text x="220" y="884" text-anchor="middle" class="flow-label">工单状态变更通知</text>
-          <text x="220" y="902" text-anchor="middle" class="flow-label-sm">bs-intake-status-notifying</text>
-          <path class="flow-arrow" d="M220 914 L220 928"/>
-          <rect class="flow-node--common" x="40" y="928" width="360" height="56" rx="10"/>
-          <text x="220" y="952" text-anchor="middle" class="flow-label">Slack 卡片推送（可选）</text>
-          <text x="220" y="970" text-anchor="middle" class="flow-label-sm">common-slack-card-publishing</text>
-          <path class="flow-arrow flow-arrow--dash" d="M220 984 L220 998"/>
-          <rect class="flow-node--common" x="40" y="998" width="360" height="56" rx="10"/>
-          <text x="220" y="1022" text-anchor="middle" class="flow-label">SLA 多阶段催办（可选）</text>
-          <text x="220" y="1040" text-anchor="middle" class="flow-label-sm">common-sla-nudging</text>
-          <path class="flow-arrow flow-arrow--dash" d="M220 1054 L220 1068"/>
-          <rect class="flow-node--common" x="40" y="1068" width="360" height="56" rx="10"/>
-          <text x="220" y="1092" text-anchor="middle" class="flow-label">业务邮件结构化解析（可选）</text>
-          <text x="220" y="1110" text-anchor="middle" class="flow-label-sm">common-email-parsing</text>
+          <!-- ═══ 业务线分册（并联分支） ═══ -->
+          <text x="20" y="384" class="flow-label" font-weight="800">业务线分册（并联分支 · RAG 配置）</text>
+          <!-- 从 common-workflow 分叉出 3 个分支 -->
+          <path class="flow-arrow flow-arrow--dash" d="M80 352 L80 370 L80 396"/>
+          <path class="flow-arrow flow-arrow--dash" d="M145 352 L145 370 L215 370 L215 396"/>
+          <path class="flow-arrow flow-arrow--dash" d="M210 352 L210 370 L350 370 L350 396"/>
+          <rect class="flow-node--dev" x="20" y="396" width="120" height="52" rx="10"/>
+          <text x="80" y="418" text-anchor="middle" class="flow-label">AE 新能源</text>
+          <text x="80" y="434" text-anchor="middle" class="flow-label-sm">bs-ae-small-flow</text>
+          <rect class="flow-node--dev" x="155" y="396" width="120" height="52" rx="10"/>
+          <text x="215" y="418" text-anchor="middle" class="flow-label">Mining 立项</text>
+          <text x="215" y="434" text-anchor="middle" class="flow-label-sm">bs-mining-jv-setup</text>
+          <rect class="flow-node--dev" x="290" y="396" width="120" height="52" rx="10"/>
+          <text x="350" y="418" text-anchor="middle" class="flow-label">Mining 运营</text>
+          <text x="350" y="434" text-anchor="middle" class="flow-label-sm">bs-mining-jv-operation</text>
 
-          <text x="40" y="1150" class="flow-label flow-v-title">已上线并行能力（Phase 1–2）</text>
-          <text x="40" y="1168" class="flow-label-sm flow-v-hint">与 Nexus 链并行，不阻塞主链示意</text>
-          <rect class="flow-node--on" x="40" y="1178" width="360" height="56" rx="10"/>
-          <text x="220" y="1204" text-anchor="middle" class="flow-label">五业务线流程问答</text>
-          <text x="220" y="1222" text-anchor="middle" class="flow-label-sm">BS-01 · RAG / SOP</text>
-          <path class="flow-arrow flow-arrow--dash" d="M220 1234 L220 1248"/>
-          <rect class="flow-node--on" x="40" y="1248" width="360" height="56" rx="10"/>
-          <text x="220" y="1274" text-anchor="middle" class="flow-label">需求接收与流程跟进</text>
-          <text x="220" y="1292" text-anchor="middle" class="flow-label-sm">BS-02</text>
-          <path class="flow-arrow flow-arrow--dash" d="M220 1304 L220 1318"/>
-          <rect class="flow-node--on" x="40" y="1318" width="360" height="56" rx="10"/>
-          <text x="220" y="1344" text-anchor="middle" class="flow-label">NS 系统数据查询</text>
-          <text x="220" y="1362" text-anchor="middle" class="flow-label-sm">BS-03</text>
-          <path class="flow-arrow flow-arrow--dash" d="M220 1374 L220 1388"/>
-          <rect class="flow-node--on" x="40" y="1388" width="360" height="56" rx="10"/>
-          <text x="220" y="1414" text-anchor="middle" class="flow-label">业务线邮件模板</text>
-          <text x="220" y="1432" text-anchor="middle" class="flow-label-sm">BS-04</text>
+          <!-- ═══ 输出与留痕 ═══ -->
+          <text x="20" y="486" class="flow-label" font-weight="800">输出与留痕</text>
+          <!-- 三分支汇聚 → 状态通知 -->
+          <path class="flow-arrow" d="M80 448 L80 464 L220 464 L220 498"/>
+          <path style="stroke:#64748b;stroke-width:1.6;fill:none" d="M215 448 L215 464"/>
+          <path style="stroke:#64748b;stroke-width:1.6;fill:none" d="M350 448 L350 464 L220 464"/>
+          <rect class="flow-node--dev" x="40" y="498" width="360" height="48" rx="10"/>
+          <text x="220" y="520" text-anchor="middle" class="flow-label">工单状态变更通知</text>
+          <text x="220" y="534" text-anchor="middle" class="flow-label-sm">bs-intake-status-notifying</text>
+          <!-- 可选 Common（并联） -->
+          <path class="flow-arrow flow-arrow--dash" d="M110 546 L110 562 L110 568"/>
+          <path class="flow-arrow flow-arrow--dash" d="M220 546 L220 562 L220 568"/>
+          <path class="flow-arrow flow-arrow--dash" d="M330 546 L330 562 L330 568"/>
+          <rect class="flow-node--common" x="20" y="568" width="120" height="52" rx="10"/>
+          <text x="80" y="588" text-anchor="middle" class="flow-label">Slack 卡片</text>
+          <text x="80" y="604" text-anchor="middle" class="flow-label-sm">可选 · Common</text>
+          <rect class="flow-node--common" x="155" y="568" width="120" height="52" rx="10"/>
+          <text x="215" y="588" text-anchor="middle" class="flow-label">SLA 催办</text>
+          <text x="215" y="604" text-anchor="middle" class="flow-label-sm">可选 · Common</text>
+          <rect class="flow-node--common" x="290" y="568" width="120" height="52" rx="10"/>
+          <text x="350" y="588" text-anchor="middle" class="flow-label">邮件解析</text>
+          <text x="350" y="604" text-anchor="middle" class="flow-label-sm">可选 · Common</text>
+
+          <!-- ═══ 已上线并行能力 ═══ -->
+          <text x="20" y="662" class="flow-label" font-weight="800">已上线并行能力（Phase 1–2）</text>
+          <rect class="flow-node--on" x="30" y="674" width="170" height="52" rx="10"/>
+          <text x="115" y="696" text-anchor="middle" class="flow-label">流程问答</text>
+          <text x="115" y="712" text-anchor="middle" class="flow-label-sm">BS-01 · RAG/SOP</text>
+          <rect class="flow-node--on" x="230" y="674" width="170" height="52" rx="10"/>
+          <text x="315" y="696" text-anchor="middle" class="flow-label">需求接收跟进</text>
+          <text x="315" y="712" text-anchor="middle" class="flow-label-sm">BS-02</text>
+          <rect class="flow-node--on" x="30" y="742" width="170" height="52" rx="10"/>
+          <text x="115" y="764" text-anchor="middle" class="flow-label">NS 数据查询</text>
+          <text x="115" y="780" text-anchor="middle" class="flow-label-sm">BS-03</text>
+          <rect class="flow-node--on" x="230" y="742" width="170" height="52" rx="10"/>
+          <text x="315" y="764" text-anchor="middle" class="flow-label">邮件模板</text>
+          <text x="315" y="780" text-anchor="middle" class="flow-label-sm">BS-04</text>
         </svg>
       </div>
       <!-- BS SOP Cards: Phase 1–2 已上线 -->
