@@ -401,15 +401,6 @@
       background: linear-gradient(90deg, #f87171, #b91c1c);
     }
 
-    .appendix {
-      background: var(--card);
-      border: 1px solid #e2e8f0;
-      border-radius: var(--radius);
-      padding: 18px 20px;
-      font-size: 0.82rem;
-      color: var(--muted);
-    }
-    footer.note { text-align: center; font-size: 0.75rem; color: var(--muted); margin-top: 28px; padding: 0 16px; }
     @media print {
       .dex-top { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       .dex-card { break-inside: avoid; }
@@ -730,10 +721,6 @@
     }
     body.subpage-active .mode-controls,
     body.subpage-active .back-top { display: none; }
-    /* 向前兼容旧 class */
-    body.subpage-flow-bs { overflow-x: hidden; background: var(--surface); }
-    body.subpage-flow-bs .mode-controls,
-    body.subpage-flow-bs .back-top { display: none; }
 
     .page-view[data-subpage] {
       max-width: 100%;
@@ -962,8 +949,6 @@
       <span>BS / HR / Treasury / Compliance / NS-Finance / OSM / Cango / Osto / Common</span>
       <span>·</span>
       <span>✅ BS Phase 1&amp;2 部分已上线</span>
-      <span>·</span>
-      <span>数据流：<a href="#flow-bs" class="ref">BS</a> · <a href="#flow-hr" class="ref">HR</a> · <a href="#flow-treasury" class="ref">Treasury</a> · <a href="#flow-astro" class="ref">Astro</a> · <a href="#flow-compliance" class="ref">Compliance</a> · <a href="#flow-nsfin" class="ref">NS-Fin</a> · <a href="#flow-osm" class="ref">OSM</a> · <a href="#flow-cango" class="ref">Cango</a> · <a href="#flow-common" class="ref">Common</a> · <a href="#flow-osto" class="ref">Osto</a></span>
     </div>
   </header>
 
@@ -981,17 +966,6 @@
         <li><a href="#no-008">NO.008 松饼</a></li>
         <li><a href="#no-009">NO.009 通用能力</a></li>
         <li><a href="#no-010">NO.010 Osto</a></li>
-        <li><a href="#flow-bs" id="tocFlowBs">BS SKILL 数据流</a></li>
-        <li><a href="#flow-hr">HR SKILL 数据流</a></li>
-        <li><a href="#flow-treasury">Treasury SKILL 数据流</a></li>
-        <li><a href="#flow-astro">Astro SKILL 数据流</a></li>
-        <li><a href="#flow-compliance">Compliance SKILL 数据流</a></li>
-        <li><a href="#flow-nsfin">NS-Finance SKILL 数据流</a></li>
-        <li><a href="#flow-osm">OSM SKILL 数据流</a></li>
-        <li><a href="#flow-cango">Cango SKILL 数据流</a></li>
-        <li><a href="#flow-common">Common SKILL 数据流</a></li>
-        <li><a href="#flow-osto">Osto SKILL 数据流</a></li>
-        <li><a href="#appendix">附录</a></li>
       </ul>
     </nav>
 
@@ -1076,8 +1050,7 @@
               <div class="st-row"><span class="st-id">BS-11</span><span class="st-name">Mining 合资立项与入资 <code>bs-mining-jv-setup</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
               <div class="st-row"><span class="st-id">BS-12</span><span class="st-name">Mining 合资日常运营 <code>bs-mining-jv-operation</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
             </div>
-            <p class="st-footnote">完整技术标识见 SKILL 索引：<code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。<br>
-              <a href="#flow-bs" class="ref" style="color: var(--dex-iris); font-weight: 700;">查看 BS SKILL 数据流可视化 →</a></p>
+            <p class="st-footnote"><a href="#flow-bs" class="ref" style="color: var(--dex-iris); font-weight: 700;">查看 BS SKILL 数据流可视化 →</a></p>
           </div>
         </div>
       </div>
@@ -1148,8 +1121,7 @@
               <div class="st-row"><span class="st-id">HR-06</span><span class="st-name" title="Workday 字段白名单需 2026-04-22 前确认（P0）">Workday 字段查询 <code>hr-workday-querying</code></span><span class="st-st st-st--blk">⛔ 阻塞</span></div>
               <div class="st-row"><span class="st-id">HR-07</span><span class="st-name" title="跨系统权限 API 协议未确认（Phase 2.0）">账户权限自动化 <code>hr-account-permission-automating</code></span><span class="st-st st-st--blk">⛔ 阻塞</span></div>
             </div>
-            <p class="st-footnote">招聘产品线技能由 <strong>NO.004 Astro</strong> 承载，见 <a href="#no-004">技能树</a>；完整技术标识见 <code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。<br>
-              <a href="#flow-hr" class="ref" style="color: var(--dex-iris); font-weight: 700;">查看 HR SKILL 数据流可视化 →</a></p>
+            <p class="st-footnote">招聘产品线技能由 <strong>NO.004 Astro</strong> 承载，见 <a href="#no-004">技能树</a>。</p>
           </div>
         </div>
       </div>
@@ -1194,8 +1166,6 @@
               <h4>Phase 2.0<span class="st-phase-desc">付款侧（5 项澄清待闭环）</span></h4>
               <div class="st-row"><span class="st-id">Treasury-03</span><span class="st-name" title="5 项待澄清全部闭环才可开发">支付审核辅助 <code>treasury-payment-reviewing</code></span><span class="st-st st-st--blk">⛔ 阻塞</span></div>
             </div>
-            <p class="st-footnote">完整技术标识见 SKILL 索引：<code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。<br>
-              <a href="#flow-treasury" class="ref" style="color: var(--dex-iris); font-weight: 700;">查看 Treasury SKILL 数据流可视化 →</a></p>
           </div>
           </div>
       </div>
@@ -1255,8 +1225,6 @@
               <h4>Phase 3.0<span class="st-phase-desc">语音/视频面试（平台选型未确认）</span></h4>
               <div class="st-row"><span class="st-id">Astro-12</span><span class="st-name" title="AI 语音/视频面试平台选型未确认">语音/视频初筛 <code>astro-voice-interview-conducting</code></span><span class="st-st st-st--blk">⛔ 阻塞</span></div>
             </div>
-            <p class="st-footnote">完整技术标识见 SKILL 索引：<code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。<br>
-              <a href="#flow-astro" class="ref" style="color: var(--dex-iris); font-weight: 700;">查看 Astro SKILL 数据流可视化 →</a></p>
           </div>
           </div>
       </div>
@@ -1303,8 +1271,6 @@
               <h4>Phase 2.0<span class="st-phase-desc">定期审查（依赖 CRA 稳定）</span></h4>
               <div class="st-row"><span class="st-id">Compliance-05</span><span class="st-name">定期审查通知 <code>compliance-periodic-review-notifying</code></span><span class="st-st">📋 规划中</span></div>
             </div>
-            <p class="st-footnote">完整技术标识见 SKILL 索引：<code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。<br>
-              <a href="#flow-compliance" class="ref" style="color: var(--dex-iris); font-weight: 700;">查看 Compliance SKILL 数据流可视化 →</a></p>
           </div>
           </div>
       </div>
@@ -1350,8 +1316,7 @@
               <h4>Phase 2.0<span class="st-phase-desc">内部划转（白名单规则库未就绪）</span></h4>
               <div class="st-row"><span class="st-id">NS-04</span><span class="st-name" title="内部划转白名单规则库未就绪">内部划转自动审批建议 <code>nsfin-internal-transfer-approval-suggesting</code></span><span class="st-st st-st--blk">⛔ 阻塞</span></div>
             </div>
-            <p class="st-footnote">邮件解析与 Slack 卡片推送已通用化至 <a href="#no-009">NO.009 通用能力</a>；完整技术标识见 <code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。<br>
-              <a href="#flow-nsfin" class="ref" style="color: var(--dex-iris); font-weight: 700;">查看 NS-Finance SKILL 数据流可视化 →</a></p>
+            <p class="st-footnote">邮件解析与 Slack 卡片推送已通用化至 <a href="#no-009">NO.009 通用能力</a>。</p>
           </div>
           </div>
       </div>
@@ -1401,8 +1366,6 @@
               <div class="st-row"><span class="st-id">OSM-07</span><span class="st-name">月度拆账计算与差异 <code>osm-split-ledger-calc</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
               <div class="st-row"><span class="st-id">OSM-08</span><span class="st-name">运营邮件草稿（参数化）<code>osm-email-draft-generating</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
             </div>
-            <p class="st-footnote">完整技术标识见 SKILL 索引：<code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。<br>
-              <a href="#flow-osm" class="ref" style="color: var(--dex-iris); font-weight: 700;">查看 OSM SKILL 数据流可视化 →</a></p>
           </div>
           </div>
       </div>
@@ -1443,8 +1406,6 @@
               <div class="st-row"><span class="st-id">Cango-01</span><span class="st-name" title="业务共建字段 Schema 未定义（BLOCKER-01）">项目文档解析与摘要 <code>cango-document-summarizing</code></span><span class="st-st st-st--blk">⛔ 阻塞</span></div>
               <div class="st-row"><span class="st-id">Cango-02</span><span class="st-name" title="合规数据源白名单未审批通过（BLOCKER-02）">合规网页搜索检索 <code>cango-web-search-retrieving</code></span><span class="st-st st-st--blk">⛔ 阻塞</span></div>
             </div>
-            <p class="st-footnote">完整技术标识见 SKILL 索引：<code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。<br>
-              <a href="#flow-cango" class="ref" style="color: var(--dex-iris); font-weight: 700;">查看 Cango SKILL 数据流可视化 →</a></p>
           </div>
           </div>
       </div>
@@ -1511,15 +1472,6 @@
               <div class="st-row"><span class="st-id">Common-04</span><span class="st-name">Slack 卡片推送 <code>common-slack-card-publishing</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
               <div class="st-row"><span class="st-id">Common-05</span><span class="st-name">合规文本风险扫描 <code>common-compliance-scanning</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
             </div>
-            <p class="st-footnote">替代来源（已归档 <code>ex/</code>）：<br>
-              · <code>common-rag-qa-responding</code> ← hr-knowledge-rag-answering / osto-expense-qa-responding / osto-tax-policy-qa-responding / bs-workflow-qa<br>
-              · <code>common-sla-nudging</code> ← astro-sla-nudging<br>
-              · <code>common-email-parsing</code> ← nsfin-email-parsing<br>
-              · <code>common-slack-card-publishing</code> ← nsfin-slack-card-publishing<br>
-              · <code>common-compliance-scanning</code> ← astro-compliance-scanning<br>
-              完整技术标识见 <code>AI Agent Skills Analysis/可开发SKILL清单.md</code>。<br>
-              <a href="#flow-common" class="ref" style="color: var(--dex-iris); font-weight: 700;">查看 Common SKILL 数据流可视化 →</a>
-            </p>
           </div>
         </div>
       </div>
@@ -1611,30 +1563,18 @@
               <div class="st-row"><span class="st-id">Osto-22</span><span class="st-name">合同合规审查 <code>osto-contract-compliance-reviewing</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
               <div class="st-row"><span class="st-id">Osto-23</span><span class="st-name">交易录入建议 <code>osto-transaction-entry-suggesting</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
             </div>
-            <p class="st-footnote">数据来源：<code>openspec/changes/skill-script-development-analysis/skill-dependency-matrix.md</code>（78 SKILLs 四分类矩阵）。<br>
-              · Phase 1.0 全部为 Type A（需脚本开发 + 共享工具），P0 优先级<br>
-              · Phase 2.0 含 Type A（P1/P2）+ Type B（osto-audit-material-preprocessing）<br>
-              · Phase 3.0 含 Type C（平台内置）+ Type D（纯 LLM）<br>
-              · ⛔ fin-fpa-report-exporting 阻塞原因：bp-api/oracle-api 授权待确认（Open Q2）<br>
-              <a href="#flow-osto" class="ref" style="color: var(--dex-iris); font-weight: 700;">查看 Osto SKILL 数据流可视化 →</a>
-            </p>
+            <p class="st-footnote"><a href="#flow-osto" class="ref" style="color: var(--dex-iris); font-weight: 700;">查看 Osto SKILL 数据流与 SOP →</a></p>
           </div>
         </div>
       </div>
     </article>
     </div><!-- /.cards-grid -->
 
-    <section id="appendix" class="appendix">
-      <strong>附录</strong> · Markdown 全文：<a href="./AI员工全部门卡片汇总.md">AI员工全部门卡片汇总.md</a><br>
-      头像：<code>excels/avatars/lumi.png</code>、<code>amy.png</code>；其余为首字母 / 字占位。请从本 HTML 所在目录打开以加载图片与 CSV 链接。
-    </section>
-
-    <footer class="note">版式与配色参考 <a href="https://raw34.github.io/astro-lumi-dex/" target="_blank" rel="noopener">astro-lumi-dex</a> · 业务口径以 <code>AI员工全部门卡片汇总.md</code> 为准</footer>
     </div><!-- /.main-col -->
   </div>
   </div><!-- /#view-main -->
 
-  <div id="view-flow-bs" class="page-view is-hidden" aria-hidden="true">
+  <div id="view-flow-bs" class="page-view is-hidden" aria-hidden="true" data-subpage="flow-bs">
     <header class="dex-top" style="margin-bottom: 20px; padding-bottom: 28px;">
       <h1>BS · Agent SKILL 数据流</h1>
       <p class="sub" style="margin-top: 8px;">NO.001 Star（Nexus 工单链 + 已上线能力）· 示意与依赖关系</p>
@@ -1756,6 +1696,129 @@
       </p>
     </div>
   </div><!-- /#view-flow-bs -->
+
+  <!-- #region flow-osto -->
+  <div id="view-flow-osto" class="page-view is-hidden" aria-hidden="true" data-subpage="flow-osto">
+    <header class="dex-top" style="margin-bottom: 20px; padding-bottom: 28px;">
+      <h1>Osto · Agent SKILL 数据流</h1>
+      <p class="sub" style="margin-top: 8px;">NO.010 Osto（月结/记账/审计 全域财务工具链）· SOP 与自动化标注</p>
+    </header>
+    <div class="flow-page">
+      <div class="flow-page-head">
+        <div>
+          <h1>数据怎么在 SKILL 之间流动</h1>
+          <p class="lead">Phase 1.0 覆盖 P0 月结核心链（OCR → 对账 → 合同 → 分录 → SEC），Phase 2.0 扩展分析与管控，Phase 3.0 由平台 + LLM 辅助。自动化覆盖率 94/98 步 (95.9%)。</p>
+        </div>
+        <a href="#" class="flow-back">← 返回卡片图鉴</a>
+      </div>
+      <div class="flow-legend" role="list">
+        <span>🤖 <strong>Agent 自动</strong></span>
+        <span>👤 <strong>人工处理</strong></span>
+        <span>🤝 <strong>人机协作</strong></span>
+        <span>⛔ <strong>阻塞</strong></span>
+        <span class="sop-auto-bar">自动化覆盖 94/98 步 (95.9%)</span>
+      </div>
+
+      <div class="flow-diagram" role="img" aria-label="Osto Agent SKILL 数据流总览">
+        <svg viewBox="0 0 980 340" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs><marker id="ah-osto" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><polygon points="0 0, 8 4, 0 8" fill="#64748b"/></marker></defs>
+          <text x="24" y="28" class="flow-label" font-weight="800">Phase 1.0 — P0 月结核心链（12 SKILLs）</text>
+          <rect class="flow-node--dev" x="20" y="40" width="110" height="44" rx="10"/><text x="75" y="62" text-anchor="middle" class="flow-label">费用 OCR</text><text x="75" y="76" text-anchor="middle" class="flow-label-sm">Osto-01~03</text>
+          <rect class="flow-node--dev" x="150" y="40" width="110" height="44" rx="10"/><text x="205" y="62" text-anchor="middle" class="flow-label">现金对账</text><text x="205" y="76" text-anchor="middle" class="flow-label-sm">Osto-04~05</text>
+          <rect class="flow-node--dev" x="280" y="40" width="110" height="44" rx="10"/><text x="335" y="62" text-anchor="middle" class="flow-label">合同管控</text><text x="335" y="76" text-anchor="middle" class="flow-label-sm">Osto-06~07</text>
+          <rect class="flow-node--dev" x="410" y="40" width="110" height="44" rx="10" stroke="#b91c1c" stroke-dasharray="4 3"/><text x="465" y="62" text-anchor="middle" class="flow-label">NS 分录</text><text x="465" y="76" text-anchor="middle" class="flow-label-sm">Osto-08 ⛔</text>
+          <rect class="flow-node--dev" x="540" y="40" width="110" height="44" rx="10"/><text x="595" y="62" text-anchor="middle" class="flow-label">BP 审核</text><text x="595" y="76" text-anchor="middle" class="flow-label-sm">Osto-09~10</text>
+          <rect class="flow-node--dev" x="670" y="40" width="110" height="44" rx="10"/><text x="725" y="62" text-anchor="middle" class="flow-label">SEC 结转</text><text x="725" y="76" text-anchor="middle" class="flow-label-sm">Osto-11~12</text>
+          <path style="stroke:#64748b;stroke-width:1.6;fill:none;marker-end:url(#ah-osto)" d="M130 62 L150 62"/>
+          <path style="stroke:#64748b;stroke-width:1.6;fill:none;marker-end:url(#ah-osto)" d="M260 62 L280 62"/>
+          <path style="stroke:#64748b;stroke-width:1.6;fill:none;marker-end:url(#ah-osto)" d="M390 62 L410 62"/>
+          <path style="stroke:#64748b;stroke-width:1.6;fill:none;marker-end:url(#ah-osto)" d="M520 62 L540 62"/>
+          <path style="stroke:#64748b;stroke-width:1.6;fill:none;marker-end:url(#ah-osto)" d="M650 62 L670 62"/>
+
+          <text x="24" y="130" class="flow-label" font-weight="800">Phase 2.0 — P1/P2 扩展分析与管控（6 SKILLs）</text>
+          <rect class="flow-node--dev" x="20" y="142" width="130" height="44" rx="10"/><text x="85" y="164" text-anchor="middle" class="flow-label">CapEx/OpEx</text><text x="85" y="178" text-anchor="middle" class="flow-label-sm">Osto-13</text>
+          <rect class="flow-node--dev" x="170" y="142" width="130" height="44" rx="10" stroke="#b91c1c" stroke-dasharray="4 3"/><text x="235" y="164" text-anchor="middle" class="flow-label">FP&amp;A 分析</text><text x="235" y="178" text-anchor="middle" class="flow-label-sm">Osto-14~15 ⛔</text>
+          <rect class="flow-node--dev" x="320" y="142" width="130" height="44" rx="10"/><text x="385" y="164" text-anchor="middle" class="flow-label">ROU 租赁</text><text x="385" y="178" text-anchor="middle" class="flow-label-sm">Osto-16</text>
+          <rect class="flow-node--dev" x="470" y="142" width="130" height="44" rx="10"/><text x="535" y="164" text-anchor="middle" class="flow-label">SSC 去重</text><text x="535" y="178" text-anchor="middle" class="flow-label-sm">Osto-17</text>
+          <rect class="flow-node--dev" x="620" y="142" width="140" height="44" rx="10"/><text x="690" y="164" text-anchor="middle" class="flow-label">审计材料预处理</text><text x="690" y="178" text-anchor="middle" class="flow-label-sm">Osto-18</text>
+
+          <text x="24" y="232" class="flow-label" font-weight="800">Phase 3.0 — 平台内置与 LLM 辅助（5 SKILLs）</text>
+          <rect class="flow-node--common" x="20" y="244" width="130" height="44" rx="10"/><text x="85" y="266" text-anchor="middle" class="flow-label">分录生成</text><text x="85" y="280" text-anchor="middle" class="flow-label-sm">Osto-19</text>
+          <rect class="flow-node--common" x="170" y="244" width="130" height="44" rx="10"/><text x="235" y="266" text-anchor="middle" class="flow-label">对账清洗</text><text x="235" y="280" text-anchor="middle" class="flow-label-sm">Osto-20</text>
+          <rect class="flow-node--common" x="320" y="244" width="140" height="44" rx="10"/><text x="390" y="266" text-anchor="middle" class="flow-label">业财交互引导</text><text x="390" y="280" text-anchor="middle" class="flow-label-sm">Osto-21</text>
+          <rect class="flow-node--common" x="480" y="244" width="140" height="44" rx="10"/><text x="550" y="266" text-anchor="middle" class="flow-label">合同合规审查</text><text x="550" y="280" text-anchor="middle" class="flow-label-sm">Osto-22</text>
+          <rect class="flow-node--common" x="640" y="244" width="140" height="44" rx="10"/><text x="710" y="266" text-anchor="middle" class="flow-label">交易录入建议</text><text x="710" y="280" text-anchor="middle" class="flow-label-sm">Osto-23</text>
+          <path style="stroke:#64748b;stroke-width:1.2;fill:none;stroke-dasharray:5 4;marker-end:url(#ah-osto)" d="M725 84 L725 100 L85 100 L85 142"/>
+          <path style="stroke:#64748b;stroke-width:1.2;fill:none;stroke-dasharray:5 4;marker-end:url(#ah-osto)" d="M465 186 L465 210 L85 210 L85 244"/>
+        </svg>
+      </div>
+
+      <!-- Phase 1.0 SOP Cards -->
+      <div class="sop-section"><h2>Phase 1.0 — P0 月结核心链（12 SKILLs · 全部 🤖 Agent）</h2>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">Osto-01</span><span class="sop-name">费用报销 OCR 审核</span><code>fin-expense-ocr-reviewing</code><span class="sop-auto-bar">🤖 4/4</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>票据文件（PDF/JPG/PNG）</li><li>报销单 JSON</li><li>差旅政策规则包</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 校验必填字段，加载政策规则</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 调用 tool-invoice-ocr 识别票据</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 调用 tool-policy-rule-engine 规则比对</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 生成审核结论 + 自动审批动作</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>审核结论 JSON（含 auto_action）</li><li>Markdown 摘要卡片</li><li>合规趋势数据包</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">Osto-02</span><span class="sop-name">工资奖金校验</span><code>fin-payroll-bonus-verifying</code><span class="sop-auto-bar">🤖 5/5</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>HR 分摊表（Excel）</li><li>薪资记录（Excel/CSV）</li><li>薪资政策版本号</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 加载分摊表与薪资记录</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 执行薪资合规检查（阈值/频次/奖金）</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. HR 分摊 vs 薪资记录差异比对</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 奖金明细独立合规校验</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">5. 生成审核报告 + 差异清单</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>审核结论报告（MD/JSON）</li><li>差异清单 JSON</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">Osto-03</span><span class="sop-name">差旅福利审核</span><code>fin-te-benefit-reviewing</code><span class="sop-auto-bar">🤖 5/5</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>差旅申请 JSON</li><li>地区封顶规则 JSON</li><li>可选：福利数据/发票</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 解析申请数据，OCR 发票（如有）</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 加载地区封顶规则配置</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 金额 vs 封顶 + 时间合规校验</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 福利申请独立校验</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">5. 生成合规结论 + 政策匹配详情</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>审核结论 JSON</li><li>政策匹配详情 JSON</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">Osto-04</span><span class="sop-name">资金匹配引擎</span><code>fin-cash-match-engine</code><span class="sop-auto-bar">🤖 4/4</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>银行流水数据</li><li>应收/应付记录</li><li>匹配规则配置</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 导入并校验银行流水批量数据</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 规则匹配（金额±0.01%/日期±3天）</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 未匹配异常按原因聚类</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 生成匹配率摘要 + 异常集群</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>匹配记录列表 JSON</li><li>异常聚类 JSON</li><li>处理摘要（匹配率）</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">Osto-05</span><span class="sop-name">现金对账</span><code>fin-cash-reconciling</code><span class="sop-auto-bar">🤖 4/4</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>现金台账 JSON/Excel</li><li>银行对账单 CSV</li><li>Prime 数据 JSON</li><li>对账期间 YYYY-MM</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 多源数据导入（银行/台账/Prime）</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 按对账期间过滤截止数据</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 多源差异比对，标记高风险项</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 生成差异清单 + 对账摘要</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>多源差异清单 JSON/Excel</li><li>对账摘要 Markdown</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">Osto-06</span><span class="sop-name">合同台账管控</span><code>fin-contract-control-listing</code><span class="sop-auto-bar">🤖 3/3</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>合同文件 PDF</li><li>Control List 当前版本</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. NLP 解析合同法律条款</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 与 Control List 比对差异</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 生成更新建议（新增/变更/待确认）</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>更新后 Control List JSON</li><li>变更摘要 Markdown</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">Osto-07</span><span class="sop-name">合同解析</span><code>fin-contract-parsing</code><span class="sop-auto-bar">🤖 4/4</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>合同文件 PDF</li><li>NetSuite 合同 ID</li><li>可选：历史合同参数</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. NLP 提取付款里程碑/金额/条款</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 读取 NS 当前字段值（只读）</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 生成付款时序草稿，标记冲突</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 输出草稿 + 冲突清单 + 摘要</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>付款时序草稿 JSON</li><li>字段冲突清单 JSON</li><li>摘要 Markdown</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">Osto-08</span><span class="sop-name">NS 分录草稿</span><code>fin-ns-je-drafting</code><span class="sop-auto-bar sop-auto-bar--blk">⛔ 阻塞</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>NS 数据参数（实体/期间/类型）</li><li>JE 模板版本</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 从 NS 读取源数据（只读）</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 模板引擎生成借贷分录草稿</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 生成对账草稿</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 输出草稿 + 校验摘要</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>JE 草稿 JSON</li><li>对账草稿 JSON</li><li>校验摘要 JSON</li><li style="color:#b91c1c">⛔ 双重授权架构未完成</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">Osto-09</span><span class="sop-name">BP 订单审核</span><code>fin-bp-order-reviewing</code><span class="sop-auto-bar">🤖 4/4</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>BP 邮件文件 EML</li><li>附件（PDF/Excel）</li><li>白名单配置 JSON</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 解析 BP 邮件与附件字段</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 识别邮件类型 → 对应 SOP 清单</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 邮件字段 vs 台账比对 + 白名单校验</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 生成匹配/差异双向报告</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>匹配/差异报告 MD/JSON</li><li>校验摘要</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">Osto-10</span><span class="sop-name">BP/Prime 对账</span><code>fin-bp-prime-reconciling</code><span class="sop-auto-bar">🤖 4/4</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>任务参数（期间/范围/源类型）</li><li>台账文件或 API 配置</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 拉取 Prime 数据 + 解析附件</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 加载台账数据作为比对基线</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 字段比对，标记差异类型</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 生成差异报告 + 字段差异清单</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>差异核查报告 MD/JSON</li><li>字段差异清单 JSON</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">Osto-11</span><span class="sop-name">证券科目结转</span><code>fin-sec-rolling-forward</code><span class="sop-auto-bar">🤖 3/3</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>上期 SEC 文件 DOCX</li><li>新期间参数</li><li>科目映射表版本</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 解析 DOCX 识别可替换元素</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 科目映射生成替换候选 + 置信度</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 输出候选清单供用户确认</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>替换候选清单 JSON</li><li>确认摘要 Markdown</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">Osto-12</span><span class="sop-name">证券勾稽核对</span><code>fin-sec-tieout</code><span class="sop-auto-bar">🤖 4/4</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>SEC 披露文档 DOCX</li><li>财务报表 XLSX</li><li>底稿 XLSX</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 解析三个源文件提取数字</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 披露 vs 报表 vs 底稿三方核对</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 标记高风险差异项</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 生成差异清单 + 核对摘要</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>差异清单 JSON</li><li>核对摘要 Markdown</li></ul></div></div></div>
+      </div>
+
+      <!-- Phase 2.0 SOP Cards -->
+      <div class="sop-section"><h2>Phase 2.0 — P1/P2 扩展分析与管控（6 SKILLs · 🤖 23 + 👤 1）</h2>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">Osto-13</span><span class="sop-name">CapEx/OpEx 分类</span><code>fin-capex-opex-classifying</code><span class="sop-auto-bar">🤖 3/4</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>支出项 JSON（金额/用途/资产类型）</li><li>会计准则版本</li><li>CapEx 政策配置</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 解析并提取支出字段</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 规则引擎按准则+政策分类</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 生成分类建议 + 审计摘要</span></div><div class="sop-step sop-step-human"><span class="sop-step-tag">👤</span><span class="sop-step-desc">4. 人工确认最终分类决策</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>分类结论 JSON</li><li>审计摘要 Markdown</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">Osto-14</span><span class="sop-name">FP&amp;A 分析草稿</span><code>fin-fpa-analysis-drafting</code><span class="sop-auto-bar sop-auto-bar--blk">⛔ 阻塞</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>标准化报表包（来自 Osto-15）</li><li>分析模板版本</li><li>可选：聚焦指令</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 读取上游标准化报表包</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 加载分析模板 + 用户指令</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. LLM 生成财务分析草稿</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>分析草稿 Markdown</li><li>元数据 JSON</li><li style="color:#b91c1c">⛔ 依赖 Osto-15 上游阻塞</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">Osto-15</span><span class="sop-name">FP&amp;A 报表导出</span><code>fin-fpa-report-exporting</code><span class="sop-auto-bar sop-auto-bar--blk">⛔ 阻塞</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>报表期间参数</li><li>数据获取模式（API/手动上传）</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 确认数据获取方式</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 调用 Oracle/BP API 并行拉数据</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 一致性校验</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 生成标准化报表包</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>标准化报表包 Excel/JSON</li><li>一致性校验报告</li><li style="color:#b91c1c">⛔ bp-api/oracle-api 授权待确认</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">Osto-16</span><span class="sop-name">ROU 租赁排期</span><code>fin-rou-lease-scheduling</code><span class="sop-auto-bar">🤖 5/5</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>租赁合同参数（起始/期限/付款/IBR）</li><li>会计准则（IFRS16/ASC842）</li><li>可选：原始排期 + 变更条款</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 校验租赁参数完整性</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 折现计算初始 ROU + 租赁负债</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 逐期生成摊销时间表</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 处理合同变更（终止/重估/续约）</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">5. 输出摊销表（NS 可导入格式）</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>ROU 摊销表 Excel/JSON</li><li>计算摘要 Markdown</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">Osto-17</span><span class="sop-name">SSC 去重核查</span><code>fin-ssc-dedup-checking</code><span class="sop-auto-bar">🤖 4/4</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>SSC 人员数据 JSON</li><li>去重检测规则配置</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 查询 HR/财务/合规系统 SSC 数据</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 跨系统重叠检测</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 按风险等级分类重复项</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 生成去重报告 + 异常摘要</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>重复检测报告</li><li>异常摘要 JSON</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">Osto-18</span><span class="sop-name">审计材料预处理</span><code>osto-audit-material-preprocessing</code><span class="sop-auto-bar">🤖 5/5</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>PBC 清单 ID</li><li>文件索引（路径/ID）</li><li>DLP 脱敏策略 ID</li><li>项目类型（审计/税务）</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 从系统 API 加载 PBC 清单 + 文件索引</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 扫描文件 vs 清单覆盖率计算</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 并行 DLP 扫描 PII/敏感数据</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. LLM 生成缺口自然语言解释</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">5. 输出覆盖报告 + 缺口 + DLP 标记</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>覆盖率报告 JSON</li><li>缺口文件清单</li><li>DLP 脱敏标记</li><li>自然语言缺口解释</li></ul></div></div></div>
+      </div>
+
+      <!-- Phase 3.0 SOP Cards -->
+      <div class="sop-section"><h2>Phase 3.0 — 平台内置与 LLM 辅助（5 SKILLs · 🤖 23 + 👤 3）</h2>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">Osto-19</span><span class="sop-name">分录生成</span><code>fin-je-generating</code><span class="sop-auto-bar">🤖 5/5</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>业务域（ar/o2c/crypto/ns/cobo）</li><li>期间 YYYY-MM</li><li>源数据引用</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 加载域专属 GL 映射与借贷规则</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 源数据打标/过滤/去重</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 生成借贷行并校验平衡</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 标记异常（缺失 GL/汇率/违规）</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">5. 输出标准 JE 模板 Excel/CSV</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>JE 模板文件 Excel/CSV</li><li>异常清单 JSON</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">Osto-20</span><span class="sop-name">对账数据清洗</span><code>osto-reconciliation-cleaning</code><span class="sop-auto-bar">🤖 5/5</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>源数据文件 A</li><li>目标数据文件 B</li><li>匹配键配置</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 加载双源文件并校验 schema</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 去重/类型修复/空值标记</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 按匹配键比对，计算匹配率</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 未匹配项 LLM 生成修复建议</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">5. 输出匹配率 + 异常 + 修复建议</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>匹配率 + 匹配记录</li><li>异常清单</li><li>LLM 修复建议</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">Osto-21</span><span class="sop-name">业财交互引导</span><code>osto-biz-finance-interaction-guiding</code><span class="sop-auto-bar">🤖 4/5</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>意图（payment/invoice/expense）</li><li>请求载荷 JSON</li><li>来源 Agent ID</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 匹配意图与当前 spec 版本</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 校验载荷字段完整性与类型</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 标准化请求格式</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 审计服务记录校验事件</span></div><div class="sop-step sop-step-human"><span class="sop-step-tag">👤</span><span class="sop-step-desc">5. 升级标记时路由至专家</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>校验结果（pass/fail）</li><li>标准化财务包引用</li><li>审计 trace ID</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">Osto-22</span><span class="sop-name">合同合规审查</span><code>osto-contract-compliance-reviewing</code><span class="sop-auto-bar">🤖 5/6</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>合同纯文本（预解析）</li><li>合同类型</li><li>规则包 ID</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 接收合同文本，提取关键字段</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. LLM 按规则包逐条合规检查</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 按严重程度风险分级</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 组装结构化审查报告</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">5. Slack 推送报告</span></div><div class="sop-step sop-step-human"><span class="sop-step-tag">👤</span><span class="sop-step-desc">6. 最终合规审批（法务/财务）</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>合规摘要</li><li>检查项数组</li><li>风险清单</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">Osto-23</span><span class="sop-name">交易录入建议</span><code>osto-transaction-entry-suggesting</code><span class="sop-auto-bar">🤖 4/5</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>业务事件 JSON</li><li>科目表版本</li><li>可选：上下文备注</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 解析业务事件字段</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 规则引擎匹配 GL 映射</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 冲突时 LLM 生成多方案建议</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 校验借贷平衡</span></div><div class="sop-step sop-step-human"><span class="sop-step-tag">👤</span><span class="sop-step-desc">5. 人工确认后过账</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>分录行数组 JSON</li><li>平衡标记 + 置信度</li><li>待定项清单</li></ul></div></div></div>
+      </div>
+
+      <p class="flow-note">
+        数据来源：<code>AI Agent Skills Analysis/SKILLS/&lt;skill-id&gt;/SKILL.md</code>。<br>
+        自动化覆盖率：Phase 1.0 全部 🤖 Agent (48/48) · Phase 2.0 🤖 23 + 👤 1 (23/24) · Phase 3.0 🤖 23 + 👤 3 (23/26) · 总计 94/98 步 (95.9%)。<br>
+        ⛔ 阻塞项：Osto-08 fin-ns-je-drafting / Osto-14 fin-fpa-analysis-drafting / Osto-15 fin-fpa-report-exporting。
+      </p>
+    </div>
+  </div><!-- /#view-flow-osto -->
+  <!-- #endregion flow-osto -->
 
   <a href="#" class="back-top visible" aria-label="返回顶部">▲ 顶部</a>
   <script>
@@ -2248,18 +2311,13 @@
         if (isEdit) exitEdit(); else enterEdit();
       });
 
-      /* ── 通用子页面路由（支持 #flow-bs, #flow-hr, ... #flow-osto）─── */
+      /* ── 子页面路由（#flow-bs、#flow-osto 等，由带 data-subpage 的 .page-view 注册）─── */
       var viewMain = document.getElementById('view-main');
       var _subpages = {};
       var _activeSubpage = null;
       document.querySelectorAll('.page-view[data-subpage]').forEach(function (el) {
         _subpages[el.getAttribute('data-subpage')] = el;
       });
-      /* 向前兼容：#view-flow-bs 没有 data-subpage 时手动注册 */
-      if (!_subpages['flow-bs']) {
-        var bsEl = document.getElementById('view-flow-bs');
-        if (bsEl) _subpages['flow-bs'] = bsEl;
-      }
 
       function switchToSubpage(id) {
         var target = _subpages[id];
@@ -2288,7 +2346,6 @@
         }
         viewMain.classList.remove('is-hidden');
         document.body.classList.remove('subpage-active');
-        document.body.classList.remove('subpage-flow-bs');
         _activeSubpage = null;
         window.scrollTo(0, 0);
         try { history.replaceState(null, '', location.pathname + location.search); } catch (e2) {}
