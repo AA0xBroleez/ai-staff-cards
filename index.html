@@ -724,25 +724,38 @@
 
     /* ─── 二级页：BS SKILL 数据流 ─────────────────────────────── */
     .page-view.is-hidden { display: none !important; }
+    body.subpage-flow-bs {
+      overflow-x: hidden;
+      background: var(--surface);
+    }
     body.subpage-flow-bs .mode-controls,
     body.subpage-flow-bs .back-top { display: none; }
+
+    #view-flow-bs {
+      max-width: 100%;
+      box-sizing: border-box;
+      padding-bottom: 32px;
+    }
 
     .flow-page {
       max-width: 1100px;
       margin: 0 auto;
       padding: 0 16px 48px;
+      box-sizing: border-box;
+      width: 100%;
     }
     .flow-page-head {
       display: flex;
       flex-wrap: wrap;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 12px;
+      gap: 14px;
       margin-bottom: 20px;
     }
     .flow-back {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 6px;
       font-size: 0.82rem;
       font-weight: 700;
@@ -753,14 +766,16 @@
       border: 1px solid #c7d2fe;
       background: #fff;
       box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+      flex-shrink: 0;
     }
     .flow-back:hover { background: #eef2ff; }
     .flow-page h1 {
       margin: 0;
-      font-size: 1.35rem;
+      font-size: clamp(1.1rem, 2.8vw, 1.35rem);
       font-weight: 800;
       color: var(--ink);
       letter-spacing: 0.02em;
+      line-height: 1.35;
     }
     .flow-page .lead {
       margin: 8px 0 0;
@@ -780,17 +795,34 @@
       background: #fff;
       border: 1px solid #e2e8f0;
       border-radius: 12px;
+      box-sizing: border-box;
+      width: 100%;
     }
     .flow-legend span { display: inline-flex; align-items: center; gap: 4px; }
+    /* 横向滚动只发生在图形容器内，避免整页被撑出横向滚动条 */
     .flow-diagram {
       background: #fff;
       border: 1px solid #e2e8f0;
       border-radius: var(--radius);
-      padding: 20px 12px 24px;
+      padding: 16px 8px 20px;
       box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
       overflow-x: auto;
+      overflow-y: visible;
+      -webkit-overflow-scrolling: touch;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
     }
-    .flow-diagram svg { display: block; margin: 0 auto; min-width: 920px; }
+    .flow-diagram svg {
+      display: block;
+      margin: 0 auto;
+      width: 980px;
+      max-width: none;
+      height: auto;
+      min-width: 720px;
+      overflow: visible;
+      shape-rendering: geometricPrecision;
+    }
     .flow-node {
       fill: #f8fafc;
       stroke: #94a3b8;
@@ -800,10 +832,19 @@
     .flow-node--dev { fill: #fff7ed; stroke: #ea580c; }
     .flow-node--common { fill: #eef2ff; stroke: #6366f1; }
     .flow-node--sys { fill: #e0f2fe; stroke: #0284c7; }
-    .flow-label { font-size: 11px; fill: #0f172a; font-family: "PingFang SC", "Microsoft YaHei", ui-sans-serif, sans-serif; }
-    .flow-label-sm { font-size: 9.5px; fill: #475569; font-family: ui-monospace, Menlo, monospace; }
-    .flow-arrow { stroke: #64748b; stroke-width: 1.4; fill: none; marker-end: url(#arrowhead-bs); }
-    .flow-arrow--dash { stroke-dasharray: 4 3; opacity: 0.85; }
+    /* 相对 svg 根 font-size（用户单位），随 viewBox 缩放 */
+    .flow-label {
+      font-size: 1em;
+      fill: #0f172a;
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+    }
+    .flow-label-sm {
+      font-size: 0.78em;
+      fill: #475569;
+      font-family: ui-monospace, Menlo, "SF Mono", monospace;
+    }
+    .flow-arrow { stroke: #64748b; stroke-width: 1.6; fill: none; marker-end: url(#arrowhead-bs); }
+    .flow-arrow--dash { stroke-dasharray: 5 4; opacity: 0.88; }
     .flow-note {
       margin-top: 18px;
       font-size: 0.78rem;
@@ -813,8 +854,16 @@
       background: #f8fafc;
       border-radius: 12px;
       border: 1px solid #e2e8f0;
+      box-sizing: border-box;
+      max-width: 100%;
+      word-break: break-word;
     }
-    .flow-note code { font-size: 0.74rem; }
+    .flow-note code { font-size: 0.74rem; word-break: break-all; }
+    @media (max-width: 560px) {
+      .flow-page-head { flex-direction: column; align-items: stretch; }
+      .flow-back { width: 100%; }
+      .flow-diagram { padding: 12px 4px 16px; }
+    }
   </style>
 </head>
 <body>
@@ -1403,7 +1452,7 @@
         <div class="dex-head-main">
           <div class="dex-name-row"><span class="dex-no">NO.010</span><h2>Osto</h2></div>
           <p class="dex-role">Finance · Accounting · 月结/记账/审计 全域财务工具链</p>
-          <span class="dex-status">🔨 22 开发中 · ⛔ 1 阻塞</span>
+          <span class="dex-status">🔨 20 开发中 · ⛔ 3 阻塞</span>
         </div>
       </div>
       <p class="dex-tags"><strong>月结核心链 · 扩展分析 · LLM 辅助</strong> · 覆盖费用报销、工资校验、现金对账、合同解析、分录草稿、证券结转等全域财务场景，三阶段渐进交付。</p>
@@ -1444,11 +1493,11 @@
           <div class="skill-tree">
             <div class="st-title-row">
               <h3 class="st-heading">🧩 技能树</h3>
-              <div class="st-legend"><span>🔨 <strong>22</strong> 开发中</span><span>⛔ <strong>1</strong> 阻塞</span></div>
+              <div class="st-legend"><span>🔨 <strong>20</strong> 开发中</span><span>⛔ <strong>3</strong> 阻塞</span></div>
             </div>
             <div class="st-progress-row">
               <span class="st-frac"><span class="st-done">0</span><span class="st-sep">/</span><span class="st-total">23</span></span>
-              <div class="st-bar st-bar--mixed" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="23" aria-label="技能交付进度" aria-valuetext="已上线 0，开发中 22，阻塞 1，共 23 项"><div class="st-bar-inner" aria-hidden="true"><span class="st-bar-seg st-bar-seg--on" style="width: 0%;"></span><span class="st-bar-seg st-bar-seg--dev" style="width: 95.65%;"></span><span class="st-bar-seg st-bar-seg--blk" style="width: 4.35%;"></span></div></div>
+              <div class="st-bar st-bar--mixed" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="23" aria-label="技能交付进度" aria-valuetext="已上线 0，开发中 20，阻塞 3，共 23 项"><div class="st-bar-inner" aria-hidden="true"><span class="st-bar-seg st-bar-seg--on" style="width: 0%;"></span><span class="st-bar-seg st-bar-seg--dev" style="width: 86.96%;"></span><span class="st-bar-seg st-bar-seg--blk" style="width: 13.04%;"></span></div></div>
             </div>
             <div class="st-phase">
               <h4>Phase 1.0<span class="st-phase-desc">P0 月结核心链</span></h4>
@@ -1459,7 +1508,7 @@
               <div class="st-row"><span class="st-id">Osto-05</span><span class="st-name">现金对账 <code>fin-cash-reconciling</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
               <div class="st-row"><span class="st-id">Osto-06</span><span class="st-name">合同台账管控 <code>fin-contract-control-listing</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
               <div class="st-row"><span class="st-id">Osto-07</span><span class="st-name">合同解析 <code>fin-contract-parsing</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
-              <div class="st-row"><span class="st-id">Osto-08</span><span class="st-name">NS 分录草稿 <code>fin-ns-je-drafting</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">Osto-08</span><span class="st-name" title="双重授权架构设计未完成，Process 章节待补写（BLOCKER-02）">NS 分录草稿 <code>fin-ns-je-drafting</code></span><span class="st-st st-st--blk">⛔ 阻塞</span></div>
               <div class="st-row"><span class="st-id">Osto-09</span><span class="st-name">BP 订单审核 <code>fin-bp-order-reviewing</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
               <div class="st-row"><span class="st-id">Osto-10</span><span class="st-name">BP/Prime 对账 <code>fin-bp-prime-reconciling</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
               <div class="st-row"><span class="st-id">Osto-11</span><span class="st-name">证券科目结转 <code>fin-sec-rolling-forward</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
@@ -1468,7 +1517,7 @@
             <div class="st-phase">
               <h4>Phase 2.0<span class="st-phase-desc">P1/P2 扩展分析与管控</span></h4>
               <div class="st-row"><span class="st-id">Osto-13</span><span class="st-name">CapEx/OpEx 分类 <code>fin-capex-opex-classifying</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
-              <div class="st-row"><span class="st-id">Osto-14</span><span class="st-name">FP&amp;A 分析草稿 <code>fin-fpa-analysis-drafting</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
+              <div class="st-row"><span class="st-id">Osto-14</span><span class="st-name" title="依赖 fin-fpa-report-exporting，上游阻塞">FP&amp;A 分析草稿 <code>fin-fpa-analysis-drafting</code></span><span class="st-st st-st--blk">⛔ 阻塞</span></div>
               <div class="st-row"><span class="st-id">Osto-15</span><span class="st-name" title="bp-api/oracle-api 授权待确认（Open Q2）">FP&amp;A 报表导出 <code>fin-fpa-report-exporting</code></span><span class="st-st st-st--blk">⛔ 阻塞</span></div>
               <div class="st-row"><span class="st-id">Osto-16</span><span class="st-name">ROU 租赁排期 <code>fin-rou-lease-scheduling</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
               <div class="st-row"><span class="st-id">Osto-17</span><span class="st-name">SSC 去重核查 <code>fin-ssc-dedup-checking</code></span><span class="st-st st-st--dev">🔨 开发中</span></div>
@@ -1524,10 +1573,10 @@
         <span>虚线 = 可选或配置型依赖</span>
       </div>
       <div class="flow-diagram" role="img" aria-label="BS Agent SKILL 数据流示意图">
-        <svg viewBox="0 0 980 520" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <svg viewBox="0 0 980 528" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" font-size="14">
           <defs>
-            <marker id="arrowhead-bs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-              <polygon points="0 0, 8 4, 0 8" fill="#64748b"/>
+            <marker id="arrowhead-bs" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+              <polygon points="0 0, 10 5, 0 10" fill="#64748b"/>
             </marker>
           </defs>
           <text x="24" y="28" class="flow-label" font-weight="800">入口与上下文</text>
