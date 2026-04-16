@@ -204,6 +204,54 @@
       padding-left: 10px; border-left: 3px solid var(--teal);
     }
 
+    /* ── Panorama (全貌图) ── */
+    .pano-wrap { margin-bottom: 32px; }
+    .pano-legend {
+      display: flex; flex-wrap: wrap; gap: 10px 18px; font-size: 0.78rem; color: var(--muted);
+      margin-bottom: 14px; padding: 10px 14px; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
+    }
+    .pano-legend span { display: flex; align-items: center; gap: 5px; }
+    .pano-legend .lg { width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; }
+    .pano-scroll { overflow-x: auto; padding-bottom: 8px; }
+    .pano-grid {
+      display: grid; gap: 0; min-width: 1100px;
+      grid-template-columns: 120px repeat(10, 1fr);
+      font-size: 0.72rem;
+    }
+    .pano-header {
+      background: #0c4a6e; color: #fff; font-weight: 700; text-align: center;
+      padding: 8px 4px; font-size: 0.75rem; border: 1px solid #0e7490;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    }
+    .pano-header .ph-icon { font-size: 1rem; }
+    .pano-header .ph-count { font-size: 0.65rem; opacity: 0.8; }
+    .pano-row-label {
+      background: #f1f5f9; font-weight: 700; padding: 6px 8px; border: 1px solid #e2e8f0;
+      display: flex; align-items: center; font-size: 0.78rem; color: var(--ink);
+    }
+    .pano-cell {
+      border: 1px solid #e2e8f0; padding: 4px; display: flex; flex-direction: column; gap: 3px;
+      min-height: 36px; background: #fff;
+    }
+    .pano-tag {
+      display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem;
+      font-weight: 600; line-height: 1.4; white-space: nowrap; text-align: center;
+      cursor: default; transition: transform 0.15s;
+    }
+    .pano-tag:hover { transform: scale(1.08); }
+    .pano-tag.pt-online { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+    .pano-tag.pt-pending { background: #f8fafc; color: #64748b; border: 1px dashed #94a3b8; }
+    .pano-tag.pt-agent { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+    .pano-tag.pt-decision { background: #f5f3ff; color: #5b21b6; border: 1px solid #c4b5fd; }
+    .pano-cell-empty { background: #fafafa; }
+    .pano-foundation {
+      grid-column: 1 / -1; background: linear-gradient(90deg, #eff6ff, #dbeafe);
+      border: 2px solid #3b82f6; border-radius: 10px; padding: 10px 16px; margin: 8px 0;
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+    .pano-foundation .pf-title { font-weight: 700; font-size: 0.85rem; color: #1e40af; white-space: nowrap; }
+    .pano-foundation .pano-tag { font-size: 0.72rem; }
+
     /* ── TOC Directory ── */
     .toc-panel {
       background: var(--card); border-radius: var(--radius); padding: 20px 24px;
@@ -267,6 +315,20 @@
     <div class="toc-panel">
       <h3>📑 目录导航</h3>
       <div class="toc-grid" id="tocGrid"></div>
+    </div>
+
+    <!-- Panorama 全貌图 -->
+    <div class="section-title">全貌图 — 任务地图</div>
+    <div class="pano-wrap">
+      <div class="pano-legend">
+        <span><span class="lg" style="background:#dbeafe;border:1px solid #93c5fd"></span> 已上线（读操作）</span>
+        <span><span class="lg" style="background:#f8fafc;border:1px dashed #94a3b8"></span> 待开发（写操作）</span>
+        <span><span class="lg" style="background:#fef3c7;border:1px solid #fcd34d"></span> Agent 可介入</span>
+        <span><span class="lg" style="background:#f5f3ff;border:1px solid #c4b5fd"></span> 审批节点</span>
+      </div>
+      <div class="pano-scroll">
+        <div id="panoGrid"></div>
+      </div>
     </div>
 
     <div class="section-title">业务线概览</div>
@@ -632,6 +694,125 @@ const HEATMAP_VALUES = [
 
 // ── RENDER FUNCTIONS ──
 
+function renderPanorama() {
+  const container = document.getElementById("panoGrid");
+  // Business lines for columns (exclude common, handle separately)
+  const bizLines = BL_DATA.filter(b => b.id !== "common");
+  const common = BL_DATA.find(b => b.id === "common");
+
+  // Collect all unique workflow categories (rows)
+  const rowDefs = [
+    { key: "address", label: "地址管理" },
+    { key: "account", label: "账户操作" },
+    { key: "opening", label: "开户/注册" },
+    { key: "contract", label: "合同/合规" },
+    { key: "capital", label: "资金操作" },
+    { key: "periodic", label: "周期任务" },
+    { key: "payment", label: "付款/转账" },
+    { key: "token", label: "代币/链上" },
+    { key: "mining", label: "矿业操作" },
+    { key: "lending", label: "借贷" },
+    { key: "other", label: "其他" },
+  ];
+
+  // Classify each workflow into a row category
+  function classify(blId, wfName) {
+    const n = wfName;
+    if (/地址|白名单|Fordefi|多签/.test(n)) return "address";
+    if (/子账户|IP/.test(n)) return "account";
+    if (/开户|钱包创建|公司注册/.test(n)) return "opening";
+    if (/合同|KYC|确认合同/.test(n)) return "contract";
+    if (/入资|增资|减资|撤资|月度确认|关键信息/.test(n)) return "capital";
+    if (/月度|周期/.test(n)) return "periodic";
+    if (/付款|换汇|银行转账|银行白名单/.test(n)) return "payment";
+    if (/代币|铸造|销毁|部署/.test(n)) return "token";
+    if (/矿工|切算力|算力/.test(n)) return "mining";
+    if (/贷款|抵押|入金|还款|仓位|资金释放|借贷|贷款确认/.test(n)) return "lending";
+    return "other";
+  }
+
+  // Build matrix: row category → column (blId) → [workflows]
+  const matrix = {};
+  rowDefs.forEach(r => { matrix[r.key] = {}; bizLines.forEach(bl => { matrix[r.key][bl.id] = []; }); });
+
+  bizLines.forEach(bl => {
+    bl.groups.forEach(g => {
+      g.items.forEach(item => {
+        const cat = classify(bl.id, item.name);
+        matrix[cat][bl.id].push(item);
+      });
+    });
+  });
+
+  // Render grid
+  const cols = bizLines.length;
+  let html = `<div class="pano-grid" style="grid-template-columns: 120px repeat(${cols}, 1fr)">`;
+
+  // Header row
+  html += '<div class="pano-header" style="background:#334155"><span class="ph-icon">📋</span>功能分类</div>';
+  bizLines.forEach(bl => {
+    html += `<div class="pano-header"><span class="ph-icon">${bl.icon}</span>${bl.name}<span class="ph-count">${bl.workflows} 流程</span></div>`;
+  });
+
+  // Data rows
+  rowDefs.forEach(row => {
+    // Check if this row has any content
+    let hasContent = false;
+    bizLines.forEach(bl => { if (matrix[row.key][bl.id].length > 0) hasContent = true; });
+    if (!hasContent) return;
+
+    html += `<div class="pano-row-label">${row.label}</div>`;
+    bizLines.forEach(bl => {
+      const items = matrix[row.key][bl.id];
+      if (items.length === 0) {
+        html += '<div class="pano-cell pano-cell-empty"></div>';
+      } else {
+        html += '<div class="pano-cell">';
+        items.forEach(item => {
+          const isOnline = item.online;
+          const hasAgent = item.steps && item.steps.some(s => s.agent);
+          const hasDecision = item.steps && item.steps.some(s => s.t === "dec");
+          let cls = isOnline ? "pt-online" : "pt-pending";
+          let prefix = isOnline ? "✅ " : "";
+          let suffix = "";
+          if (hasAgent && !isOnline) suffix += " 🤖";
+          if (hasDecision) suffix += " ◇";
+          html += `<span class="pano-tag ${cls}" title="${item.name}${isOnline ? ' [已上线]' : ' [待开发]'}${hasAgent ? ' [Agent可介入]' : ''}${hasDecision ? ' [含审批]' : ''}" onclick="showBusinessLine('${bl.id}')">${prefix}${item.name}${suffix}</span>`;
+        });
+        html += '</div>';
+      }
+    });
+  });
+
+  html += '</div>';
+
+  // Foundation bar: Star Agent online capabilities
+  if (common) {
+    const onlineGroup = common.groups.find(g => g.title.includes("已上线"));
+    if (onlineGroup) {
+      html += '<div class="pano-foundation"><span class="pf-title">🌟 Star Agent 已上线基座</span>';
+      onlineGroup.items.forEach(item => {
+        html += `<span class="pano-tag pt-online" onclick="showBusinessLine('common')">✅ ${item.name}</span>`;
+      });
+      html += '</div>';
+    }
+    // Common pending operations bar
+    const pendingGroups = common.groups.filter(g => !g.title.includes("已上线"));
+    if (pendingGroups.length > 0) {
+      html += '<div class="pano-foundation" style="background:linear-gradient(90deg,#f8fafc,#f1f5f9);border-color:#94a3b8;border-style:dashed;margin-top:4px"><span class="pf-title" style="color:#475569">📋 通用流程（待开发）</span>';
+      pendingGroups.forEach(g => {
+        g.items.forEach(item => {
+          const hasAgent = item.steps && item.steps.some(s => s.agent);
+          html += `<span class="pano-tag pt-pending" onclick="showBusinessLine('common')">${item.name}${hasAgent ? ' 🤖' : ''}</span>`;
+        });
+      });
+      html += '</div>';
+    }
+  }
+
+  container.innerHTML = html;
+}
+
 function renderTOC() {
   const grid = document.getElementById("tocGrid");
   let html = '<div class="toc-sep">业务线</div>';
@@ -655,6 +836,7 @@ function renderTOC() {
     });
   }
   html += '<div class="toc-sep">页面锚点</div>';
+  html += '<a class="toc-item" onclick="document.getElementById(\'panoGrid\').scrollIntoView({behavior:\'smooth\'})"><span class="toc-icon">🗺️</span><span class="toc-name">全貌图</span></a>';
   html += '<a class="toc-item" onclick="document.getElementById(\'heatmapTable\').scrollIntoView({behavior:\'smooth\'})"><span class="toc-icon">📊</span><span class="toc-name">操作分布热力图</span></a>';
   html += '<a class="toc-item" onclick="togglePriorityPanel();document.querySelector(\'.priority-panel\').scrollIntoView({behavior:\'smooth\'})"><span class="toc-icon">⚡</span><span class="toc-name">待开发优先级</span></a>';
   grid.innerHTML = html;
@@ -793,6 +975,7 @@ function togglePriorityPanel() {
 }
 
 // ── INIT ──
+renderPanorama();
 renderTOC();
 renderBLGrid();
 renderHeatmap();
