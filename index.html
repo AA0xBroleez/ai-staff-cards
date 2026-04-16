@@ -1604,7 +1604,7 @@
   <div id="view-flow-bs" class="page-view is-hidden" aria-hidden="true" data-subpage="flow-bs">
     <header class="dex-top" style="margin-bottom: 20px; padding-bottom: 28px;">
       <h1>BS · Agent SKILL 数据流</h1>
-      <p class="sub" style="margin-top: 8px;">NO.001 Star（Nexus 工单链 + 已上线能力）· 示意与依赖关系</p>
+      <p class="sub" style="margin-top: 8px;">NO.001 Star（Nexus 工单链 + 已上线能力）· SOP 与自动化标注</p>
     </header>
     <div class="flow-page">
       <div class="flow-page-head">
@@ -1612,13 +1612,15 @@
           <h1>数据怎么在 SKILL 之间流动</h1>
           <p class="lead">从渠道进线到分类、字段抽取、工作流路由与通知；已上线能力并行提供 SOP / NS 只读查询 / 邮件模板。通用能力（Common）为可选依赖，按实际编排接入。</p>
         </div>
-        <a href="#" class="flow-back" id="flowBsBack">← 返回卡片图鉴</a>
+        <a href="#" class="flow-back">← 返回卡片图鉴</a>
       </div>
       <div class="flow-legend" role="list">
-        <span>■ <strong>已上线</strong>（绿）</span>
-        <span>■ <strong>开发中</strong>（橙）</span>
-        <span>■ <strong>通用 / 外部</strong>（紫 / 蓝）</span>
-        <span>虚线 = 可选或配置型依赖</span>
+        <span>🤖 <strong>Agent 自动</strong></span>
+        <span>👤 <strong>人工处理</strong></span>
+        <span>🤝 <strong>人机协作</strong></span>
+        <span>✅ <strong>已上线</strong></span>
+        <span>虚线 = 可选依赖</span>
+        <span class="sop-auto-bar">自动化覆盖 41/50 步 (82.0%)</span>
       </div>
       <div class="flow-diagram" role="img" aria-label="BS Agent SKILL 数据流示意图（纵向）">
         <!-- 单列纵向：boxW=360，标题与 skill id 分两行，框高避免文字溢出 -->
@@ -1717,9 +1719,47 @@
           <text x="220" y="1432" text-anchor="middle" class="flow-label-sm">BS-04</text>
         </svg>
       </div>
+      <!-- BS SOP Cards: Phase 1–2 已上线 -->
+      <div class="sop-section"><h2>已上线能力（Phase 1–2）</h2>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">BS-01</span><span class="sop-name">五业务线流程问答</span><code>—</code><span class="sop-auto-bar" style="background:#ecfdf5;color:#166534">✅ 已上线</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>用户 SOP 问题</li><li>业务线上下文</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 接收用户问题并识别业务线</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. RAG 检索五业务线知识库</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 生成带引用的结构化回答</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>结构化回答 + SOP 引用</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">BS-02</span><span class="sop-name">需求接收与流程跟进</span><code>—</code><span class="sop-auto-bar" style="background:#ecfdf5;color:#166534">✅ 已上线</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>Slack 需求消息</li><li>工单状态变更</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 接收 Slack 需求消息</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 创建工单并记录信息</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 状态跟踪与变更检测</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 推送状态更新通知</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>工单记录</li><li>状态通知</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">BS-03</span><span class="sop-name">NS 系统数据查询</span><code>—</code><span class="sop-auto-bar" style="background:#ecfdf5;color:#166534">✅ 已上线</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>NS 查询请求</li><li>业务实体参数</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 解析查询意图与实体参数</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 调用 NS 只读 API 获取数据</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 格式化结果并生成可读摘要</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>查询结果 JSON</li><li>可读摘要</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">BS-04</span><span class="sop-name">业务线邮件模板</span><code>—</code><span class="sop-auto-bar" style="background:#ecfdf5;color:#166534">✅ 已上线</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>邮件场景</li><li>业务线</li><li>模板参数</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 识别邮件场景与业务线</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 加载对应业务线邮件模板</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 填充模板参数</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 输出完整邮件草稿</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>邮件草稿（主题 + 正文）</li></ul></div></div></div>
+      </div>
+
+      <!-- BS SOP Cards: Phase 3 开发中 -->
+      <div class="sop-section"><h2>开发中能力（Phase 3 — Nexus 工单链 + 业务线）</h2>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">BS-05</span><span class="sop-name">意图分类</span><code>bs-intake-classifying</code><span class="sop-auto-bar">🤖 3/4</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>用户原始消息</li><li>可选对话历史</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-human"><span class="sop-step-tag">👤</span><span class="sop-step-desc">1. 接收用户消息</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 提取意图和业务线信号</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 判断置信度并输出分类结果</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 传递分类结果给字段抽取</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>意图标签 + 业务线</li><li>优先级信号</li><li>置信度</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">BS-06</span><span class="sop-name">工单字段抽取</span><code>bs-intake-field-extracting</code><span class="sop-auto-bar">🤖 3/4</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>分类结果</li><li>用户原始消息</li><li>可选对话历史</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 接收上游分类结果</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. LLM 抽取结构化字段</span></div><div class="sop-step sop-step-collab"><span class="sop-step-tag">🤝</span><span class="sop-step-desc">3. 缺失字段追问补全</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 汇总完整字段对象</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>ticket_fields 结构化对象</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">BS-07</span><span class="sop-name">工单状态变更通知</span><code>bs-intake-status-notifying</code><span class="sop-auto-bar">🤖 6/6</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>工单状态变更事件 payload</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 接收事件 payload</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. 去重聚合识别实质进展</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 敏感字段脱敏</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 生成智能建议</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">5. 组装 Slack 通知</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">6. 推送通知</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>通知发送状态</li><li>聚合标识</li><li>建议操作</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">BS-08</span><span class="sop-name">业务线工作流路由</span><code>bs-workflow-routing</code><span class="sop-auto-bar">🤖 5/5</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>用户场景描述</li><li>可选业务线</li><li>补充信息</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 关键词精确匹配</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. LLM 语义兜底</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 调用 common-workflow 获取通用步骤</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 加载业务线 delta 配置</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">5. 合并输出完整工作流</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>业务线 + 工作流步骤</li><li>审批链</li><li>涉及系统</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">BS-09</span><span class="sop-name">BS 通用工作流底层</span><code>bs-common-workflow</code><span class="sop-auto-bar">🤖 3/4</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>查询文本或 workflow_id</li><li>可选业务线</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">1. 识别查询类型（ID / 文本）</span></div><div class="sop-step sop-step-human"><span class="sop-step-tag">👤</span><span class="sop-step-desc">2. 询问业务线（仅直接查询时）</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. RAG 检索母版知识库</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 输出结构化工作流</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>workflow_id + 名称</li><li>标准步骤</li><li>涉及系统</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">BS-10</span><span class="sop-name">AE 新能源小流程</span><code>bs-ae-small-flow</code><span class="sop-auto-bar">🤖 3/5</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>付款需求描述</li><li>Invoice 信息</li><li>账户信息</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-human"><span class="sop-step-tag">👤</span><span class="sop-step-desc">1. 接收付款信息</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. RAG 检索 AE 规范</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">3. 逐字段核对完整性</span></div><div class="sop-step sop-step-human"><span class="sop-step-tag">👤</span><span class="sop-step-desc">4. 追问缺失字段</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">5. 输出核对清单 + 审批顺序</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>字段核对清单</li><li>审批顺序</li><li>完整性标识</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">BS-11</span><span class="sop-name">Mining 合资立项与入资</span><code>bs-mining-jv-setup</code><span class="sop-auto-bar">🤖 2/4</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>场景描述</li><li>可选合资类型</li><li>补充信息</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-human"><span class="sop-step-tag">👤</span><span class="sop-step-desc">1. 确认合资类型</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. RAG 检索合资知识库</span></div><div class="sop-step sop-step-human"><span class="sop-step-tag">👤</span><span class="sop-step-desc">3. 追问补全关键信息</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 输出立项工作流</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>工作流步骤</li><li>审批链</li><li>所需文档</li></ul></div></div></div>
+
+      <div class="sop-card"><div class="sop-card-head"><span class="sop-id">BS-12</span><span class="sop-name">Mining 合资日常运营</span><code>bs-mining-jv-operation</code><span class="sop-auto-bar">🤖 2/4</span></div><div class="sop-cols"><div class="sop-col"><h5>📥 输入</h5><ul><li>场景描述</li><li>可选运营操作类型</li></ul></div><div class="sop-col"><h5>⚙️ 处理</h5><div class="sop-step sop-step-human"><span class="sop-step-tag">👤</span><span class="sop-step-desc">1. 确认操作类型</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">2. RAG 检索运营知识库</span></div><div class="sop-step sop-step-human"><span class="sop-step-tag">👤</span><span class="sop-step-desc">3. 追问关键参数</span></div><div class="sop-step sop-step-agent"><span class="sop-step-tag">🤖</span><span class="sop-step-desc">4. 输出操作步骤 + 注意事项</span></div></div><div class="sop-col"><h5>📤 输出</h5><ul><li>操作步骤</li><li>审批链</li><li>注意事项</li></ul></div></div></div>
+      </div>
+
       <p class="flow-note">
-        SKILL 设计文档目录（与图鉴脚注一致）：<code>AI Agent Skills Analysis/SKILLS/&lt;skill-id&gt;/SKILL.md</code>。<br>
-        类型标注参考仓库内依赖矩阵：Nexus 链上多为 Type D（纯 LLM）+ Type C（RAG）；与 NS、Slack、邮件的衔接以实际 Agent 编排为准。
+        自动化覆盖率：已上线 4 SKILLs 全部 🤖 Agent (14/14) · 开发中 8 SKILLs 🤖 27 + 👤/🤝 9 (27/36) · BS 总计 🤖 41/50 步 (82.0%)。<br>
+        已上线能力与 Nexus 工单链并行运行，不阻塞主链流程。
+      </p>
+
+      <p class="flow-note">
+        数据来源：<code>AI Agent Skills Analysis/SKILLS/&lt;skill-id&gt;/SKILL.md</code>。<br>
+        自动化覆盖率：已上线 4 SKILL（14/14 步 ✅）· 开发中 8 SKILL（27/36 步 🤖）· 总计 41/50 步 (82.0%)。<br>
+        Nexus 链上多为 Type D（纯 LLM）+ Type C（RAG）；通用能力（Common）为可选依赖。
       </p>
     </div>
   </div><!-- /#view-flow-bs -->
