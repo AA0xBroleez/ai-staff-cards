@@ -839,6 +839,232 @@
       .sop-cols { grid-template-columns: 1fr; }
       .sop-col:not(:last-child) { border-right: none; border-bottom: 1px solid #f1f5f9; }
     }
+
+    /* ─── SKILL 详情抽屉 ───────────────────────────────────────── */
+    .st-row.sd-clickable { cursor: pointer; transition: background 0.15s; }
+    .st-row.sd-clickable:hover { background: #f8fafc; }
+    .st-row.sd-clickable::after {
+      content: "›";
+      color: #cbd5e1;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-left: 6px;
+      transition: color 0.15s, transform 0.15s;
+    }
+    .st-row.sd-clickable:hover::after { color: #6366f1; transform: translateX(2px); }
+    @media (max-width: 520px) {
+      .st-row.sd-clickable::after { display: none; }
+    }
+
+    .sd-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(2px);
+      z-index: 9998;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .sd-overlay.is-open { opacity: 1; pointer-events: auto; }
+
+    .sd-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 440px;
+      max-width: 100%;
+      height: 100vh;
+      background: #fff;
+      box-shadow: -12px 0 40px rgba(15, 23, 42, 0.2);
+      z-index: 9999;
+      transform: translateX(100%);
+      transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .sd-drawer.is-open { transform: translateX(0); }
+    @media (max-width: 520px) {
+      .sd-drawer { width: 100%; }
+    }
+
+    .sd-head {
+      flex-shrink: 0;
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: linear-gradient(180deg, #fafbff 0%, #fff 100%);
+    }
+    .sd-head-main { flex: 1; min-width: 0; }
+    .sd-name-cn {
+      font-size: 1.18rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 4px;
+      line-height: 1.3;
+    }
+    .sd-name-id {
+      display: inline-block;
+      background: #f1f5f9;
+      color: #475569;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-right: 8px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    .sd-status {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+    .sd-status--on { background: #dcfce7; color: #15803d; }
+    .sd-status--dev { background: #fed7aa; color: #c2410c; }
+    .sd-status--blk { background: #fecaca; color: #b91c1c; }
+    .sd-close {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: #f1f5f9;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.3rem;
+      line-height: 1;
+      color: #64748b;
+      transition: background 0.15s, color 0.15s;
+    }
+    .sd-close:hover { background: #e2e8f0; color: #0f172a; }
+
+    .sd-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px 20px 24px;
+    }
+    .sd-desc {
+      margin: 0 0 18px;
+      padding: 12px 14px;
+      background: #f8fafc;
+      border-left: 3px solid #6366f1;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.88rem;
+      line-height: 1.55;
+      color: #334155;
+    }
+    .sd-section { margin-bottom: 20px; }
+    .sd-section:last-child { margin-bottom: 0; }
+    .sd-section h4 {
+      margin: 0 0 10px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: #1e293b;
+      letter-spacing: 0.01em;
+    }
+
+    .sd-triggers { display: flex; flex-wrap: wrap; gap: 6px; }
+    .sd-trigger-chip {
+      display: inline-block;
+      padding: 4px 10px;
+      background: #eef2ff;
+      color: #4338ca;
+      border: 1px solid #e0e7ff;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .sd-empty {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      font-style: italic;
+    }
+
+    .sd-workflow {
+      margin: 0;
+      padding-left: 0;
+      counter-reset: sd-step;
+      list-style: none;
+    }
+    .sd-workflow li {
+      counter-increment: sd-step;
+      padding: 8px 10px 8px 34px;
+      position: relative;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: #334155;
+      border-bottom: 1px dashed #f1f5f9;
+    }
+    .sd-workflow li:last-child { border-bottom: 0; }
+    .sd-workflow li::before {
+      content: counter(sd-step);
+      position: absolute;
+      left: 8px;
+      top: 8px;
+      width: 20px;
+      height: 20px;
+      background: #6366f1;
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sd-io { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .sd-io-col {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 10px 12px;
+      border: 1px solid #e2e8f0;
+    }
+    .sd-io-col h4 { margin-bottom: 8px; }
+    .sd-io-col ul {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 0.8rem;
+      color: #475569;
+      line-height: 1.5;
+    }
+    .sd-io-col li { margin-bottom: 3px; }
+    @media (max-width: 520px) {
+      .sd-io { grid-template-columns: 1fr; }
+    }
+
+    .sd-constraints ul {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 0.82rem;
+      line-height: 1.55;
+      color: #475569;
+    }
+    .sd-constraints li { margin-bottom: 4px; }
+
+    .sd-source {
+      padding-top: 14px;
+      border-top: 1px solid #e2e8f0;
+      font-size: 0.78rem;
+      color: #64748b;
+    }
+    .sd-source code {
+      background: #f1f5f9;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 0.76rem;
+    }
+
+    .sd-loading {
+      padding: 40px 20px;
+      text-align: center;
+      color: #94a3b8;
+      font-size: 0.85rem;
+    }
   </style>
 </head>
 <body>
@@ -2799,6 +3025,23 @@
 
 
   <a href="#" class="back-top visible" aria-label="返回顶部">▲ 顶部</a>
+
+  <!-- SKILL 详情抽屉 -->
+  <div class="sd-overlay" id="sdOverlay" aria-hidden="true"></div>
+  <aside class="sd-drawer" id="sdDrawer" role="dialog" aria-hidden="true" aria-labelledby="sdTitle" tabindex="-1">
+    <div class="sd-head">
+      <div class="sd-head-main">
+        <div class="sd-name-cn" id="sdTitle">—</div>
+        <code class="sd-name-id" id="sdId">—</code>
+        <span class="sd-status" id="sdStatus">—</span>
+      </div>
+      <button type="button" class="sd-close" id="sdClose" aria-label="关闭">×</button>
+    </div>
+    <div class="sd-body" id="sdBody">
+      <div class="sd-loading">加载中…</div>
+    </div>
+  </aside>
+
   <script>
     (function () {
 
@@ -2807,6 +3050,195 @@
       window.addEventListener('scroll', function () {
         backBtn.classList.toggle('visible', window.scrollY > 400);
       }, { passive: true });
+
+      /* ── SKILL 详情抽屉 ───────────────────────────────────────── */
+      (function initSkillDrawer () {
+        var drawer = document.getElementById('sdDrawer');
+        var overlay = document.getElementById('sdOverlay');
+        var closeBtn = document.getElementById('sdClose');
+        if (!drawer || !overlay || !closeBtn) return;
+
+        var titleEl = document.getElementById('sdTitle');
+        var idEl = document.getElementById('sdId');
+        var statusEl = document.getElementById('sdStatus');
+        var bodyEl = document.getElementById('sdBody');
+
+        var skillData = null;
+        var dataPromise = null;
+        var lastFocus = null;
+
+        function loadData () {
+          if (dataPromise) return dataPromise;
+          dataPromise = fetch('./skills-data.json', { cache: 'no-cache' })
+            .then(function (r) {
+              if (!r.ok) throw new Error('HTTP ' + r.status);
+              return r.json();
+            })
+            .then(function (d) { skillData = d; return d; })
+            .catch(function (e) { console.warn('[sd] skills-data.json 加载失败:', e); return null; });
+          return dataPromise;
+        }
+
+        function esc (s) {
+          return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+            return ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[c];
+          });
+        }
+
+        function listFrag (items, emptyText) {
+          if (!items || !items.length) return '<p class="sd-empty">' + esc(emptyText || '—') + '</p>';
+          return '<ul>' + items.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>';
+        }
+
+        function chipFrag (items, emptyText) {
+          if (!items || !items.length) return '<p class="sd-empty">' + esc(emptyText || '—') + '</p>';
+          return items.map(function (t) {
+            return '<span class="sd-trigger-chip">' + esc(t) + '</span>';
+          }).join('');
+        }
+
+        function renderDetail (skillId, statusClass, statusLabel) {
+          if (!skillData) {
+            bodyEl.innerHTML = '<div class="sd-loading">数据未加载，请刷新页面后重试。</div>';
+            titleEl.textContent = skillId;
+            idEl.textContent = skillId;
+            statusEl.className = 'sd-status';
+            statusEl.textContent = statusLabel || '';
+            return;
+          }
+          var d = skillData[skillId];
+          if (!d) {
+            bodyEl.innerHTML =
+              '<div class="sd-loading">暂无此 SKILL 的详情数据。<br><code style="font-size:0.75rem">' + esc(skillId) + '</code></div>';
+            titleEl.textContent = skillId;
+            idEl.textContent = skillId;
+            statusEl.className = 'sd-status';
+            statusEl.textContent = statusLabel || '';
+            return;
+          }
+
+          titleEl.textContent = d.name_cn || skillId;
+          idEl.textContent = skillId;
+          statusEl.className = 'sd-status ' + (statusClass || '');
+          statusEl.textContent = statusLabel || '';
+
+          var triggers = chipFrag(d.triggers, '（参考资料性质，无显式触发词）');
+          var workflow = (d.workflow && d.workflow.length)
+            ? '<ol class="sd-workflow">' + d.workflow.map(function (x) {
+                return '<li>' + esc(x) + '</li>';
+              }).join('') + '</ol>'
+            : '<p class="sd-empty">—</p>';
+          var inputs = listFrag(d.inputs, '—');
+          var outputs = listFrag(d.outputs, '—');
+          var constraints = listFrag(d.constraints, '—');
+
+          bodyEl.innerHTML =
+            (d.description ? '<p class="sd-desc">' + esc(d.description) + '</p>' : '') +
+            '<section class="sd-section">'
+              + '<h4>🎯 如何触发</h4>'
+              + '<div class="sd-triggers">' + triggers + '</div>'
+            + '</section>'
+            + '<section class="sd-section">'
+              + '<h4>⚙️ 工作流程</h4>'
+              + workflow
+            + '</section>'
+            + '<section class="sd-section">'
+              + '<div class="sd-io">'
+                + '<div class="sd-io-col"><h4>📥 输入</h4>' + inputs + '</div>'
+                + '<div class="sd-io-col"><h4>📤 输出</h4>' + outputs + '</div>'
+              + '</div>'
+            + '</section>'
+            + '<section class="sd-section sd-constraints">'
+              + '<h4>⚠️ 边界与约束</h4>'
+              + constraints
+            + '</section>'
+            + '<section class="sd-section sd-source">'
+              + '<h4>📂 源文件</h4>'
+              + '<div>路径：<code>ai-skills-library/skills/' + esc(skillId) + '/SKILL.md</code></div>'
+            + '</section>';
+        }
+
+        function openDrawer (skillId, statusClass, statusLabel, trigger) {
+          lastFocus = trigger || null;
+          bodyEl.innerHTML = '<div class="sd-loading">加载中…</div>';
+          titleEl.textContent = skillId;
+          idEl.textContent = skillId;
+          statusEl.className = 'sd-status ' + (statusClass || '');
+          statusEl.textContent = statusLabel || '';
+
+          drawer.classList.add('is-open');
+          drawer.setAttribute('aria-hidden', 'false');
+          overlay.classList.add('is-open');
+          overlay.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+
+          loadData().then(function () {
+            renderDetail(skillId, statusClass, statusLabel);
+          });
+        }
+
+        function closeDrawer () {
+          drawer.classList.remove('is-open');
+          drawer.setAttribute('aria-hidden', 'true');
+          overlay.classList.remove('is-open');
+          overlay.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+          if (lastFocus && typeof lastFocus.focus === 'function') {
+            try { lastFocus.focus({ preventScroll: true }); } catch (e) {}
+          }
+        }
+
+        /* 关闭事件 */
+        closeBtn.addEventListener('click', closeDrawer);
+        overlay.addEventListener('click', closeDrawer);
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && drawer.classList.contains('is-open')) {
+            e.preventDefault();
+            closeDrawer();
+          }
+        });
+
+        /* 给含 <code> 的 st-row 绑定点击（只在非编辑模式下触发） */
+        function statusFromRow (row) {
+          var stEl = row.querySelector('.st-st');
+          if (!stEl) return { cls: '', label: '' };
+          var label = stEl.textContent.trim();
+          var cls = '';
+          if (stEl.classList.contains('st-st--on')) cls = 'sd-status--on';
+          else if (stEl.classList.contains('st-st--dev')) cls = 'sd-status--dev';
+          else if (stEl.classList.contains('st-st--blk')) cls = 'sd-status--blk';
+          return { cls: cls, label: label };
+        }
+
+        var rows = document.querySelectorAll('.skill-tree .st-row');
+        rows.forEach(function (row) {
+          var codeEl = row.querySelector('.st-name code');
+          if (!codeEl) return;
+          var skillId = codeEl.textContent.trim();
+          if (!skillId) return;
+          row.classList.add('sd-clickable');
+          row.setAttribute('tabindex', '0');
+          row.setAttribute('role', 'button');
+          row.setAttribute('aria-label', '查看 ' + skillId + ' 详情');
+          row.addEventListener('click', function (e) {
+            /* 编辑模式下不触发（避免和 st-del-btn/编辑交互冲突） */
+            if (document.body.classList.contains('edit-mode')) return;
+            var status = statusFromRow(row);
+            openDrawer(skillId, status.cls, status.label, row);
+          });
+          row.addEventListener('keydown', function (e) {
+            if (document.body.classList.contains('edit-mode')) return;
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              var status = statusFromRow(row);
+              openDrawer(skillId, status.cls, status.label, row);
+            }
+          });
+        });
+
+        /* 预加载数据（提高首次点击响应速度） */
+        setTimeout(loadData, 500);
+      })();
 
       /* ── 编辑 / 预览 模式 ─────────────────────────────────────── */
       var body      = document.body;

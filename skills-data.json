@@ -1,0 +1,614 @@
+{
+  "bs-ae-small-flow": {
+    "name_cn": "AE 小流程辅助",
+    "description": "核对 AE 新能源付款申请字段完整性，包括 Invoice、账户信息、审批路径，缺失时追问补全，输出核对清单与审批顺序。",
+    "triggers": ["AE 付款", "AE 付款申请", "Invoice 核对", "AE 新能源付款", "AE 审批路径"],
+    "workflow": ["接收付款信息", "调用 rag-retriever 检索规范", "逐字段核对完整性", "追问缺失字段", "输出完整核对清单与审批顺序"],
+    "inputs": ["付款需求描述", "已提供的 Invoice 字段", "已提供的账户信息", "多轮对话历史"],
+    "outputs": ["字段完整性核对清单", "审批顺序", "模板文件名", "是否完整", "缺失字段追问文本"],
+    "constraints": ["缺失必填字段时必须追问不得跳过", "仅处理 AE 业务线付款申请", "不承诺审批结果", "保留原始字段值不修改"]
+  },
+  "bs-common-workflow": {
+    "name_cn": "通用工作流知识层",
+    "description": "提供 BS 系统 L/S 序列通用步骤与工作流基础定义，支持流程查询和业务线 delta 配置叠加，是所有业务线 skill 的共享底层。",
+    "triggers": ["L 序列", "S 序列", "通用流程", "大阶段", "小工作流", "标准步骤"],
+    "workflow": ["识别查询类型（直接编号 / 场景描述 / 内部调用）", "追问业务线（仅用户直接查询）", "调用 rag-retriever 检索母版", "输出结构化工作流"],
+    "inputs": ["用户查询文本", "L/S 序列编号", "业务线标识"],
+    "outputs": ["序列编号", "工作流名称", "标准步骤列表", "涉及系统", "下一步人工节点", "知识版本"],
+    "constraints": ["仅输出步骤指引无系统操作能力", "低置信度时必须追问", "保持通用层与专线层严格分离"]
+  },
+  "bs-contract-drafting": {
+    "name_cn": "合同草拟",
+    "description": "合作金额确定后生成给客户的合同邮件草稿与 NS 合同流程草稿，支持标准与非标条款路由，含法务审阅与客户确认。",
+    "triggers": ["合同草稿", "签合同", "合同邮件", "contract drafting"],
+    "workflow": ["调用 BS-R01 查审批链", "按模板标准 / 非标分支", "非标走法务审阅路由", "生成合同邮件草稿", "推进客户确认与 NS 流程"],
+    "inputs": ["客户 ID", "业务线", "合作金额", "币种", "模板键", "非标条款描述"],
+    "outputs": ["流程状态", "邮件草稿", "NS 流程草稿 ID", "审批链"],
+    "constraints": ["非标条款需法务审查", "客户反复修改超 3 轮自动升级", "合同正文不在 Slack 推送仅邮件传递"]
+  },
+  "bs-contract-signing-handoff": {
+    "name_cn": "合同签署交接",
+    "description": "NS 合同审批通过后生成 Docusign 发起指引与归档指引，监听签署完成邮件并触发 PDF 归档流程。",
+    "triggers": ["Docusign", "合同签署", "签字", "contract signing", "合同归档"],
+    "workflow": ["生成 Docusign 发起指引", "推送 #bs-ops", "监听 Docusign 邮件回流", "跟踪签署状态", "生成归档指引"],
+    "inputs": ["NS 合同 ID", "客户 ID", "签字人列表", "Docusign 信封 ID"],
+    "outputs": ["签署状态", "信封 ID", "签字进度", "签署 PDF 链接", "归档指引"],
+    "constraints": ["需 BS IT 配置 Gmail 过滤器", "签署超时 7 天触发催办", "MVP 仅半自动不调 NS API"]
+  },
+  "bs-cross-channel-syncing": {
+    "name_cn": "跨通道同步",
+    "description": "将节点完成事件发布到 Slack 与 Email 双通道，支持幂等去重与敏感字段自动 mask，邮件仅生成草稿由 BS 发送。",
+    "triggers": ["跨通道同步", "TXID 同步", "多通道广播", "cross channel"],
+    "workflow": ["幂等校验检查 24h 窗口", "按通道分发（Slack / Email）", "收集通道结果", "写幂等记录", "回传调用方"],
+    "inputs": ["内容块", "目标通道列表", "幂等键", "紧急度（normal / high）"],
+    "outputs": ["发布状态", "通道结果数组", "幂等键回显", "去重时间戳"],
+    "constraints": ["Slack 敏感字段自动 mask", "邮件仅生成不发送", "完全幂等 24h 窗口", "仅支持 Slack / Email 两通道"]
+  },
+  "bs-customer-drafting": {
+    "name_cn": "NS 客户创建 / 修改",
+    "description": "通过 ns-mcp 完成客户创建与修改操作，强制预览与确认，失败原样透传，支持自动 close 实现草稿态。",
+    "triggers": ["创建客户", "新建客户", "修改客户", "更新客户", "编辑客户", "client onboard"],
+    "workflow": ["收集用户信息", "业务线 ID 映射", "查重", "预览字段并确认", "执行创建", "自动 close", "回显与后续建议"],
+    "inputs": ["客户名称", "业务线", "客户邮箱", "KYC 状态", "NDA 状态"],
+    "outputs": ["操作状态", "客户 ID", "NS 管理链接", "失败信息"],
+    "constraints": ["强制预览 + 确认不可跳过", "错误原样透传不自动重试", "大整数 ID 一律字符串处理"]
+  },
+  "bs-exception-escalating": {
+    "name_cn": "异常统一移交",
+    "description": "所有 skill 的异常路径统一兜底处理，按来源 skill 路由至对应频道，打标记防止流程重复推进，记录审计日志。",
+    "triggers": ["异常移交", "升级", "escalate", "流程暂停", "BS 兜底"],
+    "workflow": ["按 source_skill 路由通道", "生成移交消息", "@目标并推送", "打暂停标记", "写审计日志", "返回调用方"],
+    "inputs": ["源 skill", "流程 ID", "异常原因", "异常上下文", "严重程度"],
+    "outputs": ["升级状态", "升级 ID", "Slack 时间戳", "推送频道", "暂停标记"],
+    "constraints": ["不尝试自行恢复", "不重试原操作", "部分幂等 10 分钟窗口"]
+  },
+  "bs-external-whitelist-coordinating": {
+    "name_cn": "外部白名单协调",
+    "description": "客户提交收币地址后起草外部白名单通知邮件，支持模版动态字段解析与多语言输出，自动查询业务线与地址信息。",
+    "triggers": ["外部白名单", "收币地址", "客户地址", "external whitelist"],
+    "workflow": ["下载模版并解析字段", "收集用户输入与语言偏好", "查询 NS 系统补全派生字段", "生成邮件草稿"],
+    "inputs": ["邮件语言（中 / 英 / 双语）", "客户公司名", "业务线", "付款目的"],
+    "outputs": ["邮件草稿正文"],
+    "constraints": ["模版字段动态解析不硬编码", "系统派生字段自动获取不询问"]
+  },
+  "bs-flow-intent-parsing": {
+    "name_cn": "流程意图解析与路由",
+    "description": "对业务方 @star 消息进行意图解析与业务线校验，抽取 flow_type / business_lines / entities，单轮追问补全缺字段，按路由表分发至下游 skill。",
+    "triggers": ["@star", "业务方需求消息", "流程起点", "意图识别", "flow-intent-parsing"],
+    "workflow": ["PII 预处理", "LLM 意图识别（15 项枚举）", "业务线 NS 校验", "必填字段检查", "缺字段单轮追问", "路由决策与输出"],
+    "inputs": ["原始消息", "请求人", "通道信息"],
+    "outputs": ["解析状态", "流程类型", "业务线", "实体字段", "目标 skill", "缺失字段列表"],
+    "constraints": ["显式前缀直调优先级最高", "pre-flight 查询跳过业务线校验", "单轮追问 24h 超时升级", "完全幂等纯解析无副作用"]
+  },
+  "bs-flow-progressing": {
+    "name_cn": "流程进度查询与催办",
+    "description": "支持用户查询个人相关的进行中审批流程（发起 / 待审批），并提供交互式、自然语言、批量三种方式催办审批人。",
+    "triggers": ["审批进度", "我的流程", "查流程", "流程状态", "催审批", "催一下"],
+    "workflow": ["Slack ID 映射查询", "NS 用户身份验证", "并行查询两类流程", "汇总展示", "催办功能（可选）"],
+    "inputs": ["Slack 用户 ID", "操作类型（query / remind）", "催办目标", "流程编号"],
+    "outputs": ["查询状态", "用户信息", "发起的流程", "待审批流程", "催办记录"],
+    "constraints": ["用户只能查询自己相关流程", "催办前需二次确认", "短时间内不重复催办同人"]
+  },
+  "bs-flow-resolving": {
+    "name_cn": "审批链规则引擎",
+    "description": "规则引擎中心化计算审批链与参与人，根据流程类型 / 业务线 / 条件从配置表读规则，返回审批顺序与参与人联系方式。",
+    "triggers": ["查审批链", "算审批人", "flow-resolving", "审批规则查询"],
+    "workflow": ["读规则表", "解析 base_roles_per_line", "解析 global_roles", "解析 conditional_roles", "组装 approval_chain", "生成 rule_trace"],
+    "inputs": ["流程类型", "业务线数组", "触发条件"],
+    "outputs": ["解析状态", "审批链列表", "参与人索引", "默认模板", "溯源信息"],
+    "constraints": ["不硬编码业务线或角色信息", "完全幂等纯读纯计算", "缺失联系人返回 missing_contact"]
+  },
+  "bs-intake-classifying": {
+    "name_cn": "需求意图分类",
+    "description": "对用户提交的需求消息进行意图分类与业务线归属判断，标注优先级信号，为后续字段抽取提供分类标签。",
+    "triggers": ["需求分类", "意图识别", "业务线归属"],
+    "workflow": ["接收原始消息", "提取意图与优先级信号", "输出分类结果", "传递给字段抽取"],
+    "inputs": ["用户消息文本", "多轮对话历史"],
+    "outputs": ["意图标签", "业务线", "优先级信号", "置信度"],
+    "constraints": ["置信度低时标注 unclear", "不做字段抽取", "不写入工单系统", "不修改用户消息"]
+  },
+  "bs-intake-field-extracting": {
+    "name_cn": "需求字段抽取",
+    "description": "从用户需求消息中结构化抽取工单必填字段，包括标题 / 业务线 / 优先级 / 截止时间等，缺失时主动追问补全。",
+    "triggers": ["字段抽取", "工单填充"],
+    "workflow": ["接收分类结果", "LLM 抽取已知字段", "检查必填完整性", "汇总完整字段对象"],
+    "inputs": ["消息文本", "意图标签", "业务线", "优先级信号"],
+    "outputs": ["完整字段对象"],
+    "constraints": ["必填字段缺失时追问补全", "不推断用户未提供的值", "锁定工单系统格式"]
+  },
+  "bs-intake-status-notifying": {
+    "name_cn": "工单状态回写通知",
+    "description": "工单状态变更时将格式化通知回写至原始 Slack 频道，支持去重与聚合，敏感字段自动脱敏，智能生成下一步建议。",
+    "triggers": ["工单状态变更", "工单进展", "工单关闭", "工单升级"],
+    "workflow": ["接收上游事件 payload", "去重与聚合判断", "敏感字段过滤", "智能建议生成", "组装 Slack 通知", "推送通知"],
+    "inputs": ["工单 ID", "工单标题", "变更前状态", "变更后状态", "执行人", "变更备注"],
+    "outputs": ["是否发送", "推送频道", "提及用户", "建议操作"],
+    "constraints": ["无实质进展时不通知", "敏感字段自动脱敏", "支持去重与聚合", "仅读取不修改工单"]
+  },
+  "bs-internal-whitelist-drafting": {
+    "name_cn": "内部白名单邮件",
+    "description": "查询内部收币地址并生成白名单审批邮件草稿，支持模版动态字段解析，自动查询 NS 系统补全地址与业务线信息。",
+    "triggers": ["内部白名单", "内部地址", "收款地址", "internal whitelist"],
+    "workflow": ["下载模版并解析字段", "收集用户输入", "查询 NS 系统补全派生字段", "生成邮件草稿"],
+    "inputs": ["业务线", "币种", "公链名称", "语言偏好"],
+    "outputs": ["邮件草稿正文"],
+    "constraints": ["地址查询 0 条 / 多条走 BS-C04", "业务线未找到走 BS-C04", "模版字段动态解析不硬编码"]
+  },
+  "bs-kyc-status-querying": {
+    "name_cn": "KYC 状态查询",
+    "description": "从两张 KYC 跟踪表（Google Sheet + xlsx）查询客户 KYC 状态，支持多条件精确匹配，输出为 TSV 附件。",
+    "triggers": ["查 KYC", "KYC 状态", "KYC 过了吗", "KYC 查询", "客户准入"],
+    "workflow": ["读取两张 KYC 跟踪表", "匹配行", "解析 KYC 状态", "输出 TSV 附件"],
+    "inputs": ["客户名", "BD", "业务线"],
+    "outputs": ["查询状态（passed / expired / not_found）", "KYC 类型", "通过日期（ISO 格式）", "来源行引用"],
+    "constraints": ["仅查表不查 NS 系统", "精确匹配不模糊", "多值单元格转义换行", "仅读不修改"]
+  },
+  "bs-mining-jv-operation": {
+    "name_cn": "矿场日常运营",
+    "description": "Mining 矿工号分配、切算力、账单核对等日常运营工作流指引，知识源独立于立项，包含操作步骤、审批链、注意事项。",
+    "triggers": ["矿工号", "切算力", "算力切换", "账单", "矿场日常", "Mining 运营"],
+    "workflow": ["确认运营操作类型", "调用 rag-retriever 检索日常运营知识库", "追问关键参数（如需）", "输出运营操作步骤"],
+    "inputs": ["用户场景描述", "运营操作类型", "补充信息"],
+    "outputs": ["操作类型", "操作步骤列表", "审批链", "注意事项", "知识负责人"],
+    "constraints": ["知识源与立项完全独立", "不输出合资立项步骤", "低置信度标注建议联系业务线"]
+  },
+  "bs-mining-jv-setup": {
+    "name_cn": "矿业合资立项",
+    "description": "Mining 合资立项与入资 onboarding 工作流指引，覆盖合资协议签署、立项审批、入资流程等阶段，知识源独立维护。",
+    "triggers": ["Mining 合资", "Mining 立项", "矿场入资", "合资协议", "合资立项", "矿业合资"],
+    "workflow": ["确认合资类型", "调用 rag-retriever 检索合资立项知识库", "追问补全关键信息", "输出完整立项工作流"],
+    "inputs": ["场景描述", "合资类型（合资 / 自营）", "补充信息"],
+    "outputs": ["流程类型", "完整步骤", "审批链", "所需文档", "知识来源"],
+    "constraints": ["不输出运营步骤", "必须在 Step1 确认合资 vs 自营", "不混淆合资与自营", "不与运营知识混用"]
+  },
+  "bs-payment-drafting": {
+    "name_cn": "付款申请流程草稿",
+    "description": "在 NS 创建付款申请 BPMN 流程实例，渐进式收集业务线与项目，自动聚合主体与客户，两次落盘产出流程草稿与资金信息。",
+    "triggers": ["付款", "打款", "付款单", "付款申请", "创建付款", "发起付款流程", "payment drafting"],
+    "workflow": ["静默获取通用流程类别", "选择付款申请流程（Save#1）", "输入业务线 + 项目（Save#2）", "聚合主体客户", "可选：创建资金信息"],
+    "inputs": ["流程定义", "业务线列表", "项目号列表", "Slack 用户 ID"],
+    "outputs": ["创建状态", "流程实例 ID", "流程链接", "校验结果", "保存次数"],
+    "constraints": ["两次落盘模型", "业务字段全量覆盖", "不自动发送邮件", "后端默认处理邮件接收人"]
+  },
+  "bs-project-drafting": {
+    "name_cn": "NS 项目草稿",
+    "description": "在 NS 创建项目草稿（status=1 筹备中），续建按历史 no 末尾数字 +1 自动递增，首次创建由 BS 提供 initial_no，支持签署主体确认。",
+    "triggers": ["NS 项目草稿", "项目号生成", "立项", "project drafting"],
+    "workflow": ["取客户元数据与校验", "解析业务线元数据", "查询与确认签署主体", "查重 + 生成项目号", "组装 POST body 并创建草稿", "推送指引与监听变更"],
+    "inputs": ["客户 ID", "业务线", "签署主体名", "项目描述", "项目起止时间", "初始项目号"],
+    "outputs": ["创建状态", "项目 ID", "项目号", "项目链接"],
+    "constraints": ["客户 status 必须 =3 可用", "续建路径保持位宽", "首次询问 BS 3 轮获取初始号", "MCP wrapper 不透传 owner_ids / contains_bm_funds"]
+  },
+  "bs-sub-account-drafting": {
+    "name_cn": "子账户申请邮件",
+    "description": "子账户申请邮件起草，支持模版动态字段解析与多语言输出，自动查询业务线负责人与邮箱信息。",
+    "triggers": ["子账户", "开账户", "平台账户", "sub account", "子账户申请"],
+    "workflow": ["下载模版并解析字段", "收集用户输入与语言偏好", "查询 NS 系统补全派生字段", "生成邮件草稿"],
+    "inputs": ["邮件语言", "业务线", "项目号", "平台名称"],
+    "outputs": ["邮件草稿正文"],
+    "constraints": ["模版字段动态解析", "系统派生字段自动获取"]
+  },
+  "bs-workflow-routing": {
+    "name_cn": "业务线工作流路由",
+    "description": "统一业务线工作流路由，识别业务线归属，从通用知识层加载 L/S 序列，叠加对应业务线 delta 配置，输出完整工作流指引。",
+    "triggers": ["业务线名称 + 流程", "业务线工作流查询"],
+    "workflow": ["识别业务线（确定性关键词 + LLM 兜底）", "调用 bs-common-workflow 获取通用步骤", "加载业务线 delta 配置", "合并通用层与 delta 层", "输出完整工作流指引"],
+    "inputs": ["场景描述", "业务线", "补充信息"],
+    "outputs": ["业务线", "步骤列表", "审批链", "涉及系统", "置信度"],
+    "constraints": ["确定性关键词优先", "业务线无法确认时必须追问", "不混合输出多业务线步骤", "不独立维护通用 L/S 序列"]
+  },
+  "common-agent-card-gen": {
+    "name_cn": "AI 员工卡片图鉴",
+    "description": "基于 Agent Spec 文档批量生成自包含 HTML 卡片图鉴，支持多部门、多技能、可视化展示全景，并可选发布至 GitHub Pages。",
+    "triggers": ["生成 agent 卡片", "agent card", "员工卡片", "卡片图鉴", "AGENT-DEX"],
+    "workflow": ["解析 spec 文件来源并获取确认", "读取并验证 spec 文档中必填字段", "按照模板结构和颜色映射生成 HTML 卡片", "汇总部门 / 技能统计生成仪表板", "输出自包含 HTML 文件并可选发布到 GitHub Pages"],
+    "inputs": ["Agent Spec 文档路径或内容", "输出文件保存路径", "可选：是否发布到 GitHub Pages"],
+    "outputs": ["自包含 HTML 卡片图鉴文件", "GitHub Pages 公开链接（可选）", "生成统计摘要（Agent 数、部门数、Skill 进度）"],
+    "constraints": ["不修改源 spec 文件", "不生成 PDF（仅 HTML）", "不做卡片编辑器或可视化编辑", "不做 AI 文案生成，纯模板渲染"]
+  },
+  "common-agent-skill-detail-drafting": {
+    "name_cn": "Skill 详细诉求文档",
+    "description": "将架构 spec 细化为 per-skill 的 TDD 层详细诉求文档，包含 6 节结构模板、执行模式描述、追问建议，供开发者 handoff。",
+    "triggers": ["skill 细化", "skill 详细诉求", "生成 skill detail", "出每个 skill 的详细设计", "per-skill TDD"],
+    "workflow": ["验证 input spec 符合 v2.0.0+ 格式", "加载模板和执行模式规范", "解析 skill 清单和 Agent 上下文", "询问用户生成范围（全量 / 分阶段）", "批量生成 detail 文档并追问高复杂度 skill"],
+    "inputs": ["common-agent-skill-spec v2.0.0+ 的架构 spec 文件", "可选：限制生成范围（all / P0 / P0-P1 / list）", "可选：输出目录路径"],
+    "outputs": ["details / 目录含 N 个 skill md + README.md", "追问建议清单（针对高复杂度 skill）", "生成统计摘要（生成 / 跳过 / 追问数量、复杂度分布）"],
+    "constraints": ["不评估 spec 质量（evaluating 的职责）", "不改写架构 spec", "不处理 v1 格式 spec", "不生成可运行的 SKILL.md"]
+  },
+  "common-agent-skill-evaluating": {
+    "name_cn": "Agent/Skill 设计评估",
+    "description": "基于三层架构模型和六项检查清单，评估 Agent/Skill 设计合理性，输出结构化报告含问题汇总、重构建议、风险提示。",
+    "triggers": ["评估 agent", "评估 skill", "审查设计", "设计合理吗", "agent review", "skill 拆分合理吗"],
+    "workflow": ["识别 Agent 和 Skill，请用户确认", "按 C1-C6 检查清单逐项评估每个 Skill", "扫描反模式和额外检查项，输出问题汇总", "对自己的重构建议做反模式自检", "输出五部分评估报告（框架 / 逐项评估 / 问题汇总 / 重构建议 / 风险提示）"],
+    "inputs": ["Agent 或 Skill 的设计文档（文本 / 粘贴 / 描述均可）", "可选：对比两套设计方案时提供两份文档"],
+    "outputs": ["结构化评估报告（含 C1-C8 检查表、问题汇总表、重构建议、风险统计）", "严重程度分级（🔴 严重 / 🟡 中等 / 🟢 轻微）"],
+    "constraints": ["不生成 Agent/Skill spec 文档", "不做技术方案设计", "不修改原始文档", "评估报告较长时建议用户保存"]
+  },
+  "common-agent-skill-spec-drafting": {
+    "name_cn": "Agent/Skill 需求文档",
+    "description": "基于想法、PRD 或评估报告，生成结构化的 Agent/Skill 需求文档，含 Agent 边界、Skill 拆分、交互设计、权限矩阵等完整设计。",
+    "triggers": ["设计 agent", "agent 需求", "skill 需求", "出 agent spec", "生成 agent 设计", "做个 agent", "agent 规划"],
+    "workflow": ["模式识别（迭代 / 从零）并加载对应规则", "需求澄清（交互式按需提问）", "按服务对象 × 决策域进行 Agent 边界划分", "按粒度检查清单进行 Skill 拆分与装配", "设计 Agent 间协作机制、频道规划、防碰撞规则、数据层设计"],
+    "inputs": ["用户想法 / PRD / 评估报告的重构建议（可组合）", "可选：迭代 prior spec 的路径"],
+    "outputs": ["结构化需求文档（§0-§8 含概述、架构图、Agent YAML、Skill 清单、覆盖度自检表、交互设计、权限矩阵、实施优先级）", "Mermaid 架构图和覆盖地图"],
+    "constraints": ["不评估已有设计（evaluating 的职责）", "不做技术方案（只产出需求文档）", "不做实施计划", "不做深度评估（Step 4.5 lint 仅 3 项 quick check）"]
+  },
+  "common-ai-requirement-intake": {
+    "name_cn": "AI 需求收集",
+    "description": "收集全员的 AI 方向需求和想法，通过引导式对话提取关键信息并自动创建 Jira Issue，支持 direct / clarify / fallback-draft 三种模式。",
+    "triggers": ["提个 AI 需求", "有个 AI 想法", "提个 AI 建议", "收录 AI 需求"],
+    "workflow": ["加载并锁定 config.yaml 中的 Jira 配置", "接收用户自由描述", "判断是否可直接收录或需澄清", "结构化引导追问（使用场景、痛点、期望效果）", "汇总并请用户确认后创建 Jira Issue 或生成待确认草稿"],
+    "inputs": ["用户的 AI 需求想法（可以是症状型 / 目标型 / 方案型 / 极简型）", "必填：使用场景、当前痛点、期望效果中至少两项"],
+    "outputs": ["创建成功：Jira Issue 链接和需求摘要", "门槛不足：待确认草稿 + @fallback reviewers"],
+    "constraints": ["严禁向用户询问 Jira 项目 / Epic 类型 / 版本（来自 config）", "不得从用户推断 project key（必须使用 Step 0 锁定值）", "若 config 缺失立即中止（硬报错）"]
+  },
+  "common-atlassian-guide": {
+    "name_cn": "Atlassian MCP 调用指南",
+    "description": "Atlassian MCP（Jira/Confluence/Bitbucket）通用调用指南，包含 mcpfast 快速调用、常用 API 示例、性能优化、异常处理。属参考资料，不由用户直接触发。",
+    "triggers": [],
+    "workflow": [],
+    "inputs": [],
+    "outputs": [],
+    "constraints": ["参考资料性质，不由用户直接触发"]
+  },
+  "common-blog-publisher": {
+    "name_cn": "博客发布（Strapi）",
+    "description": "根据 topic 生成完整博客文章，支持存草稿或直接发布到 Strapi CMS，包含配置引导、集合自动探测、可选封面图上传。",
+    "triggers": ["发布博客", "写博客", "发博客", "blog", "publish blog", "strapi"],
+    "workflow": ["检测或引导配置 Strapi 连接信息", "根据 topic 生成标题、摘要、正文、slug", "展示预览并询问意图（若意图明确则直接执行）", "调用脚本创建 / 发布文章", "返回 documentId 和管理后台链接"],
+    "inputs": ["博客 topic（必填）", "可选：存草稿或发布的明确意图", "可选：作者名、封面图 URL"],
+    "outputs": ["文章 documentId、标题、状态、管理后台链接"],
+    "constraints": ["意图明确时直接执行，不再询问选项", "slug 必须 URL-safe 且中文转英文", "不支持中英混排标题"]
+  },
+  "common-brainstorm": {
+    "name_cn": "头脑风暴助手",
+    "description": "输入话题即可开始，AI 自动匹配最佳方法论（SCAMPER / 六顶帽 / 5W1H / 反向思维），引导发散→收敛→输出可执行结论。",
+    "triggers": ["头脑风暴", "brainstorm", "发散思维", "想点子", "集思广益", "出主意", "创意发散"],
+    "workflow": ["定义话题范围并自动匹配方法论", "发散阶段产生 10-15 个想法（单人模式 AI 贡献 40%）", "按可行性 × 影响力收敛至 Top 3-5", "输出推荐方案表 + Action Items"],
+    "inputs": ["讨论话题（必填）", "可选：手动指定方法论或声明单人 / 小组模式"],
+    "outputs": ["核心结论（2-3 句话）", "推荐方案表（方案 | 理由 | 预期效果）", "Action Items（负责人 | 截止时间）"],
+    "constraints": ["发散不评判不筛选", "不强制范围澄清（单人 + 明确主题时直出种子想法）", "自动匹配方法论无感知"]
+  },
+  "common-compliance-scanning": {
+    "name_cn": "文本合规扫描",
+    "description": "按目标地区规则包扫描输入文本，检测歧视性语言和法规合规性，输出风险等级标注与逐条修复建议及审计留痕。",
+    "triggers": ["合规扫描", "检查合规", "合规风险", "法规审查", "JD 合规检查", "Offer 合规"],
+    "workflow": ["按 regions 加载对应地区法规规则库", "逐段对 text 执行规则匹配和 LLM 辅助检测", "生成修复建议并引用法规条款编号", "输出含 auto_fixable 标志和审计留痕的结构化报告"],
+    "inputs": ["待扫描文本内容", "目标地区列表（如 SG / HK / US）", "可选：scan_type（jd / offer / contract / policy）", "可选：strict_mode 严格模式"],
+    "outputs": ["扫描结果 JSON（overall_risk / blocking_count / issues 详情 / audit_trail）", "issues 逐条标注 level | rule | region | suggestion | auto_fixable"],
+    "constraints": ["不修改原始文本", "不做最终发布决策", "不扫描附件文件（仅文本字符串）", "audit_trail 可作为合规审计证据存档"]
+  },
+  "common-crypto-news-digest": {
+    "name_cn": "加密货币市场新闻",
+    "description": "每日自动获取加密货币市场关键资讯，聚焦政策监管、主流币行情、市场情绪研判，输出多维度分析报告。",
+    "triggers": ["今日加密货币新闻", "市场行情分析", "币圈重大新闻", "crypto market news"],
+    "workflow": ["并行从 4 个数据源获取新闻（吴说 API + PANews / The Block / CoinDesk RSS）", "合并标准化并智能筛选（优先重大事件、主流币、监管）", "按新闻重要性分级、币种动态、行情因素、市场情绪进行多维分析", "生成简短摘要发送主频道，完整报告发送 thread"],
+    "inputs": ["可选：自定义时间范围（默认 24h）"],
+    "outputs": ["市场情绪研判（看涨 / 看跌 / 中性 + 置信度）", "主流币种动态追踪（BTC/ETH/SOL 等）", "分类新闻汇总（重大影响 / 市场影响 / 常规资讯）", "短期关注点、风险警示、机会方向"],
+    "constraints": ["只能从 4 个指定数据源获取", "禁止 web_search 通用搜索", "RSS Feed URL 必须使用指定订阅地址", "语言规范：首次出现加密货币标注中文全称（英文缩写）"]
+  },
+  "common-doc-sanitize": {
+    "name_cn": "文档内容脱敏",
+    "description": "对输入文档进行敏感信息检测与遮盖（支持 docx / pdf / 图片），输出脱敏后的文件，禁止读取文件内容。",
+    "triggers": ["脱敏", "文档脱敏", "敏感信息处理", "隐私处理", "打码", "遮盖敏感", "redact"],
+    "workflow": ["验证文件格式和依赖环境", "调用对应脚本执行脱敏（脚本根据正则规则自动识别）", "按用户指定样式输出（mask 白底 *** 或 block 纯黑）", "上传脱敏后文件并报告命中数量"],
+    "inputs": ["待脱敏文件（.docx / .pdf / .jpg / .jpeg / .png）", "可选：自定义脱敏规则 JSON", "可选：脱敏样式（mask / block）"],
+    "outputs": ["脱敏后的同格式文件", "命中敏感信息数量"],
+    "constraints": ["严禁读取文件内容（仅按文件名后缀判断格式）", "不输出脱敏前后对比", "不输出命中具体文本", "无敏感内容仍输出原样文件"]
+  },
+  "common-email-draft": {
+    "name_cn": "通用邮件起草",
+    "description": "为各 Agent 提供邮件起草和邮件模板管理能力，支持基于邮件模板生成邮件、创建 / 更新 / 删除邮件模板、查询模板列表。",
+    "triggers": ["生成邮件", "起草邮件", "写邮件", "发邮件", "创建邮件模板", "支持哪些邮件模板"],
+    "workflow": ["识别 agent_id 并加载业务线配置", "按优先级查找模板（agent 专属→company-common）", "提取 / 验证参数（必填项追问用户）", "填充模板生成邮件", "邮件模板管理操作时同步更新 README"],
+    "inputs": ["邮件意图或模板操作类型", "可选：参数值（business_line / 审批人等）"],
+    "outputs": ["可直接复制粘贴的邮件草稿（收件人 / 抄送 / 主题 + 正文）", "邮件模板列表或详情", "模板操作成功确认"],
+    "constraints": ["严禁杜撰模板内容（文件不存在时拒绝）", "邮件输出不用 markdown 代码块包裹", "必须参考业务线 TEMPLATE_GUIDE.md", "邮件模板操作必须同步更新 README.md"]
+  },
+  "common-email-draft-gdrive": {
+    "name_cn": "Google Drive 邮件起草",
+    "description": "基于 Google Drive 上的 Google Doc 邮件模板进行邮件起草（只读），优先读本地索引 fallback 到 GDrive 实时拉取，不允许修改模板。",
+    "triggers": ["起草邮件", "gdrive 邮件", "draft email", "邮件起草", "选择邮件模板"],
+    "workflow": ["获取模板列表（本地索引→fallback GDrive）", "下载选中 Google Doc 并用 pandoc 转为 markdown", "解析占位符并收集用户参数", "替换占位符输出邮件草稿"],
+    "inputs": ["模板选择（编号或名称）", "邮件占位符参数值"],
+    "outputs": ["可直接复制粘贴的邮件草稿"],
+    "constraints": ["严禁修改模板（common-email-template-sync 负责）", "邮件输出纯文本无 markdown", "占位符必须全部替换", "若用户要求修改模板引导至 common-email-template-sync"]
+  },
+  "common-email-parsing": {
+    "name_cn": "邮件实体抽取",
+    "description": "从结构化业务邮件中抽取关键实体字段，按调用方提供的 schema 输出标准化 JSON，缺失必填字段时显式标注。",
+    "triggers": ["解析邮件", "邮件实体抽取", "邮件解析", "提取邮件信息", "抽取邮件字段"],
+    "workflow": ["邮件预处理（清洗 HTML、提取纯文本）", "按 schema 逐字段调用 LLM 提取实体", "完整性校验（缺失必填项生成待补全列表）"],
+    "inputs": ["邮件原文（纯文本或 HTML）", "目标字段 schema（含 field_name / type / required）", "可选：业务场景标签（crypto-payment 等）"],
+    "outputs": ["结构化 JSON（extracted / missing_required / attachments / raw_text_preview）", "低置信度项标注 low_confidence"],
+    "constraints": ["不做业务验证（地址 / 金额范围等）", "不直接回复邮件", "不处理加密附件", "不维护历史（状态由调用方负责）"]
+  },
+  "common-email-template-edit": {
+    "name_cn": "邮件模板编辑",
+    "description": "对 Google Drive 上已转换的 -AI Google Doc 邮件模板进行原地编辑，通过对话指令理解修改意图并使用 Google Docs API 精确编辑。",
+    "triggers": ["修改邮件模板", "编辑邮件模板", "edit email template", "更新邮件模板"],
+    "workflow": ["验证环境变量和模板名称", "定位目标 -AI Google Doc（本地索引→fallback GDrive）", "读取文档理解结构", "规划编辑操作（替换 / 插入 / 删除）", "执行编辑并验证生效"],
+    "inputs": ["模板名称（必填）", "修改意图描述"],
+    "outputs": ["模板修改摘要 + 在线文档链接"],
+    "constraints": ["只编辑 -AI Google Doc（不修改 .docx 原始模板）", "每次只修改一个模板", "修改前必须读取文档", "文件路径需加引号处理特殊字符"]
+  },
+  "common-email-template-scan": {
+    "name_cn": "邮件模板扫描",
+    "description": "扫描 Google Drive 邮件模板文件夹，列出所有模板文件清单（含 fileId），不执行转换，以线上模板为准。",
+    "triggers": ["扫描邮件模板", "scan email templates", "邮件模板扫描", "查看邮件模板"],
+    "workflow": ["验证环境变量和 GDrive 连接", "从 GDrive 拉取文件列表并按规则过滤", "过滤出 .docx 文件（排除 Google Doc、导出产物、临时文件）", "写入 scan-result.json 并输出结果摘要"],
+    "inputs": [],
+    "outputs": ["模板列表（名称 + fileId）", "scan-result.json 文件"],
+    "constraints": ["单一职责（仅 GDrive 快照，不判断哪些需转换）", "输出仅含扫描结果（不输出 exec 命令 / 中间过程）"]
+  },
+  "common-email-template-sync": {
+    "name_cn": "邮件模版同步",
+    "description": "将 Google Drive 上的 docx 邮件模版通过 pandoc 转为结构化 markdown，再上传为 Google Doc 格式，支持 md5 校验跳过和强制重新转换。",
+    "triggers": ["同步邮件模版", "sync email template", "强制同步邮件模版", "force sync email template"],
+    "workflow": ["提取模版名并校验环境变量", "读取转换规则文件", "通过 fileId 或 listFolder 定位目标 docx 文件", "下载并 md5 检查，非强制模式下判断是否跳过", "使用 pandoc 转换为原始 markdown", "按三阶段流水线进行 AI 语义转换", "将结构化 markdown 转为 docx 并上传至 Google Drive"],
+    "inputs": ["模版名称", "fileId（可选）", "强制模式标志"],
+    "outputs": ["Google Doc 格式的结构化邮件模版", "sync-state 状态文件", "template-index.json 模版索引"],
+    "constraints": ["每次仅处理一个模版文件", "文件路径必须用引号包裹应对特殊字符", "完成后仅输出结果摘要，禁止输出过程步骤"]
+  },
+  "common-escalation-respond": {
+    "name_cn": "升级响应同步",
+    "description": "监听专家频道中对升级问题的回复，自动识别认领、已解决、需补充信息等动作，更新 Jira 状态并向一线频道发送跨渠道通知。",
+    "triggers": ["专家回复", "claim", "已解决", "认领", "need info", "需要更多信息"],
+    "workflow": ["从升级通知的父消息中提取 Jira issue key", "读取 Jira 票据获取源频道和源线程信息", "判断专家消息中的动作类型（认领、解决或需补充）", "执行相应动作：更新 assignee、过渡 Jira 状态、发送一线通知", "记录同步到 Jira 评论避免重复", "回复专家线程确认完成"],
+    "inputs": ["专家回复消息", "Jira issue key", "源频道 / 线程元数据"],
+    "outputs": ["Jira 状态变更记录", "一线频道通知消息"],
+    "constraints": ["仅处理三种明确的动作词，其他讨论不同步", "必须检测重复同步防止多次发送"]
+  },
+  "common-escalation-trigger": {
+    "name_cn": "升级触发",
+    "description": "当用户明确要求找专家或升级时，立即创建 Jira 票据并通知专家频道，不得继续自行排查。支持两种信息充分度：直接升级或先补充上下文。",
+    "triggers": ["找专家", "升级", "人工", "转专家", "escalate", "需要帮助", "解决不了", "搞不定"],
+    "workflow": ["判断当前频道属于哪个域，确定目标专家频道", "评估用户信息充分度，不足时先补充上下文", "在 Jira 搜索去重，检查该线程是否已有升级票据", "创建 Jira 票据含路由元数据（JSON 代码块）和问题描述", "向专家频道发送通知并记录 expert_message_ts", "更新 Jira 以记录专家线程位置，回复用户升级完成"],
+    "inputs": ["用户问题描述", "渠道上下文", "业务域信息"],
+    "outputs": ["Jira issue ticket", "专家频道通知消息"],
+    "constraints": ["用户明确要求专家时必须立即升级，不得延迟", "信息不足时必须补充才能创建票据"]
+  },
+  "common-feature-progress": {
+    "name_cn": "功能进度查询",
+    "description": "实时查询 Jira 中功能开发状态，适用于晨会确认和测试就绪判断。返回当前状态、负责人、Sprint 和子任务进度。",
+    "triggers": ["功能进度", "进度查询", "做完了吗", "好了没", "可以测了吗", "开发完了吗", "到哪了", "测试就绪"],
+    "workflow": ["判断单功能或批量模式，提取功能关键词", "用两步法搜索：宽泛 JQL 搜索加客户端过滤", "处理搜索结果：无结果时自动降级拆词重搜，多结果时输出候选列表", "查询父项详情和所有子任务状态", "按状态标识和完成度输出格式化结果"],
+    "inputs": ["功能名称（可多个，用逗号 / 顿号分隔）"],
+    "outputs": ["功能当前状态和负责人", "子任务列表及完成度", "Sprint 信息"],
+    "constraints": ["关键词过短时提示补充", "自动并行处理多功能查询"]
+  },
+  "common-file-output": {
+    "name_cn": "智能文件管理",
+    "description": "根据文档类型和内容长度自动判断是否保存文件。8 行以上自动保存到 outbound 目录并发送附件，不询问用户。",
+    "triggers": ["file_manager", "common-file-output", "文件管理", "保存规范"],
+    "workflow": ["判断文档类型和行数", "≥8 行：自动保存到 outbound / {关键词} / {YYYY-MM} / 并通过 message 发附件", "<8 行：直接在聊天返回完整内容", "按规范命名和编码（UTF-8）"],
+    "inputs": ["生成的文本内容"],
+    "outputs": ["保存的文件路径（if ≥8 行）", "附件消息链接"],
+    "constraints": ["所有文本必须 UTF-8 无 BOM 编码", "TSV 格式优先于 CSV，JSON 仅限程序消费"]
+  },
+  "common-gdrive-doc-sync": {
+    "name_cn": "谷歌云端硬盘同步",
+    "description": "将本地文件或会话产出同步到 Google Drive 指定目录。支持直传和格式转换两种模式，md / txt / html 自动通过 pandoc 转 docx 后上传。",
+    "triggers": ["gdrive 同步", "同步到 gdrive", "Google Drive 同步", "上传到 GoogleDrive", "folderId 上传"],
+    "workflow": ["参数确认与 preflight 检查（目标目录有效性）", "四分类决策（直传或转换），转换路径为宿主机路径", "执行上传（直传或 pandoc 转换后上传）", "返回结构化成功 / 失败结果"],
+    "inputs": ["源文件路径", "目标目录（folderId 或链接）", "自定义文件名（可选）"],
+    "outputs": ["drive_file_id", "drive_folder_id", "uploaded_name", "collaborative_editable 标志"],
+    "constraints": ["仅支持 MCP 上传，禁止非 MCP 回退", "不支持批量多文件上传"]
+  },
+  "common-image-recognition": {
+    "name_cn": "图片识别分析",
+    "description": "通过内部 VLM（Vision Language Model）对上传图片进行 OCR、内容分析、数据提取。支持发票识别、代码分析、图表数据提取等场景。",
+    "triggers": ["识别图片", "图片分析", "OCR", "看图", "分析截图"],
+    "workflow": ["确定图片文件位置（容器内或宿主机路径）", "构建宿主机路径（使用环境变量）", "调用 VLM 识别接口，传入定制化 prompt", "直接返回识别结果，不添加过程性描述"],
+    "inputs": ["上传的图片文件"],
+    "outputs": ["OCR 文字提取或内容分析结果"],
+    "constraints": ["路径必须用宿主机绝对路径，禁止 /workspace 路径", "禁止输出过程性话语如『我来识别』"]
+  },
+  "common-knowledge-search": {
+    "name_cn": "内部知识库查询",
+    "description": "先检索内部知识库再作答，无例外。将问题拆分为关键词传递给 knowledge-bridge MCP 工具进行语义和全文混合检索。",
+    "triggers": ["知识库", "查知识库", "查资料", "有什么文档"],
+    "workflow": ["拆分问题为关键词", "调用 knowledge_search（top_k 建议 20）", "按 score 置信度判定（top-1 ≥0.90 强命中，0.85-0.90 弱命中）", "不达标换词重试最多 1 次", "返回原文完整呈现，不擅自总结"],
+    "inputs": ["用户提问"],
+    "outputs": ["检索到的知识库内容（chunk）和文档链接", "相关度评分"],
+    "constraints": ["top-1 score <0.05 一律视为未命中", "不得编造训练数据，无数据时明确说不知道"]
+  },
+  "common-meeting-notes-gen": {
+    "name_cn": "会议纪要生成",
+    "description": "将会议记录或音频转写整理为结构化会议纪要和 Action Items。自动提取参会人、决议、任务分配和遗留问题。",
+    "triggers": ["会议纪要", "会议记录", "整理会议", "生成会议纪要", "Action Items"],
+    "workflow": ["解析会议内容，识别主题、参会人、时间、议题列表", "提取关键决议（通过、否决、待定）", "识别 Action Items（含负责人、任务、截止时间）", "整理遗留问题", "按模板生成结构化纪要并保存文件"],
+    "inputs": ["会议记录（文字 / 音频转写 / 聊天记录）"],
+    "outputs": ["结构化会议纪要 markdown", "Action Items 表格", "遗留问题清单"],
+    "constraints": ["内容过短（<100 字）提示补充细节", "自动修正口语化表达"]
+  },
+  "common-memory-hygiene": {
+    "name_cn": "记忆审查管理",
+    "description": "对记忆数据库进行全量审查，输出完整报告并标注问题行。删除仅支持用户手动指定 ID，agent 不自动判定删除。",
+    "triggers": ["记忆审查", "记忆审计", "记忆导出", "记忆 review", "memory audit"],
+    "workflow": ["执行 dump 脚本导出完整记忆", "运行渲染脚本生成 Excel 报告", "通过 message 工具发送 .xlsx 附件并输出摘要", "（可选）用户指定 ID 后执行手动删除"],
+    "inputs": ["用户审查请求"],
+    "outputs": [".xlsx 报告文件（Overview + Memories sheet）", "问题分布摘要"],
+    "constraints": ["删除必须由用户显式指定 ID，agent 不自动判定", "禁止直连 LanceDB，只走 memory_forget 工具"]
+  },
+  "common-ns-flows": {
+    "name_cn": "NS 流水对账查询",
+    "description": "NS 流水、对账、FDL 结算、资金端流动性子域查询。覆盖 22 个端点，包括业务流水、逻辑流水、实际流水、对账、FDL 结算、资金看板。",
+    "triggers": ["流水", "业务流水", "逻辑流水", "对账", "FDL", "资金端流动性"],
+    "workflow": ["鉴权预检（提取 sender_id 并写临时文件）", "域内路由（判断属于哪个子域，加载对应 reference）", "通过 ns-call.sh wrapper 调用相应端点", "按 reference 规范展示数据（中文字段名、原样值输出）"],
+    "inputs": ["用户查询请求（流水 / 对账 / FDL 等）"],
+    "outputs": ["结构化查询结果（含中文字段名）"],
+    "constraints": ["必须先执行鉴权，仅限 Slack 渠道", "所有调用走 wrapper，禁止直接调 mcpfast armada"]
+  },
+  "common-ns-masterdata": {
+    "name_cn": "NS 主数据查询",
+    "description": "NS 主数据、业务配置、账户域查询。覆盖客户、项目、主体、用户、部门、合同、数币账户、银行、法币账户等 44 个端点。",
+    "triggers": ["查客户", "查项目", "主体查询", "用户查询", "数币账户", "银行账户"],
+    "workflow": ["鉴权预检，提取 sender_id 并写入临时文件", "定位端点（从端点索引找路径，禁止猜测）", "加载对应 reference 文档", "通过 wrapper 构造请求并调用", "严格按 reference 规范输出（中文字段、无注释字段跳过）"],
+    "inputs": ["查询条件（客户名 / 项目号 / 用户 ID 等）"],
+    "outputs": ["主数据查询结果（列表或详情）"],
+    "constraints": ["分页最大 100 条 / 页，需全部时自动连续翻页", "项目号必须标注业务线"]
+  },
+  "common-ns-monitor": {
+    "name_cn": "NS 监控看板",
+    "description": "NS 系统监控看板子域查询（纯读）。覆盖 BI 报表、BM 调仓、交易所账户监控、平台借贷利率差价监控 10 个端点。",
+    "triggers": ["查币价", "币价看板", "资金费率", "BM 调仓", "交易所监控", "平台借贷利率"],
+    "workflow": ["鉴权预检（提取 sender_id 写入）", "读取对应 reference 文档", "直接调用相应端点（多数无请求参数）", "按规范展示数据（中文字段、原样值）"],
+    "inputs": ["监控看板查询（币价 / 费率 / 调仓 / 交易所等）"],
+    "outputs": ["监控数据（价格、费率、持仓等）"],
+    "constraints": ["纯读域，无跨域依赖", "禁止向用户询问参数枚举值"]
+  },
+  "common-ns-process": {
+    "name_cn": "NS 流程审批查询",
+    "description": "NS 流程、审批、资金流程域查询。覆盖流程定义、流程看板、流程实例、资金计划、资金路径、审批管理 14 个端点。",
+    "triggers": ["查流程", "流程号", "流程看板", "审批", "资金计划", "资金路径"],
+    "workflow": ["鉴权预检，提取 sender_id 写入临时文件", "判断子域（流程 / 审批 / 资金）并读取对应 reference", "若需查询链则按 fund.md 的短路优先级路由", "通过 wrapper 调用相应端点", "按 reference 规范展示（中文字段、原样值、严禁编造数据）"],
+    "inputs": ["流程号或业务描述"],
+    "outputs": ["流程实例详情、资金数据或审批历史"],
+    "constraints": ["instance_id 必须当次查询获取，禁止复用缓存", "审批历史必须当次调 /tasks，禁止编造节点"]
+  },
+  "common-ns-system-query": {
+    "name_cn": "NS 系统查询路由",
+    "description": "NS 内部系统查询的路由与公共规范入口。承载鉴权预检、wrapper 调用约定、跨域 ID 映射和查询链编排，根据用户表述路由到子 skill。",
+    "triggers": ["NS 查询", "查询 NS 系统", "流程号查询", "多域查询", "跨域查询", "业务线查询"],
+    "workflow": ["鉴权预检（提取 sender_id，正则校验，写入临时文件）", "按路由表判断单域或多域，路由到子 skill 或留在父 skill", "读取对应 references（公共或子 skill 特定）", "通过 wrapper 构造请求并调用", "严格输出规范（中文字段、原样值、禁止编造）"],
+    "inputs": ["NS 系统查询请求"],
+    "outputs": ["路由结果或按规范的查询结果"],
+    "constraints": ["所有 armada 调用必须走 wrapper，禁止直接 mcpfast", "必须先鉴权，仅限 Slack 用户", "每轮开头必重新执行 Step 0"]
+  },
+  "common-openclaw-news": {
+    "name_cn": "生态动态仪表盘",
+    "description": "聚合 OpenClaw 平台的产品版本、社区讨论、生态插件和最佳实践，分层采集官方、策展、社区动态，输出分类仪表盘。",
+    "triggers": ["openclaw 动态", "openclaw 新闻", "openclaw 更新", "平台动态", "最近有什么更新"],
+    "workflow": ["解析时间范围，默认 3 天", "分层采集官方、策展、社区动态", "按关键词过滤去重，保留详细版本", "按 5 个维度分类（版本、热点、社区、生态、最佳实践）", "输出结构化仪表盘"],
+    "inputs": ["时间范围（自然语言或天数）", "可选维度过滤（仅社区、仅版本等）"],
+    "outputs": ["分类仪表盘（Markdown）", "数据源分层标注", "使用建议"],
+    "constraints": ["需要 WebSearch 采集，无 API 依赖", "策展源与官方源冲突时以 P0 为准"]
+  },
+  "common-pdf-gen": {
+    "name_cn": "PDF 文件生成",
+    "description": "使用 reportlab 库生成 PDF 文件，支持中文、表格、图形等复杂内容，输出至工作目录并支持通过消息工具发送。",
+    "triggers": ["生成 PDF", "PDF 报告", "导出 PDF", "输出 PDF"],
+    "workflow": ["导入 reportlab 库，注册中文字体（Noto CJK）", "定义样式（标题、正文等）", "构建文档内容（段落、表格、图像）", "生成 PDF 文件到指定目录", "发送文件附件"],
+    "inputs": ["标题和内容（Markdown 或纯文本）", "可选：样式配置、输出路径"],
+    "outputs": ["PDF 文件（保存到 outbound 目录）", "文件元数据（大小、页数）"],
+    "constraints": ["仅用 reportlab，不用其他 PDF 库", "中文必须用 NotoSansCJK 字体"]
+  },
+  "common-rag-qa-responding": {
+    "name_cn": "知识库问答",
+    "description": "通用 RAG 知识库检索与答复生成，支持多知识库切换，返回带引用来源的结构化回复，高风险问题自动转人工。",
+    "triggers": ["查询知识库", "流程问题", "报销政策", "税务政策", "工作流程"],
+    "workflow": ["预处理用户问题，提取关键词向量", "按知识库参数加载索引，执行语义检索", "风险评估（低→直接回答，中→附加免责，高→转人工）", "基于检索结果调用 LLM 生成回复", "返回带引用来源的结构化答复"],
+    "inputs": ["知识库标识", "用户原始问题", "可选：风险阈值"],
+    "outputs": ["带引用来源的 answer", "sources 数组", "risk_level", "escalation_required"],
+    "constraints": ["不生成无据回复", "合规敏感问题必须触发高风险路由"]
+  },
+  "common-secure-coding": {
+    "name_cn": "代码安全与运维",
+    "description": "强制执行公司代码安全与生产运维最佳实践，覆盖凭证、Python、Shell、服务、防火墙、日志、变更管控、SSH、容器、定时任务、Skill 配置和依赖链安全。",
+    "triggers": ["安全检查", "代码审核", "写脚本", "部署脚本", "Skill 配置"],
+    "workflow": ["审核 API 密钥硬编码情况", "检查危险函数（eval、exec、pickle）", "验证 Shell 脚本安全规范（set -euo pipefail）", "审查服务权限和防火墙配置", "检查日志中的敏感信息"],
+    "inputs": ["生成的代码、脚本或配置文件", "SKILL.md 或配置声明"],
+    "outputs": ["安全自检清单（✓/✗）", "风险项和修复建议"],
+    "constraints": ["凭证泄露为最高优先级禁止", "所有外部输入必须校验清洗"]
+  },
+  "common-skill-audit": {
+    "name_cn": "Skill 安全审计",
+    "description": "审计 Skill 文件的安全性，检测凭证泄露、危险操作、权限范围和代码质量问题，输出审计报告和风险等级。",
+    "triggers": ["审计 skill", "检查 skill 安全", "安全审计", "skill 安全"],
+    "workflow": ["收集待审计文件和目录", "执行凭证泄露、危险操作、权限范围和代码质量检测", "按规则引擎判断风险等级", "汇总问题按严重度分类", "输出详细审计报告"],
+    "inputs": ["粘贴内容（SKILL.md）、文件路径或 Git URL"],
+    "outputs": ["审计报告（凭证、操作、权限、质量四维）", "风险等级（高 / 中 / 低）", "修复建议"],
+    "constraints": ["检测 API Key、Token、私钥等敏感信息", "高风险问题触发拒绝安装建议"]
+  },
+  "common-skill-doctor": {
+    "name_cn": "Skill 诊断工具",
+    "description": "集成提效评估、性能分析和自动修复三大功能。支持 eval（4D 评分卡）、perf（性能诊断）、fix（自动修复），输出结构化报告和改进建议。",
+    "triggers": ["评估 skill", "skill 性能", "诊断 skill", "修复 skill", "skill 基准"],
+    "workflow": ["检测模式关键词（eval / perf / fix），确定执行模式", "前置检查文件行数（超 400 行上限则终止）", "按对应参考文件执行分析或修复", "输出评分卡 / 问题清单 / 修复计划"],
+    "inputs": ["skill 名称", "可选：模式指定、参考文件"],
+    "outputs": ["eval：4D 评分卡 + 等级 + 改进建议", "perf：风险 + 问题清单 + 重构建议", "fix：修复计划 + 执行报告"],
+    "constraints": ["fix 需用户确认后执行，修复前禁止写入", "仅改 SKILL.md，不动其他文件"]
+  },
+  "common-skill-intake": {
+    "name_cn": "Skill 收录助手",
+    "description": "接收外部 skill 压缩包或 GitHub 链接，执行安全预检，通过后代提 PR 到 ai-skills-library 仓库自动收录。",
+    "triggers": ["收录 skill", "提交 skill", "安装 skill", "帮我收录"],
+    "workflow": ["获取 skill 文件（解压或 clone）", "格式校验（SKILL.md 存在、frontmatter 完整）", "运行 askit audit 安全预检", "添加 ext- 前缀重命名", "代提 PR 并通知审批"],
+    "inputs": ["压缩包附件（.tar.gz 或 .zip）或 GitHub 链接"],
+    "outputs": ["PR 链接", "安全预检报告"],
+    "constraints": ["安全预检失败时流程终止", "一次只处理一个 skill"]
+  },
+  "common-skill-mapping": {
+    "name_cn": "Skill 库架构师",
+    "description": "实时扫描 Skill 库识别功能重叠、生成能力地图，回答「有哪些 skill」，输出分类清单、能力地图或重叠告警。",
+    "triggers": ["skill 清单", "有哪些 skill", "skill 重叠", "能力地图", "skill 架构师"],
+    "workflow": ["模式判定（A：清单、B：全量分析、C：单点查重、D：草稿扫描）", "执行 Glob 扫描 SKILL.md 并读取 frontmatter", "提取 name、description、触发词", "按模式执行对应分析", "输出结构化结果"],
+    "inputs": ["用户查询意图（清单 / 重叠 / 单点 / 草稿）"],
+    "outputs": ["A：分类 skill 清单", "B：能力地图 + 重叠告警", "C：相似度表 + 建议", "D：草稿 skill 列表"],
+    "constraints": ["必须先执行文件扫描再输出", "禁止使用 AI 记忆代替实时查询"]
+  },
+  "common-skill-testing": {
+    "name_cn": "Skill 质量验证",
+    "description": "支持静态检查（L0）、功能测试（L1）、跨模型基准对比（L2）三种模式，输出检查报告、测试结果或对比矩阵。",
+    "triggers": ["测试 skill", "skill 测试", "check skill", "benchmark skill"],
+    "workflow": ["检测模式关键词（check / test / benchmark），默认 check", "运行对应脚本（static_check / functional_test / benchmark）", "解析脚本输出，按 L0/L1/L2 格式汇总", "输出检查报告、测试结果或回归告警"],
+    "inputs": ["skill 名称", "可选：suite / tier / providers / runs 参数"],
+    "outputs": ["check：格式检查报告", "test：断言结果 + 失败归因", "benchmark：对比矩阵 + 统计 + 回归告警"],
+    "constraints": ["benchmark 前置需 L0 检查通过", "超时 / API 错误标记为 dependency_error"]
+  },
+  "common-sla-nudging": {
+    "name_cn": "审批 SLA 催促",
+    "description": "按审批节点 pending 时长阈值向审批人发送多渠道催促通知，支持首催、升级催、终催三阶段，主渠道失败自动降级。",
+    "triggers": ["催促审批", "SLA 超时提醒", "审批催促", "审批超时"],
+    "workflow": ["判定 pending 时长对应催促阶段（首催 / 升级 / 终催）", "按阶段生成对应催促消息", "按渠道优先级逐一尝试发送", "主渠道失败自动降级到备用渠道", "返回发送结果"],
+    "inputs": ["node_id、approver、pending_hours、sla_config、channels、escalation_target"],
+    "outputs": ["stage、sent_via、success、failed_channels、message_preview"],
+    "constraints": ["不决定是否催促，仅执行发送", "不修改审批状态"]
+  },
+  "common-slack-card-publishing": {
+    "name_cn": "Slack 卡片发布",
+    "description": "接收结构化审核结论或状态通知，按 Block Kit 模板渲染并推送至 Slack 频道，同时写入审计日志。",
+    "triggers": ["推送审核结果", "发送 Slack 卡片", "发布通知卡片"],
+    "workflow": ["按 card_type 加载 Block Kit 模板", "将 payload 映射填充生成完整 JSON", "调用 slack.post_message 发送至频道", "无论成败都写入审计日志"],
+    "inputs": ["channel、card_type、payload、audit_context（可选）"],
+    "outputs": ["success、slack_message_ts、channel、audit_log_id"],
+    "constraints": ["不生成业务判断，仅负责展示层", "不解析 Slack 用户回复"]
+  },
+  "common-slack-digest": {
+    "name_cn": "Slack 消息总结",
+    "description": "从 Slack 频道获取历史消息，根据用户意图生成讨论总结、活动摘要、知识提取或搜索总结四种类型。",
+    "triggers": ["slack 总结", "频道总结", "消息总结", "讨论总结", "slack 摘要"],
+    "workflow": ["解析输入提取频道、时间范围、搜索词", "自动识别使用模式（讨论 / 活动 / 知识 / 搜索）", "调用 Slack API 获取历史消息", "过滤合并线程，预处理消息", "按选定模式生成总结"],
+    "inputs": ["频道名或 ID、时间范围、可选搜索词"],
+    "outputs": ["结构化总结（会议纪要 / 概览 / 列表 / 搜索结果）", "核心要点"],
+    "constraints": ["需要 Bot 加入目标频道", "超 500 条消息建议缩小范围"]
+  },
+  "common-sop-analysis": {
+    "name_cn": "SOP 自动化分析",
+    "description": "分析部门 SOP 流程，识别结构缺口与人机协作机会，输出 L1-L4 分层方案、Skill 候选清单、结构缺口报告和流程图。",
+    "triggers": ["分析 SOP", "梳理流程", "流程分析", "流程缺口", "工作流分析"],
+    "workflow": ["模式判定（A：引导梳理、B：单文档、C：批量分析）", "输入解析和质量评估", "执行 4 项结构检查（完整性 / 闭合性 / 异常路径 / 引用）", "L1-L4 人机协作分层，轻量标记效率风险", "生成流程图（Mermaid），自检一致性", "提取 Skill 候选，输出 YAML + 报告"],
+    "inputs": ["文本 / Markdown / Excel / Word / PDF 格式流程文档（模式 B/C）或仅口头描述（模式 A）"],
+    "outputs": ["7 章报告（含流程图、缺口清单、Skill 候选）", "结构化 YAML（工作流 schema v2.2）"],
+    "constraints": ["7 章报告所有章节必须保留", "Mermaid 节点必须带 [角色·Lx] 前缀和四属性 classDef"]
+  },
+  "common-url-lookup": {
+    "name_cn": "链接导航（内外网）",
+    "description": "根据用户描述快速查询内网系统地址（NS、Jira、Confluence 等）或外网工具官网，内网优先查询 internal_links.yaml，未命中则 WebSearch 外网官方地址。",
+    "triggers": ["跳转：xxx", "地址是什么", "怎么打开", "在哪里"],
+    "workflow": ["解析用户输入提取系统名、功能词、环境标识", "必须先读取 internal_links.yaml 文件", "执行别名精确 / 环境联合 / 关键词匹配", "内网无匹配时执行 WebSearch 查找外网官方", "输出最权威的 URL"],
+    "inputs": ["系统 / 工具名称（可含环境标识、别名）"],
+    "outputs": ["可点击 Slack 链接（<URL|说明> 格式）", "多结果时列出候选供选择"],
+    "constraints": ["禁止在内网查询前反问", "严禁编造 URL，以文件内容为准"]
+  },
+  "common-web-capture": {
+    "name_cn": "网页截图与提取",
+    "description": "通过 Playwright 无头浏览器对公开网页进行截图和内容提取，支持首屏预览、整页截图、CSS 选择器提取。",
+    "triggers": ["截图", "网页截图", "抓取网页", "网页内容", "给我看看"],
+    "workflow": ["判断运行环境（Claude Code 或 OpenClaw）", "导航到目标 URL（指定 waitUntil 和可选延迟）", "对动态内容先 snapshot 确认加载完成", "截图或提取内容（根据需求选择）", "处理失败重新导航"],
+    "inputs": ["公开网页 URL", "可选：CSS 选择器、全页截图标志"],
+    "outputs": ["PNG 截图文件（内联或保存到 outbound）", "结构化内容（文本 / 数据 / 链接）"],
+    "constraints": ["navigate 和 screenshot 间禁止插入操作", "动态内容需加 waitFor 延迟或 snapshot 确认"]
+  }
+}
