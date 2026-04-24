@@ -628,81 +628,6 @@
     }
     .st-add-btn:hover { background: #eef2ff; border-color: #818cf8; }
 
-    /* ─── 访问密码保护 ──────────────────────────────────────────── */
-    .auth-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 38%, #5b21b6 72%, #6d28d9 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .auth-box {
-      background: #fff;
-      border-radius: 20px;
-      padding: 40px 36px 32px;
-      width: 100%;
-      max-width: 360px;
-      box-shadow: 0 24px 60px rgba(0,0,0,0.4);
-      text-align: center;
-    }
-    .auth-box .auth-icon { font-size: 2rem; margin-bottom: 10px; }
-    .auth-box h2 {
-      margin: 0 0 6px;
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: #0f172a;
-    }
-    .auth-box p {
-      margin: 0 0 22px;
-      font-size: 0.82rem;
-      color: #64748b;
-    }
-    .auth-input {
-      width: 100%;
-      padding: 11px 14px;
-      font-size: 0.9rem;
-      font-family: inherit;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 10px;
-      outline: none;
-      box-sizing: border-box;
-      transition: border-color 0.15s, box-shadow 0.15s;
-      text-align: center;
-      letter-spacing: 0.06em;
-    }
-    .auth-input:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.15); }
-    .auth-input.shake { animation: auth-shake 0.32s ease; border-color: #ef4444; }
-    @keyframes auth-shake {
-      0%,100% { transform: translateX(0); }
-      20%,60%  { transform: translateX(-7px); }
-      40%,80%  { transform: translateX(7px); }
-    }
-    .auth-btn {
-      display: block;
-      width: 100%;
-      margin-top: 12px;
-      padding: 12px;
-      border: none;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #4f46e5, #7c3aed);
-      color: #fff;
-      font-size: 0.9rem;
-      font-weight: 700;
-      font-family: inherit;
-      cursor: pointer;
-      transition: opacity 0.15s, transform 0.1s;
-    }
-    .auth-btn:hover { opacity: 0.88; }
-    .auth-btn:active { transform: scale(0.98); }
-    .auth-err {
-      margin-top: 10px;
-      font-size: 0.76rem;
-      color: #ef4444;
-      min-height: 16px;
-    }
-
     /* 编辑提示：卡片轮廓 */
     body.edit-mode .dex-card {
       transition: outline-color 0.2s;
@@ -914,154 +839,9 @@
       .sop-cols { grid-template-columns: 1fr; }
       .sop-col:not(:last-child) { border-right: none; border-bottom: 1px solid #f1f5f9; }
     }
-
-    /* ─── SKILL 目录组成结构 说明区块 ─────────────────────────── */
-    .skill-anatomy {
-      background: #fff;
-      border: 1px solid #e2e8f0;
-      border-radius: 14px;
-      padding: 20px 22px;
-      margin-bottom: 22px;
-      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
-    }
-    .skill-anatomy > summary {
-      cursor: pointer;
-      list-style: none;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: #1e293b;
-    }
-    .skill-anatomy > summary::-webkit-details-marker { display: none; }
-    .skill-anatomy > summary::after {
-      content: "▸";
-      color: #64748b;
-      font-size: 0.9rem;
-      transition: transform 0.2s;
-    }
-    .skill-anatomy[open] > summary::after { transform: rotate(90deg); }
-    .skill-anatomy .sa-sub {
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: #64748b;
-      margin-left: 8px;
-    }
-    .skill-anatomy .sa-body { margin-top: 14px; }
-    .skill-anatomy h4 {
-      font-size: 0.88rem;
-      font-weight: 800;
-      color: #334155;
-      margin: 16px 0 8px;
-      letter-spacing: 0.01em;
-    }
-    .skill-anatomy h4:first-child { margin-top: 0; }
-    .skill-anatomy p { margin: 6px 0; font-size: 0.88rem; color: #475569; line-height: 1.55; }
-    .skill-anatomy table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.8rem;
-    }
-    .skill-anatomy th,
-    .skill-anatomy td {
-      text-align: left;
-      padding: 6px 10px;
-      border-bottom: 1px solid #f1f5f9;
-      vertical-align: top;
-    }
-    .skill-anatomy th {
-      font-weight: 700;
-      color: #1e293b;
-      background: #f8fafc;
-      font-size: 0.75rem;
-      letter-spacing: 0.02em;
-    }
-    .skill-anatomy td code {
-      background: #f1f5f9;
-      padding: 1px 5px;
-      border-radius: 4px;
-      font-size: 0.78rem;
-    }
-    .skill-anatomy .sa-cov {
-      display: inline-block;
-      min-width: 44px;
-      padding: 1px 6px;
-      border-radius: 4px;
-      font-weight: 700;
-      text-align: center;
-      font-size: 0.72rem;
-    }
-    .skill-anatomy .sa-cov--must { background: #dcfce7; color: #15803d; }
-    .skill-anatomy .sa-cov--high { background: #e0e7ff; color: #4338ca; }
-    .skill-anatomy .sa-cov--mid  { background: #fef3c7; color: #b45309; }
-    .skill-anatomy .sa-cov--low  { background: #f1f5f9; color: #64748b; }
-    .skill-anatomy pre {
-      background: #0f172a;
-      color: #e2e8f0;
-      padding: 14px 16px;
-      border-radius: 8px;
-      overflow-x: auto;
-      font-size: 0.78rem;
-      line-height: 1.55;
-      margin: 8px 0;
-    }
-    .skill-anatomy pre .sa-keyword { color: #f472b6; }
-    .skill-anatomy pre .sa-comment { color: #94a3b8; font-style: italic; }
-    .skill-anatomy pre .sa-tag { color: #38bdf8; }
-    .skill-anatomy .sa-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-    @media (max-width: 768px) {
-      .skill-anatomy .sa-grid { grid-template-columns: 1fr; }
-      .skill-anatomy pre { font-size: 0.72rem; }
-    }
-    .skill-anatomy .sa-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin: 6px 0 10px;
-    }
-    .skill-anatomy .sa-chip {
-      font-size: 0.72rem;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: #eef2ff;
-      color: #4338ca;
-    }
-    .skill-anatomy .sa-chip--bs { background: #e0f2fe; color: #0369a1; }
-    .skill-anatomy .sa-chip--common { background: #fef3c7; color: #a16207; }
-    .skill-anatomy .sa-note {
-      margin-top: 10px;
-      padding: 10px 12px;
-      background: #f8fafc;
-      border-left: 3px solid #a5b4fc;
-      border-radius: 0 6px 6px 0;
-      font-size: 0.8rem;
-      color: #475569;
-    }
   </style>
 </head>
 <body>
-  <!-- 访问密码保护层（已注释：公开访问无需密码）
-  <div class="auth-overlay" id="authOverlay">
-    <div class="auth-box">
-      <div class="auth-icon">🔐</div>
-      <h2>AI 员工卡片图鉴</h2>
-      <p>请输入访问密码</p>
-      <input class="auth-input" id="authInput" type="password"
-             placeholder="••••••••" autocomplete="current-password" />
-      <button class="auth-btn" id="authBtn">进入</button>
-      <div class="auth-err" id="authErr"></div>
-    </div>
-  </div>
-  -->
-
-
   <div class="mode-controls">
     <button class="save-btn" id="localSaveBtn" aria-label="保存到浏览器">💾 保存</button>
     <button class="export-btn" id="exportBtn" aria-label="导出为 HTML 文件">📥 导出</button>
@@ -1099,8 +879,6 @@
         <li><a href="#no-008">NO.008 松饼</a></li>
         <li><a href="#no-009">NO.009 通用能力</a></li>
         <li><a href="#no-010">NO.010 Osto</a></li>
-        <li style="margin-top:8px;font-size:0.78rem;color:#94a3b8;font-weight:600">— 说明文档 —</li>
-        <li><a href="#skill-anatomy">📦 SKILL 构成</a></li>
         <li style="margin-top:8px;font-size:0.78rem;color:#94a3b8;font-weight:600">— 数据流 —</li>
         <li><a href="#flow-bs">BS</a></li>
         <li><a href="#flow-hr">HR</a></li>
@@ -1116,174 +894,6 @@
     </nav>
 
     <div class="main-col">
-
-    <!-- ─── SKILL 目录组成结构说明 ─────────────────────────────── -->
-    <details class="skill-anatomy" id="skill-anatomy" open>
-      <summary>
-        <span>📦 SKILL 目录组成结构<span class="sa-sub">标准模板 · 覆盖率统计 · 开发规范</span></span>
-      </summary>
-      <div class="sa-body">
-
-        <p>SKILL 是 Agent 能力的最小交付单元，每个 SKILL 以一个独立目录组织：<code>skills/&lt;skill-name&gt;/</code>。本节总结当前 <strong>ai-skills-library</strong> 仓库中核心两大分组（<span class="sa-chip sa-chip--bs">bs-*</span> 业务线 SKILL 与 <span class="sa-chip sa-chip--common">common-*</span> 通用/基础设施 SKILL）的目录组成现状与推荐模板，作为 SKILL 作者的开发规范参考。</p>
-
-        <div class="sa-chips">
-          <span class="sa-chip sa-chip--bs">bs-* · 22 个</span>
-          <span class="sa-chip sa-chip--common">common-* · 46 个</span>
-          <span class="sa-chip">合计 · 68 个 SKILL</span>
-        </div>
-
-        <h4>① 部件覆盖率（bs-* vs common-*）</h4>
-        <table>
-          <thead>
-            <tr>
-              <th style="width:28%">部件</th>
-              <th style="width:14%">bs-* 覆盖</th>
-              <th style="width:14%">common-* 覆盖</th>
-              <th>用途</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>SKILL.md</code></td>
-              <td><span class="sa-cov sa-cov--must">22/22</span></td>
-              <td><span class="sa-cov sa-cov--must">46/46</span></td>
-              <td>核心 prompt；定义场景、工作流程、输入输出、约束规则</td>
-            </tr>
-            <tr>
-              <td><code>SKILL.tests.yaml</code></td>
-              <td><span class="sa-cov sa-cov--must">22/22</span></td>
-              <td><span class="sa-cov sa-cov--high">29/46</span></td>
-              <td>触发词测试与非触发断言；验证 trigger 正负例</td>
-            </tr>
-            <tr>
-              <td><code>references/</code></td>
-              <td><span class="sa-cov sa-cov--low">2/22</span></td>
-              <td><span class="sa-cov sa-cov--mid">18/46</span></td>
-              <td>端点文档、决策矩阵、规则表、字段字典</td>
-            </tr>
-            <tr>
-              <td><code>contracts/</code></td>
-              <td><span class="sa-cov sa-cov--low">1/22</span></td>
-              <td><span class="sa-cov sa-cov--low">—</span></td>
-              <td>输入输出 JSON Schema，契约化集成</td>
-            </tr>
-            <tr>
-              <td><code>scripts/</code></td>
-              <td><span class="sa-cov sa-cov--low">1/22</span></td>
-              <td><span class="sa-cov sa-cov--mid">8/46</span></td>
-              <td>可执行脚本、MCP/API wrapper、辅助工具</td>
-            </tr>
-            <tr>
-              <td><code>assets/</code></td>
-              <td><span class="sa-cov sa-cov--low">—</span></td>
-              <td><span class="sa-cov sa-cov--low">4/46</span></td>
-              <td>邮件/卡片模板、图片、静态资源</td>
-            </tr>
-            <tr>
-              <td><code>CLAUDE.md</code></td>
-              <td><span class="sa-cov sa-cov--low">—</span></td>
-              <td><span class="sa-cov sa-cov--low">5/46</span></td>
-              <td>Agent 集成说明、子 skill 路由（主要见 NS 系列）</td>
-            </tr>
-            <tr>
-              <td><code>config.yaml</code></td>
-              <td><span class="sa-cov sa-cov--low">—</span></td>
-              <td><span class="sa-cov sa-cov--low">3/46</span></td>
-              <td>业务线配置、升级规则、参数映射</td>
-            </tr>
-            <tr>
-              <td><code>SETUP.md</code> / <code>PATH-MAPPING.md</code></td>
-              <td><span class="sa-cov sa-cov--low">—</span></td>
-              <td><span class="sa-cov sa-cov--low">2/46</span></td>
-              <td>安装配置、依赖说明、外部系统路径映射</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="sa-note">
-          <strong>观察：</strong>bs-* 保持极简（<code>SKILL.md + SKILL.tests.yaml</code> 两件套，测试覆盖 100%）；common-* 结构更多样，涵盖系统集成（NS 系列 <code>CLAUDE.md + scripts/</code>）、资源模板（<code>assets/</code>）、路径配置等维度。SKILL 类型不同，目录复杂度不同。
-        </div>
-
-        <h4>② 推荐的标准目录树</h4>
-        <pre><span class="sa-tag">my-skill-name/</span>
-├── <span class="sa-keyword">SKILL.md</span>                 <span class="sa-comment">[必需] 核心 prompt + frontmatter</span>
-├── <span class="sa-keyword">SKILL.tests.yaml</span>         <span class="sa-comment">[必需] trigger / non-trigger 用例</span>
-├── references/            <span class="sa-comment">[可选] 规则表、API 文档、决策矩阵</span>
-├── contracts/             <span class="sa-comment">[可选] 输入输出 JSON Schema</span>
-├── scripts/               <span class="sa-comment">[可选] MCP/API wrapper、辅助脚本</span>
-├── assets/                <span class="sa-comment">[可选] 模板、图片、静态资源</span>
-├── CLAUDE.md              <span class="sa-comment">[可选] Agent 集成说明（多 skill 协作）</span>
-├── config.yaml            <span class="sa-comment">[可选] 业务线/参数映射</span>
-├── SETUP.md               <span class="sa-comment">[可选] 依赖安装、环境配置</span>
-└── PATH-MAPPING.md        <span class="sa-comment">[可选] 外部系统路径映射</span></pre>
-
-        <div class="sa-grid">
-          <div>
-            <h4>③ SKILL.md Frontmatter 模板</h4>
-            <pre><span class="sa-comment">---</span>
-<span class="sa-tag">name:</span> {skill-id}
-<span class="sa-tag">description:</span> {功能描述与触发词}
-<span class="sa-tag">status:</span> draft | active
-<span class="sa-tag">metadata:</span>
-  <span class="sa-tag">author:</span> {Team Name}
-  <span class="sa-tag">version:</span> {X.Y.Z}
-  <span class="sa-tag">last_updated:</span> {YYYY-MM-DD}
-  <span class="sa-tag">tags:</span> [tag1, tag2]
-<span class="sa-comment">---</span>
-
-<span class="sa-comment"># 正文：场景、前置条件、工作流、</span>
-<span class="sa-comment">#       输入输出、约束规则</span></pre>
-            <p style="font-size:0.78rem;color:#64748b">必有字段：<code>name</code> · <code>description</code> · <code>status</code> · <code>metadata.author</code> · <code>metadata.version</code></p>
-          </div>
-
-          <div>
-            <h4>④ SKILL.tests.yaml 简化模板</h4>
-            <pre><span class="sa-tag">trigger_tests:</span>
-  - <span class="sa-tag">input:</span> <span class="sa-keyword">"用户触发文本"</span>
-    <span class="sa-tag">expected:</span> direct
-
-<span class="sa-tag">non_trigger_tests:</span>
-  - <span class="sa-tag">input:</span> <span class="sa-keyword">"不应触发的文本"</span>
-    <span class="sa-tag">expected:</span> no_trigger
-    <span class="sa-tag">reason:</span> <span class="sa-keyword">"说明"</span></pre>
-            <p style="font-size:0.78rem;color:#64748b">复杂 SKILL（如 NS 系列）采用完整型：含 <code>test_cases</code> / <code>expected_behavior</code> / <code>suites</code> 分组，支持 <code>contains</code> / <code>not_contains</code> / <code>min_length</code> 等断言。</p>
-          </div>
-        </div>
-
-        <h4>⑤ 按 SKILL 类型选择目录模板</h4>
-        <table>
-          <thead>
-            <tr>
-              <th style="width:18%">SKILL 类型</th>
-              <th style="width:42%">推荐部件</th>
-              <th>代表</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>轻量 SKILL</strong><br><span style="font-size:0.72rem;color:#64748b">业务逻辑 / 意图分类</span></td>
-              <td><code>SKILL.md</code> + <code>SKILL.tests.yaml</code></td>
-              <td>bs-intake-classifying · bs-exception-escalating · common-feature-progress</td>
-            </tr>
-            <tr>
-              <td><strong>标准 SKILL</strong><br><span style="font-size:0.72rem;color:#64748b">数据查询 / 文档生成</span></td>
-              <td>基础两件套 + <code>references/</code>（+ 可选 <code>contracts/</code>）</td>
-              <td>bs-customer-drafting · common-agent-skill-spec-drafting · common-meeting-notes-gen</td>
-            </tr>
-            <tr>
-              <td><strong>重型 SKILL</strong><br><span style="font-size:0.72rem;color:#64748b">系统集成 / Agent 协作</span></td>
-              <td>全套 + <code>CLAUDE.md</code> + <code>scripts/</code> + <code>config.yaml</code></td>
-              <td>common-ns-system-query · common-gdrive-doc-sync · common-skill-testing</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="sa-note">
-          <strong>源仓库：</strong><code>ai-skills-library/skills/</code> · 本区块数据截取自 2026-04-24 的仓库快照；SKILL 变更需按 <code>CLAUDE.md</code> 规则 5 同步更新本页"技能树"与此说明区。
-        </div>
-      </div>
-    </details>
-
     <div class="cards-grid">
 
     <!-- NO.001 Star -->
@@ -3113,50 +2723,7 @@
 
   <a href="#" class="back-top visible" aria-label="返回顶部">▲ 顶部</a>
   <script>
-    /* 在 auth IIFE 运行（可能 remove overlay）之前保存原始 HTML */
-    var _authOverlayHtml = (document.getElementById('authOverlay') || {outerHTML:''}).outerHTML;
-
     (function () {
-
-      /* ── 访问密码保护（已注释：公开访问无需密码）────────────────
-      (function () {
-        var AUTH_KEY = 'dex-auth-v1';
-        var AUTH_TTL = 7 * 24 * 60 * 60 * 1000;
-        var S = [107,112,95,90,40,57,1,53,11,31,21,5,13,224,211,170,175,147,159];
-
-        function verify(input) {
-          if (input.length !== S.length) return false;
-          return S.every(function (c, i) {
-            return (input.charCodeAt(i) ^ (i * 7 + 42)) === c;
-          });
-        }
-
-        var overlay = document.getElementById('authOverlay');
-        if (!overlay) return;
-
-        var inp = document.getElementById('authInput');
-        var btn = document.getElementById('authBtn');
-        var err = document.getElementById('authErr');
-        if (!inp || !btn) return;
-
-        function attempt() {
-          if (verify(inp.value)) {
-            overlay.style.transition = 'opacity 0.35s';
-            overlay.style.opacity = '0';
-            setTimeout(function () { overlay.remove(); }, 360);
-          } else {
-            err.textContent = '密码错误，请重试';
-            inp.classList.add('shake');
-            inp.value = '';
-            setTimeout(function () { inp.classList.remove('shake'); err.textContent = ''; }, 420);
-          }
-        }
-
-        btn.addEventListener('click', attempt);
-        inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') attempt(); });
-        inp.focus();
-      })();
-      */
 
       /* ── 返回顶部 ──────────────────────────────────────────────── */
       var backBtn = document.querySelector('.back-top');
@@ -3520,15 +3087,7 @@
 
         setTimeout(async function () {
           /* ── 导出前清理运行时状态，确保导出 HTML 与源文件一致 ── */
-          /* 1. 还原 auth overlay（认证后已被 remove()） */
-          var overlayRestored = false;
-          if (_authOverlayHtml && !document.getElementById('authOverlay')) {
-            var tmp = document.createElement('div');
-            tmp.innerHTML = _authOverlayHtml;
-            document.body.insertBefore(tmp.firstElementChild, document.body.firstElementChild);
-            overlayRestored = true;
-          }
-          /* 2. 隐藏 toast 的 show 状态和 back-top 的 visible 状态 */
+          /* 隐藏 toast 的 show 状态和 back-top 的 visible 状态 */
           var toast = document.getElementById('save-toast');
           var toastShow = toast && toast.classList.contains('show');
           var toastStyle = toast ? toast.getAttribute('style') : null;
@@ -3536,16 +3095,12 @@
           var backTop = document.querySelector('.back-top');
           var backTopVisible = backTop && backTop.classList.contains('visible');
           if (backTopVisible) backTop.classList.remove('visible');
-          /* 3. 清理 body class（编辑模式已由 exitEdit 处理，但防止残留） */
+          /* 清理 body class（编辑模式已由 exitEdit 处理，但防止残留） */
           document.body.className = '';
 
           var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML + '\n';
 
           /* ── 恢复 DOM 到导出前状态 ── */
-          if (overlayRestored) {
-            var el = document.getElementById('authOverlay');
-            if (el) el.remove();
-          }
           if (toast) {
             if (toastShow) toast.classList.add('show');
             if (toastStyle) toast.setAttribute('style', toastStyle);
