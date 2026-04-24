@@ -610,5 +610,203 @@
     "inputs": ["公开网页 URL", "可选：CSS 选择器、全页截图标志"],
     "outputs": ["PNG 截图文件（内联或保存到 outbound）", "结构化内容（文本 / 数据 / 链接）"],
     "constraints": ["navigate 和 screenshot 间禁止插入操作", "动态内容需加 waitFor 延迟或 snapshot 确认"]
+  },
+  "mining-pool-base": {
+    "name_cn": "矿池收入查询统一规范",
+    "description": "定义矿池查询类 skill 的 CLI 接口、JSON 输出 schema 和展示模板，供 mining-antpool / mining-f2pool 等 adapter skill 引用，不直接由用户触发。",
+    "triggers": ["矿池收入规范", "mining-pool-base"],
+    "workflow": ["定义 CLI 接口参数（账户、日期范围）", "定义 JSON 输出 schema（收益、支付、算力）", "定义 Slack 展示模板", "供 adapter skill 引用"],
+    "inputs": ["矿池类型标识", "adapter 配置"],
+    "outputs": ["统一 JSON schema", "展示模板"],
+    "constraints": ["不直接由用户触发", "adapter 必须遵循 schema 输出"]
+  },
+  "mining-antpool": {
+    "name_cn": "Antpool 矿池收益查询",
+    "description": "查询 Antpool Observer 账户 BTC 收益和支付记录，支持按日期范围查询，多账户场景需指定账户名。",
+    "triggers": ["antpool 查一下", "antpool 收益", "查询 antpool", "antpool 收入"],
+    "workflow": ["校验账户名参数（缺失时追问）", "调用 Antpool Observer API", "按 mining-pool-base schema 格式化输出", "展示收益与支付明细"],
+    "inputs": ["账户名（必填）", "日期范围（可选，默认最近 7 天）"],
+    "outputs": ["BTC 日收益明细", "累计收益", "支付记录"],
+    "constraints": ["多账户必须指定", "遵循 mining-pool-base schema", "只读查询"]
+  },
+  "mining-f2pool": {
+    "name_cn": "F2Pool 矿池收益查询",
+    "description": "查询 F2Pool BTC 挖矿收入和历史支付数据，支持按日期范围查询，多账户场景需指定账户名。",
+    "triggers": ["f2pool 帮我查一下", "f2pool 查一下", "查询 f2pool", "f2pool 收入", "f2pool 收益"],
+    "workflow": ["校验账户名参数（缺失时追问）", "调用 F2Pool Observer API", "按 mining-pool-base schema 格式化输出", "展示收益与支付明细"],
+    "inputs": ["账户名（必填）", "日期范围（可选）"],
+    "outputs": ["BTC 日收益明细", "累计收益", "支付记录"],
+    "constraints": ["多账户必须指定", "遵循 mining-pool-base schema", "只读查询"]
+  },
+  "dev-agent-generator": {
+    "name_cn": "Agent 生成器",
+    "description": "基于自然语言描述与交互式问答生成完整 OpenClaw Agent 配置包，包含 spec、Slack Bot、部署 checklist。",
+    "triggers": ["生成 agent", "新建 agent", "创建 agent", "agent 配置包"],
+    "workflow": ["接收 agent 描述", "交互式收集必要字段", "生成 spec 文档", "生成 Slack Bot 配置", "生成部署 checklist"],
+    "inputs": ["agent 名称与定位", "触发场景", "依赖系统"],
+    "outputs": ["完整 agent 配置包", "部署 checklist"],
+    "constraints": ["必须通过交互式问答收集完整字段", "生成物需人工评审后上线"]
+  },
+  "dev-auto-pr-review": {
+    "name_cn": "PR 自动审查与 inline 评论",
+    "description": "审查 Bitbucket PR 代码并将问题以 inline 评论写回 PR，同时自动决策 approve 或 request-changes；所有 PR 相关操作（review / approve / merge）的强制入口。",
+    "triggers": ["review PR", "code review", "审查代码", "auto review", "自动审查", "approve PR", "批准 PR", "LGTM", "merge PR", "合并 PR"],
+    "workflow": ["拉取 PR diff", "执行代码审查（安全 / 规范 / 逻辑）", "以 inline 评论写回 PR", "自动决策 approve / request-changes", "merge 前强制通过完整流程"],
+    "inputs": ["PR URL 或编号", "可选：审查维度配置"],
+    "outputs": ["inline 评论", "审查决策（approve / request-changes）"],
+    "constraints": ["任何 PR 审查 / 批准 / 合并请求必须走本 skill", "依赖 Bitbucket API"]
+  },
+  "dev-bug-analyze": {
+    "name_cn": "错误日志分析",
+    "description": "分析错误日志内容给出可能原因和排查建议（V1 粘贴日志版本），支持堆栈、异常、性能类报错。",
+    "triggers": ["分析报错", "错误分析", "日志分析", "问题排查", "排查 bug", "分析日志"],
+    "workflow": ["解析日志结构识别错误类型", "定位关键堆栈", "列出可能原因", "给出排查建议"],
+    "inputs": ["原始日志文本", "可选：运行环境与复现步骤"],
+    "outputs": ["错误类型", "可能原因列表", "排查建议"],
+    "constraints": ["V1 仅支持粘贴日志，不读取文件系统", "不执行修复操作"]
+  },
+  "dev-code-review": {
+    "name_cn": "代码审查（CR）",
+    "description": "审查 Bitbucket PR 代码，发现问题并给出改进建议，覆盖安全、性能、可读性、规范等维度。",
+    "triggers": ["review", "code review", "代码审查", "CR", "帮我看看代码", "审查代码"],
+    "workflow": ["拉取 PR diff", "分析代码质量与潜在问题", "按维度生成改进建议", "输出审查报告"],
+    "inputs": ["PR URL 或 diff 文本", "可选：审查重点"],
+    "outputs": ["审查报告", "问题清单与改进建议"],
+    "constraints": ["不自动写回 PR（对比 auto-pr-review）", "依赖 Bitbucket API"]
+  },
+  "dev-code-tech-design-gen": {
+    "name_cn": "代码架构文档生成",
+    "description": "从代码仓库生成模块架构文档，包括目录结构、组件关系、API 列表，适用于现有代码理解与新人 onboarding。",
+    "triggers": ["代码架构", "模块文档", "架构分析", "代码文档", "架构文档", "技术文档"],
+    "workflow": ["扫描仓库目录结构", "识别核心模块与组件关系", "提取 API 列表", "生成 Markdown 架构文档"],
+    "inputs": ["代码仓库地址或本地路径", "可选：聚焦模块"],
+    "outputs": ["目录结构说明", "组件关系图", "API 列表"],
+    "constraints": ["依赖 Bitbucket API", "只读分析不修改代码"]
+  },
+  "dev-jira-digest": {
+    "name_cn": "Jira 站会 / 周报 / Sprint 摘要",
+    "description": "从 Jira 生成站会报告、周报、Sprint 总结、需求进度汇总，支持研发与产品两种视角。",
+    "triggers": ["Jira 报告", "站会报告", "周报", "Sprint", "需求进度", "生成周报"],
+    "workflow": ["按视角（研发 / 产品）拉取 Jira 数据", "按时间窗汇总 Issue 状态", "生成结构化摘要"],
+    "inputs": ["视角（研发 / 产品）", "时间范围或 Sprint ID"],
+    "outputs": ["站会 / 周报 / Sprint 摘要"],
+    "constraints": ["依赖 Atlassian MCP (Jira)", "只读汇总"]
+  },
+  "dev-jira-issue-gen": {
+    "name_cn": "Jira Issue 批量生成",
+    "description": "将描述转换为标准报告，支持批量创建 Jira Issue（Bug / Task / Story / Epic），自动补齐字段。",
+    "triggers": ["bug 报告", "提 bug", "记录 bug", "提 task", "提 story", "提 epic", "创建 Issue", "批量提 Issue"],
+    "workflow": ["解析描述抽取 Issue 字段", "按类型（Bug / Task / Story / Epic）标准化", "确认后批量创建"],
+    "inputs": ["自然语言描述", "Issue 类型", "项目 Key"],
+    "outputs": ["Jira Issue 链接列表", "创建结果摘要"],
+    "constraints": ["创建前强制二次确认", "依赖 Atlassian MCP (Jira 写入)"]
+  },
+  "dev-prd-tech-design-gen": {
+    "name_cn": "PRD 转技术方案",
+    "description": "从产品需求生成技术方案文档（V1 粘贴需求版本），覆盖系统架构、模块拆分、接口草稿。",
+    "triggers": ["技术方案", "技术设计", "架构设计", "写技术方案", "PRD 转技术方案"],
+    "workflow": ["解析 PRD 内容识别核心功能", "拆分模块与组件", "草拟接口定义", "生成技术方案文档"],
+    "inputs": ["PRD 全文或摘要", "可选：技术栈约束"],
+    "outputs": ["技术方案 Markdown 文档"],
+    "constraints": ["V1 仅支持粘贴需求", "不自动写入系统"]
+  },
+  "dev-release-notes-gen": {
+    "name_cn": "Release Notes 生成",
+    "description": "从 Jira 和 Bitbucket 生成技术发布说明，包含新功能、修复、升级注意事项。",
+    "triggers": ["release notes", "版本发布", "发版内容", "技术发布", "发布内容"],
+    "workflow": ["按版本范围拉取 Jira Issue", "拉取 Bitbucket commit / PR", "按类型分类（新功能 / 修复 / 升级注意）", "生成 Release Notes"],
+    "inputs": ["版本号或时间范围", "项目 Key / 仓库"],
+    "outputs": ["Release Notes Markdown"],
+    "constraints": ["依赖 Atlassian MCP (Jira) + Bitbucket API"]
+  },
+  "dev-slackapp-bootstrap": {
+    "name_cn": "Slack App 快速脚手架",
+    "description": "基于环境变量凭据与 manifest-first 方式，快速为 OpenClaw 集成创建新的 Slack App。",
+    "triggers": ["新建 Slack App", "Slack App 脚手架", "slack app bootstrap"],
+    "workflow": ["准备 manifest 模板", "读取环境变量凭据", "调用 Slack Admin API 创建 App", "输出 App ID 与安装链接"],
+    "inputs": ["App 名称", "manifest 参数", "环境变量凭据"],
+    "outputs": ["App ID", "安装链接", "manifest 文件"],
+    "constraints": ["凭据来自环境变量不硬编码", "manifest-first 不支持手改"]
+  },
+  "dev-testcase-gen": {
+    "name_cn": "测试用例生成",
+    "description": "根据需求描述生成测试用例清单（V1 粘贴需求版本），覆盖正向、边界、异常场景。",
+    "triggers": ["测试用例", "用例设计", "测试场景", "写测试用例", "生成用例"],
+    "workflow": ["解析需求抽取功能点", "按场景类型（正向 / 边界 / 异常）生成用例", "输出测试用例清单"],
+    "inputs": ["需求描述或 PRD 片段"],
+    "outputs": ["结构化测试用例清单"],
+    "constraints": ["V1 仅支持粘贴需求", "不自动录入测试管理系统"]
+  },
+  "product-prd-gen": {
+    "name_cn": "PRD 初稿生成",
+    "description": "根据一句话需求描述生成 PRD 初稿框架，覆盖背景、目标、核心场景、功能列表、验收标准。",
+    "triggers": ["PRD", "写 PRD", "生成 PRD", "需求文档", "帮我写需求", "PRD 初稿", "产品需求"],
+    "workflow": ["接收一句话需求", "扩展为 PRD 框架", "补齐核心章节（背景 / 目标 / 场景 / 功能 / 验收）"],
+    "inputs": ["一句话需求描述"],
+    "outputs": ["PRD 初稿 Markdown"],
+    "constraints": ["仅生成初稿框架需人工完善", "不自动录入需求池"]
+  },
+  "product-requirement-check": {
+    "name_cn": "PRD 完整性检查",
+    "description": "检查 PRD 文档完整性，发现遗漏点并给出完整度评分，辅助需求评审。",
+    "triggers": ["PRD 检查", "需求审核", "完整性检查", "检查 PRD", "审核需求", "需求完整性"],
+    "workflow": ["解析 PRD 章节结构", "按完整性 checklist 比对", "给出缺失点与评分", "输出审核报告"],
+    "inputs": ["PRD 全文"],
+    "outputs": ["完整度评分", "缺失项清单", "改进建议"],
+    "constraints": ["不修改原 PRD", "仅给出建议不做决策"]
+  },
+  "product-prototype-gen": {
+    "name_cn": "HTML 原型生成",
+    "description": "根据产品需求生成可直接运行的 HTML 原型包，适用于官网、H5、App 风格页面和简单后台页面。",
+    "triggers": ["产品原型", "页面原型", "HTML 原型", "H5 原型", "App 原型", "可运行静态原型"],
+    "workflow": ["解析需求识别页面类型", "选择模板风格（官网 / H5 / App / 后台）", "生成 HTML + CSS + JS 包", "输出可运行原型"],
+    "inputs": ["需求描述", "页面风格偏好"],
+    "outputs": ["HTML 原型包（可直接运行）"],
+    "constraints": ["仅生成静态原型", "不接入真实后端数据"]
+  },
+  "product-requirement-intake": {
+    "name_cn": "需求收录到 Jira",
+    "description": "将需求描述收录到 Jira，创建 Epic 并自动同步到需求池，便于口头 / Slack 需求沉淀。",
+    "triggers": ["录入需求", "需求录入", "录入 Jira", "提需求", "创建需求", "需求收录", "收录"],
+    "workflow": ["解析需求描述抽取关键字段", "创建 Jira Epic", "同步到需求池", "回显链接"],
+    "inputs": ["需求描述", "业务线 / 项目 Key"],
+    "outputs": ["Jira Epic 链接", "需求池记录 ID"],
+    "constraints": ["依赖 Atlassian MCP (Jira 写入)", "创建前强制二次确认"]
+  },
+  "product-requirement-tracking": {
+    "name_cn": "需求追踪表同步",
+    "description": "在 Jira Issue 创建完成后，将需求信息同步到 Google Sheet「已收录需求」追踪表，闭环录入流程。",
+    "triggers": ["同步需求", "需求追踪", "需求录入表", "同步到表格", "写入需求表", "需求同步 googlesheet"],
+    "workflow": ["读取 Jira Issue 详情", "映射到追踪表字段", "写入 Google Sheet", "回显记录链接"],
+    "inputs": ["Jira Issue Key"],
+    "outputs": ["追踪表记录链接", "写入结果"],
+    "constraints": ["仅追加不覆盖历史记录", "依赖 Google Sheet API"]
+  },
+  "product-func-doc-gen": {
+    "name_cn": "功能说明文档生成",
+    "description": "基于系统截图生成功能说明文档（V1 粘贴截图版本），辅助编写用户手册和操作指南。",
+    "triggers": ["功能文档", "功能说明", "操作指南", "写功能文档", "生成功能说明"],
+    "workflow": ["解析截图识别 UI 元素", "按操作流程组织章节", "生成功能说明 Markdown"],
+    "inputs": ["系统截图（多张）", "可选：功能标题"],
+    "outputs": ["功能说明文档"],
+    "constraints": ["V1 仅支持粘贴截图", "不自动录入文档系统"]
+  },
+  "product-feedback-digest": {
+    "name_cn": "用户反馈汇总",
+    "description": "从 Slack 频道收集问题和需求反馈，自动分析并生成报告，支持指定频道和时间范围。",
+    "triggers": ["反馈分析", "收集反馈", "问题汇总", "反馈汇总", "用户反馈", "客诉"],
+    "workflow": ["拉取指定频道消息", "识别反馈类型（问题 / 需求 / 吐槽）", "聚类分析", "生成反馈报告"],
+    "inputs": ["Slack 频道 ID", "时间范围"],
+    "outputs": ["反馈分类报告", "高频问题 Top N"],
+    "constraints": ["依赖 Slack API", "只读不写回 Slack"]
+  },
+  "product-changelog-gen": {
+    "name_cn": "内部系统更新日志",
+    "description": "从 Jira 和 Confluence 生成内部系统版本更新日志，面向用户侧通知变更。",
+    "triggers": ["changelog", "更新日志", "版本日志", "版本更新", "功能更新"],
+    "workflow": ["按版本范围拉取 Jira Issue", "拉取 Confluence 变更记录", "按用户视角重写描述", "生成 Changelog"],
+    "inputs": ["版本号或时间范围", "目标受众"],
+    "outputs": ["面向用户的 Changelog"],
+    "constraints": ["依赖 Atlassian MCP (Jira + Confluence)", "用户侧措辞不保留技术术语"]
   }
 }
